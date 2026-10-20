@@ -65,7 +65,7 @@ setup, so the >70%-at-1:1 rule doesn't apply directly. Still audit it fully.
 ## Variants to log (A2)
 Base; VWAP exit 7; session from midnight NY; noise multiplier 0.2 / 0.5 (sensitivity only); max trades 1 / 2;
 **ES 8.5 / 16 points** (same shape as on NQ); **ES 0.10 / 0.20 × average range**; **average range including the most
-recent session**. Total on ES: 1 base + 8 variants = 9. Base = his code exactly (Pablo, 2026-10-20).
+recent session**. Total on ES: 1 base + 9 variants = 10 configurations (C9 uses 10). Base = his code exactly (Pablo, 2026-10-20).
 
 Note for the split: Conti chose 0.30 / 3 trades / 40-75 on NQ 2018-2022, so on any instrument 2018-2022 is not fully
 unseen for these parameters. Cleanest test of his rules as given: 2023 onward + the holdout.
