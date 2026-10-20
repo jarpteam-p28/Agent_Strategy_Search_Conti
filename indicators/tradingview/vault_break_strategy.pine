@@ -19,6 +19,7 @@
 // Check against his screen (9/22/2026 tooltip: NoiseUp 30,945.39, SessOpen 30,836.25): this logic gives
 // average range 364.1 vs his 363.8 and NoiseUp 30,945.48 — but only with "Skip the most recent session" ON.
 //
+// ES: use an ES1! chart and set "Target / stop measured in" = "Fraction of average range (ES base)".
 // Use a 30-minute NQ1! (or MNQ1!) chart with extended hours ON. Premium plans also get the 1-minute bar magnifier.
 
 strategy("Vault Break NQ (Conti)", shorttitle = "VaultBreak", overlay = true,
@@ -40,7 +41,11 @@ flatTime  = input.int(1430, "Flatten time (also last entry)", group = G2, toolti
 maxTrades = input.int(3, "Max trades per session", minval = 1, group = G2)
 contracts = input.int(1, "Contracts", minval = 1, group = G2, tooltip = "Develop with 1. His prop sizing: about 5 MNQ.")
 
-G3 = "Exits (points)"
+G3 = "Exits"
+exitMode     = input.string("Points (his NQ rules)", "Target / stop measured in", options = ["Points (his NQ rules)", "Fraction of average range (ES base)"], group = G3,
+     tooltip = "ES test base: target 0.10 x and stop 0.20 x the session's average range (what 40/75 NQ points were in 2022-26). See handoff/ES_ADAPTATION.md.")
+tpFrac       = input.float(0.10, "Target (x average range)", step = 0.01, group = G3)
+slFrac       = input.float(0.20, "Stop (x average range)", step = 0.01, group = G3)
 tpPts        = input.float(40.0, "Take profit (points)", step = 1, group = G3, tooltip = "TakeProfitDollars(800) = 40 NQ points. On MNQ use 40 points too (= $80 per MNQ).")
 slPts        = input.float(75.0, "Stop loss (points)", step = 1, group = G3, tooltip = "StopLossDollars(1500) = 75 NQ points")
 vwapExitBars = input.int(0, "VWAP exit: close after N closes in a row below VWAP (0 = off)", minval = 0, group = G3,
@@ -117,7 +122,10 @@ if longSig
     strategy.entry("VB.Long", strategy.long, qty = contracts)
     dTrades += 1
 
-strategy.exit("VB.Bracket", "VB.Long", profit = tpPts / syminfo.mintick, loss = slPts / syminfo.mintick,
+useFrac = exitMode == "Fraction of average range (ES base)"
+tpUse   = useFrac ? tpFrac * boundaryATR : tpPts
+slUse   = useFrac ? slFrac * boundaryATR : slPts
+strategy.exit("VB.Bracket", "VB.Long", profit = math.round(tpUse / syminfo.mintick), loss = math.round(slUse / syminfo.mintick),
      comment_profit = "VB.TP", comment_loss = "VB.SL")
 
 // ---------------- Other exits ----------------

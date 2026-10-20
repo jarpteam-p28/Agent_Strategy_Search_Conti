@@ -62,7 +62,11 @@ setup, so the >70%-at-1:1 rule doesn't apply directly. Still audit it fully.
 - Developed 2018–2022, out-of-sample 2023 onward (his split). Our NQ data starts Jul 2021.
 
 ## Variants to log (A2)
-Base; VWAP exit 7; session from midnight NY; noise multiplier 0.2 / 0.5 (sensitivity only); max trades 1 / 2.
+Base; VWAP exit 7; session from midnight NY; noise multiplier 0.2 / 0.5 (sensitivity only); max trades 1 / 2;
+**ES fixed points 8.5 / 16** (ES test); **average range including the most recent session**. Total on ES: 1 base + 7 variants = 8.
+
+Note for the split: Conti chose 0.30 / 3 trades / 40-75 on NQ 2018-2022, so on any instrument 2018-2022 is not fully
+unseen for these parameters. Cleanest test of his rules as given: 2023 onward + the holdout.
 
 ## Part D — Monte Carlo and prop simulation (his settings)
 - Trade reshuffle 10,000 and bootstrap 20,000; bench rule: drawdown above the 75th percentile of the Monte Carlo
