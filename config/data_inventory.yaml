@@ -46,7 +46,7 @@ instruments:
   start: '2021-07-15'
   end: 2026-09
   location: Joshua Backtest data copy of drive/NQ 2026 september-2021 september/NQ MM-YY.Last.txt
-  gaps: Contracts 12-21, 03-22, 03-25, 06-25, 09-25 missing; no continuous 1-min NQ series built yet (raw tick files)
+  gaps: Contracts 12-21, 03-22, 03-25, 06-25, 09-25 missing in the raw tick files (check how clean_NQ 1-min handles them)
 file_formats:
   minute: yyyyMMdd HHmmss;open;high;low;close;volume (semicolon, no header)
   tick: yyyyMMdd HHmmss fffffff;last;bid;ask;volume (semicolon, no header)
