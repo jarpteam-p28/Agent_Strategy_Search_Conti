@@ -1,0 +1,77 @@
+id: gamma_flip_cross
+name: 0DTE Gamma Flip Crossing (NQ, continuation)
+status: spec
+source:
+  kind: transcript
+  ref: "transcripts/04_gamma_exposure_study.txt - 'Gamma exposure from an Ex Market Maker' (MatFinOg, 2026-08-22, youtu.be/bMs9PzQzrqM)"
+  papers:
+    - title: "Hedging Demand and Market Intraday Momentum"
+      authors: [Guido Baltussen, Zhi Da, Sten Lammers, Martin Martens]
+      year: 2021
+      note: "Not cited by Conti - academic support for the same WHY (dealer gamma hedging pushes price with the move); on the reading list."
+finding: >
+  Conti's own study of retail gamma-exposure (GEX) beliefs, using minute-by-minute levels he built from raw
+  0DTE NDX options volume (3 Apr 2023 - 7 Jul 2026, 820 RTH sessions, on NQ). The only level with a real
+  signal is the gamma flip, and only at the moment price CROSSES it - trade in the direction of the cross.
+  Every gamma-level event (flip cross, call-wall touch, put-wall break) was a continuation; fading lost
+  everywhere. The reversion fade-traders expect does happen, but later.
+why: >
+  Below the flip dealers are net short gamma and must sell into falls / buy into rallies, amplifying the
+  move; a fresh cross of the flip changes the dealers' hedging regime, and their forced hedging flow pushes
+  price further in the cross direction for roughly 50 minutes.
+what_would_kill_it: "Changes in who holds 0DTE gamma (dealers net long on both sides), or the crossing becoming crowded."
+market:
+  instruments: [NQ]
+  bar_size: "1 min"
+  session: "RTH only (where the 0DTE levels exist)"
+  universe: null
+direction: long_short
+entry:
+  long: "Price crosses ABOVE the gamma flip (net dealer gamma = 0 level, from 0DTE NDX options) -> buy."
+  short: "Price crosses BELOW the gamma flip -> sell short."
+  filters:
+    - "Only the first crossing of a cluster: after each exit, stand aside for 35 minutes (repeat crosses in a cluster lose money)."
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: "Exit exactly 50 minutes after entry (research configuration: fixed hold, no stop, no target)."
+  other: []
+position_sizing:
+  development: "1 NQ contract."
+  live: "Not designed yet - he calls this a research configuration; stops, targets and sizing are the next step."
+parameters:
+  - {name: hold_minutes, default: 50, test_range: "15, 30, 50, 60", source: "transcript (continuation plateau ~50 min)"}
+  - {name: lockout_minutes, default: 35, test_range: "0, 15, 35, 60", source: transcript}
+variants:
+  - "Same signal on ES with SPX 0DTE gamma."
+  - "Add stop / target / volatility sizing (his suggested next project)."
+  - "Call-wall touch -> go LONG (follow, don't fade); put-wall break -> short (weak alone)."
+expectations:
+  - "Baseline (always long NQ in 15-min slices): +$4.71 per 15-min trade. Every signal must beat this."
+  - "Side of the flip (long above / short below), 15-min hold: +$0.56 per trade over ~18,800 trades - coin flip (above +$2.90, below +$6.87: both drifted up)."
+  - "Flip CROSSING, 15-min hold: +$33.22 per trade over ~3,400 trades (7x baseline); down-crosses +$27/trade even in a bull market."
+  - "First cross only (35-min lockout): ~+$62/trade. Plus 50-min hold: +$99/trade gross; after $19 round-trip costs +$80/trade, ~$122,000 net on 1 contract (~1,500 trades)."
+  - "Profitable in both halves of the sample, long and short side in each half; 2023 (quietest year) negative; worst months were panic months with violent two-way crossings."
+  - "Outlier dependence: top 10 trades = 55% of profit, top 20 = 90%; remove the best 20 of 1,500 and nothing is left after costs -> must be automated, every signal taken."
+  - "Belief tests: sell call-wall touch = -$39.82/trade (going long instead is positive - wall is a milestone, not a ceiling); put-wall break short = +$13.12 (weak, put book thin); centroid side = +$3.00 (below baseline - just the shadow of price)."
+data_requirements:
+  - "Minute-by-minute 0DTE NDX option trades (strike, type, volume) to compute dealer gamma levels without look-ahead"
+  - "NQ 1-min bars, RTH"
+data_available: no
+open_questions:
+  - "Exact gamma-flip computation: dealer positioning assumption (dealer short calls/puts sold to customers?), use of volume traded inside each minute only, which strikes."
+  - "How to source 0DTE NDX option trade data (vendor) - not in our NinjaTrader data."
+  - "Is the cross measured on 1-min closes or intrabar?"
+validation:
+  in_sample_pct: 50
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
+  extra_checks:
+    - "Compare every variant to the always-long baseline over the same bars."
+    - "Remove top 10 / 20 trades and re-check."
+    - "Results by year and by long/short side in each half."
+related_strategies: [vwap_trend, drift_vwap_pullback]
+notes:
+  - "Chart: MultiCharts 'NQ OptFlow Data' 1-min with 'OFB GEX Study' / '0DTE Gamma' - green = major positive gamma (call wall), red = major negative gamma (put wall), yellow = gamma flip, white = gamma-weighted centroid."
+  - "Full paper and signal code promised inside his paid 'institutional protocol'."

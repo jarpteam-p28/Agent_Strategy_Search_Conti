@@ -34,5 +34,15 @@
     ],
     "processed": "2026-10-19",
     "processed_by": "manual (Claude, in chat)"
+  },
+  "04_gamma_exposure_study.txt": {
+    "hash": "a796d175bc34b0d5",
+    "title": "Gamma exposure from an Ex Market Maker (MatFinOg, 2026-08-22, youtu.be/bMs9PzQzrqM)",
+    "summary": "Tests retail GEX beliefs on NQ with self-built 0DTE NDX gamma levels (Apr 2023-Jul 2026). Walls and flip side don't work as taught; fading loses everywhere. Survivor: trade the gamma-flip CROSS in its direction, first cross only (35-min lockout), hold 50 min: $80/trade after costs, but top 20 trades = 90% of profit.",
+    "strategies": [
+      "gamma_flip_cross"
+    ],
+    "processed": "2026-10-19",
+    "processed_by": "manual (Claude, in chat)"
   }
 }

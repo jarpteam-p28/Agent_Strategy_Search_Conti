@@ -64,3 +64,22 @@
   magnifier for intrabar fills, document warm-up length (ATR look-back) so early sessions don't trade with
   filters silently off, set realistic costs (~$13 round turn for NQ), and print the IS/OOS stats in the header.
 - **His long IS/OOS split for the overnight bias:** in-sample 2006-2019, out-of-sample 2020-2026, zero-cost.
+
+## 04_gamma_exposure_study.txt — Gamma exposure from an Ex Market Maker
+
+- **Test beliefs with one master signal.** To judge an entry idea, hold every trade a fixed time (here
+  15 min) with no stop and no target, so the exit can't flatter the entry.
+- **Always beat a zero-intelligence baseline.** Measure the same bars with "just own the market" (here:
+  always long NQ in 15-min slices = +$4.71/trade). A signal below the baseline is worthless.
+- **Events beat states.** "Which side of the level are we on" was a coin flip; "the moment price crosses
+  the level" carried the edge. Test the change, not just the state.
+- **Continuation first, reversion later.** At gamma levels, every touch/cross continued; faders are early,
+  and early means losing. Check the return profile over time after the event to pick the holding period
+  (here a second plateau out to ~50 min).
+- **Cluster filter.** Signals arrive in clusters; only the first one carries information. A lockout after
+  each exit (35 min) nearly doubled the edge.
+- **Outlier dependence decides how you trade it.** If the top 20 trades are 90% of profit, you must take every
+  signal - automate or don't trade it.
+- **Build your own data when the edge depends on it.** He built gamma levels minute by minute from raw 0DTE
+  option volume, using only volume traded inside each minute to avoid look-ahead bias.
+- **Report the ugly parts:** losing year, worst months, cost drag ($19 round trip), half-by-half and side-by-side results.
