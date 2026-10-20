@@ -1,4 +1,55 @@
 {
+  "a_tug_of_war_overnight_versus_intraday_expected_returns": {
+    "title": "A Tug of War: Overnight versus Intraday Expected Returns",
+    "authors": [
+      "Dong Lou",
+      "Christopher Polk",
+      "Spyros Skouras"
+    ],
+    "year": 2019,
+    "venue": "Journal of Financial Economics",
+    "url": "https://researchonline.lse.ac.uk/id/eprint/87481",
+    "pdf_url": "https://personal.lse.ac.uk/polk/research/TugOfWar.pdf",
+    "instruments": [
+      "US stocks"
+    ],
+    "access": "open_pdf",
+    "priority": 1,
+    "where_to_get_it": "Free PDF on Christopher Polk's LSE page",
+    "why_promising": "Momentum profits are earned almost entirely overnight; most other anomalies (value, size, etc.) are earned intraday and reverse overnight. WHY: different clienteles - individuals trade at the open, institutions during the day - push in opposite directions.",
+    "what_it_should_contain": "Overnight vs intraday decomposition of 10+ stock anomalies; a strategy that holds momentum overnight only.",
+    "testable_on_our_data": "no",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "asset_fire_sales_and_purchases_in_equity_markets": {
+    "title": "Asset Fire Sales (and Purchases) in Equity Markets",
+    "authors": [
+      "Joshua Coval",
+      "Erik Stafford"
+    ],
+    "year": 2007,
+    "venue": "Journal of Financial Economics (NBER w11357)",
+    "url": "https://www.nber.org/papers/w11357",
+    "pdf_url": "https://www.nber.org/papers/w11357.pdf",
+    "instruments": [
+      "US stocks"
+    ],
+    "access": "open_pdf",
+    "priority": 1,
+    "where_to_get_it": "Free NBER working paper w11357 PDF",
+    "why_promising": "Mutual funds with big outflows are forced to sell their holdings, pushing prices below value; prices recover over the following months. Classic forced-seller WHY - buy what distressed funds must dump.",
+    "what_it_should_contain": "How to identify forced sellers from fund flows/holdings, size and timing of the price drop and rebound. Needs mutual fund holdings/flows data.",
+    "testable_on_our_data": "no",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
   "beat_the_market_an_effective_intraday_momentum_strategy_for": {
     "title": "Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)",
     "authors": [
@@ -97,6 +148,32 @@
     "attempts": 0,
     "added": "2026-10-19"
   },
+  "famous_firms_earnings_clusters_and_the_stock_market": {
+    "title": "Famous Firms, Earnings Clusters, and the Stock Market",
+    "authors": [
+      "Yixin Chen",
+      "Randolph B. Cohen",
+      "Zixuan (Kevin) Wang"
+    ],
+    "year": 2020,
+    "url": "https://papers.ssrn.com/abstract=3685452",
+    "instruments": [
+      "US mega caps",
+      "S&P 500",
+      "ES"
+    ],
+    "access": "ssrn_free_download",
+    "priority": 1,
+    "where_to_get_it": "SSRN abstract 3685452 -> 'Download This Paper'",
+    "why_promising": "A large part of the yearly market return comes in the 24 hours before days when several famous firms report together after the close - days known in advance. WHY: optimists buy into the attention spike while short-sale limits keep pessimists out. Tradable on ES as well as the stocks.",
+    "what_it_should_contain": "How clusters are defined, return close-to-close before post-close clusters, results by year. Needs a mega-cap earnings calendar (public).",
+    "testable_on_our_data": "partial",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
   "hedging_demand_and_market_intraday_momentum": {
     "title": "Hedging Demand and Market Intraday Momentum",
     "authors": [
@@ -120,6 +197,30 @@
     "what_it_should_contain": "Last-30-min predictability by asset class and by gamma level; reversal over following days; strategy returns",
     "testable_on_our_data": "yes",
     "priority": 1,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "the_52_week_high_and_momentum_investing": {
+    "title": "The 52-Week High and Momentum Investing",
+    "authors": [
+      "Thomas J. George",
+      "Chuan-Yang Hwang"
+    ],
+    "year": 2004,
+    "venue": "Journal of Finance",
+    "url": "https://alphaarchitect.com/the-secret-to-momentum-is-the-52-week-high/",
+    "instruments": [
+      "US stocks"
+    ],
+    "access": "unknown",
+    "priority": 2,
+    "where_to_get_it": "Journal of Finance 2004; search the title on Google Scholar for a free author copy",
+    "why_promising": "Stocks near their 52-week high keep outperforming. WHY: traders anchor on the 52-week high and under-react to good news near it. Also tested on index level in later work.",
+    "what_it_should_contain": "Ranking by price / 52-week high, holding periods, comparison with classic momentum.",
+    "testable_on_our_data": "partial",
+    "track": "stocks",
     "origin": "librarian",
     "status": "queued",
     "attempts": 0,
@@ -171,6 +272,25 @@
     "what_it_should_contain": "Return in the 24h before 14:00 ET FOMC releases, 1994-2011; needs a list of FOMC dates (public)",
     "testable_on_our_data": "yes",
     "priority": 2,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "the_russell_reconstitution_effect": {
+    "title": "The Russell Reconstitution Effect",
+    "year": 2001,
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=278000",
+    "instruments": [
+      "Russell 2000 stocks"
+    ],
+    "access": "ssrn_free_download",
+    "priority": 2,
+    "where_to_get_it": "SSRN abstract 278000; follow-up 'Russell Reconstitution Effect Revisited' is SSRN 960727",
+    "why_promising": "Index funds must trade every addition/deletion on reconstitution day, creating order imbalances and price pressure. The 2007 follow-up says the effect has weakened - check what survives.",
+    "what_it_should_contain": "Abnormal returns from rank day to reconstitution day for additions vs deletions; reversal afterwards. Needs Russell membership lists.",
+    "testable_on_our_data": "no",
+    "track": "stocks",
     "origin": "librarian",
     "status": "queued",
     "attempts": 0,

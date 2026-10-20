@@ -11,6 +11,8 @@ prefer:
   - Mean reversion after overreaction / liquidity shocks
   - Earnings and news drift
   - Commodity futures anomalies (crude oil, gold)
+  - Stock anomalies with a structural WHY (earnings drift, index additions/deletions, analyst revisions,
+    short interest, insider buying, share buybacks, gap behaviour, small/mid-cap underreaction)
 
 keywords:
   - intraday momentum
@@ -25,21 +27,41 @@ keywords:
   - volatility managed
   - return predictability intraday
   - anomaly futures
+  - stock return anomaly
+  - earnings announcement drift
+  - index inclusion effect
+  - cross-sectional momentum stocks
 
 avoid:
   - Pure theory with no testable trading rule
   - Results that need data we can never get (proprietary order books, private fund data)
   - High-frequency strategies (sub-second) we can't execute
 
-# The librarian builds papers/READING_LIST.md from these: research we can test on our ES/NQ data.
-librarian_focus:
-  - ES / S&P 500 futures intraday return patterns (first and last half hour, lunch, close)
-  - NQ / Nasdaq-100 futures and QQQ intraday momentum and reversal
-  - Overnight (globex) vs regular-session returns in index futures
-  - Opening range breakout and gap behaviour in index futures
-  - VWAP, TWAP and institutional execution flow effects on index futures
-  - Month-end, quarter-end and index rebalancing flows in S&P 500 futures
-  - Option expiration, 0DTE and dealer gamma hedging effects on S&P 500 intraday moves
-  - Futures roll and settlement effects
-  - Macro announcement (FOMC, CPI, NFP) drift in index futures
-  - Volatility-targeted sizing for equity index futures
+# The librarian builds papers/READING_LIST.md, one section per track.
+librarian_tracks:
+  index_futures:
+    label: ES / NQ / index futures
+    focus:
+      - ES / S&P 500 futures intraday return patterns (first and last half hour, lunch, close)
+      - NQ / Nasdaq-100 futures and QQQ intraday momentum and reversal
+      - Overnight (globex) vs regular-session returns in index futures
+      - Opening range breakout and gap behaviour in index futures
+      - VWAP, TWAP and institutional execution flow effects on index futures
+      - Month-end, quarter-end and index rebalancing flows in S&P 500 futures
+      - Option expiration, 0DTE and dealer gamma hedging effects on S&P 500 intraday moves
+      - Futures roll and settlement effects
+      - Macro announcement (FOMC, CPI, NFP) drift in index futures
+      - Volatility-targeted sizing for equity index futures
+  stocks:
+    label: Stocks
+    focus:
+      - Post-earnings announcement drift and earnings surprise strategies (small/mid caps, Europe)
+      - Pre-earnings run-up and earnings-day gap continuation / fade
+      - Index addition and deletion effects (S&P 500, Russell reconstitution)
+      - Analyst recommendation and estimate revision drift
+      - Short interest, short squeezes and borrow fees
+      - Insider buying and share buyback announcements
+      - Gap-and-go / stocks-in-play intraday momentum on single stocks
+      - Cross-sectional momentum, reversal and 52-week-high effects
+      - Overnight vs intraday returns in single stocks
+      - Liquidity / fund-flow forced selling (mutual fund fire sales, ETF rebalancing)

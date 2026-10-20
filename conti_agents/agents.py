@@ -91,19 +91,24 @@ def scout(repo: Repo, llm, known_titles: list[str], n: int) -> list[dict]:
 # =============================================================================================
 # 1b. Librarian - reading list of ES/NQ research for Pablo to download by hand
 # =============================================================================================
-def librarian(repo: Repo, llm, known_titles: list[str], n: int) -> list[dict]:
+def librarian(repo: Repo, llm, known_titles: list[str], n: int, track: str = "index_futures") -> list[dict]:
     lim = repo.settings().get("limits", {})
-    focus = repo.load_yaml("config/search_topics.yaml", {}).get("librarian_focus", [])
-    content = (f"Find up to {n} papers for the reading list.\n\nFocus areas:\n"
-               + "\n".join(f"- {f}" for f in focus)
+    cfg = (repo.load_yaml("config/search_topics.yaml", {}) or {}).get("librarian_tracks", {}).get(track, {})
+    label = cfg.get("label", track)
+    content = (f"Track: {label}\nFind up to {n} papers for the reading list.\n\nFocus areas:\n"
+               + "\n".join(f"- {f}" for f in cfg.get("focus", []))
                + "\n\nAlready known - skip these:\n" + "\n".join(f"- {t}" for t in known_titles))
     out = llm.structured(
         agent="librarian", model=_model(repo, "librarian"),
-        system=fill(prompts.LIBRARIAN, method=repo.method_text(), data_inventory=repo.data_inventory_text()),
+        system=fill(prompts.LIBRARIAN, method=repo.method_text(), track=label,
+                    data_inventory=repo.data_inventory_text()),
         content=content, tool_name="submit_reading_list", schema=READING_LIST_SCHEMA,
         server_tools=[web_search_tool(lim.get("librarian_max_searches", 15))],
     )
-    return out.get("papers", [])[:n]
+    papers = out.get("papers", [])[:n]
+    for p in papers:
+        p["track"] = track
+    return papers
 
 
 # =============================================================================================

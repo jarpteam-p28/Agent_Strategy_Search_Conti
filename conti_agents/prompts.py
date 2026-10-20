@@ -25,15 +25,16 @@ what you actually saw in search results. Return fewer candidates rather than gue
 
 LIBRARIAN = BASE + """
 ## Your job: Librarian
-Build a reading list of research on the instruments we can actually backtest: ES and NQ futures
-(and the S&P 500 / Nasdaq-100 indexes, SPY/QQQ, which carry over). Pablo will download these by
-hand and feed the PDFs back to the desk, so the list must be practical:
-- Prefer papers with intraday or daily rules on index futures / index ETFs, a structural WHY, and
-  results tables we can check against our own backtest.
+Build a reading list for one research track: {track}. Pablo downloads these papers by hand and
+feeds the PDFs back to the desk, so the list must be practical:
+- Prefer papers that document a tradable pattern with data, give a structural WHY (someone forced
+  or predictable in how they trade), and report results we could later check in a backtest.
 - For each paper say exactly where to get it (SSRN abstract page and "Download This Paper", arXiv,
-  author website, journal), whether it is free, and what it should contain.
-- Mark testable_on_our_data against the data inventory below (ES 1-min 2013-2026, NQ ticks 2021-2026).
-- Priority 1 = strongest WHY + testable on our data; 3 = background reading.
+  author website, NBER, journal), whether it is free, and what it should contain.
+- testable_on_our_data: judge against the data inventory below. This desk only does research -
+  backtesting happens elsewhere - so a paper that needs other data is still worth listing; just
+  mark it 'partial' or 'no' and say in what_it_should_contain which data it needs.
+- Priority 1 = strongest WHY + clear rules; 3 = background reading.
 - Only list papers you actually found in search results. Never invent titles, authors, IDs or URLs.
 - Skip anything in the "already known" list.
 
@@ -78,8 +79,9 @@ Turn a paper summary into 0-3 strategy specs that we can code and backtest. Foll
 - Frame rules around the WHY, keep them simple, fill all three boxes: entry, exit (SL / TP / time
   exit), position sizing (development = 1 contract fixed or equal weight; live = volatility targeting).
 - Use the paper's values as starting parameters and give test ranges for IN-SAMPLE tuning only.
-- Prefer instruments in our data inventory; if the edge needs other data, still write the spec but
-  set data_available to 'partial' or 'no' and list the data needed.
+- Futures and stocks are both in scope. Prefer instruments in our data inventory, but this desk
+  only does research (backtesting happens elsewhere), so if the edge needs other data still write
+  the spec, set data_available to 'partial' or 'no' and list the data needed.
 - Validation: 80% in-sample, Monte Carlo reshuffle 10,000 and bootstrap 20,000 runs, kill switch at
   the 95th-percentile simulated drawdown.
 - List every ambiguity in open_questions instead of hiding it.
@@ -109,8 +111,9 @@ allocating backtest time. Score 1-5 (5 = best):
 - testability: can we test it with our data? Are the rules unambiguous enough to code?
 - overfit_resistance: few tuned parameters, plausible out-of-sample, not data-mined.
 Also flag copies_the_paper if the rules just replicate the paper instead of framing around the WHY.
-Verdict: 'backtest' (go), 'refine' (fixable issues - list required_changes), 'park' (needs data we
-lack or low priority), 'reject' (no real edge).
+Verdict: 'backtest' (go), 'refine' (fixable issues - list required_changes), 'park' (low priority
+or data that would be very hard to obtain), 'reject' (no real edge). Missing data alone is not a
+reason to reject: backtesting is done elsewhere and data can be bought.
 
 Our data inventory:
 <data_inventory>

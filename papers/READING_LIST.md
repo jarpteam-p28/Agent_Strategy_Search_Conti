@@ -6,7 +6,7 @@ Updated 2026-10-19. Download each PDF and save it in `papers/inbox/` **using the
 
 Nothing pending.
 
-## 2. Recommended ES / NQ research
+## 2. Recommended research — ES / NQ / index futures
 
 ### P1 · Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY) (2024)
 *Carlo Zarattini, Andrea Barbon, Andrew Aziz* · instruments: SPY, ES · access: open_pdf · testable on our data: yes
@@ -63,4 +63,47 @@ Nothing pending.
 - **Should contain:** Overnight return decomposition by news vs no-news nights
 - **Get it:** Free on arXiv https://arxiv.org/abs/2507.04481
 - **Save as:** `papers/inbox/does_overnight_news_explain_overnight_returns.pdf`
+
+
+## 3. Recommended research — Stocks
+
+### P1 · A Tug of War: Overnight versus Intraday Expected Returns (2019)
+*Dong Lou, Christopher Polk, Spyros Skouras* · instruments: US stocks · access: open_pdf · testable on our data: no
+
+- **Why:** Momentum profits are earned almost entirely overnight; most other anomalies (value, size, etc.) are earned intraday and reverse overnight. WHY: different clienteles - individuals trade at the open, institutions during the day - push in opposite directions.
+- **Should contain:** Overnight vs intraday decomposition of 10+ stock anomalies; a strategy that holds momentum overnight only.
+- **Get it:** Free PDF on Christopher Polk's LSE page https://researchonline.lse.ac.uk/id/eprint/87481
+- **Save as:** `papers/inbox/a_tug_of_war_overnight_versus_intraday_expected_returns.pdf`
+
+### P1 · Asset Fire Sales (and Purchases) in Equity Markets (2007)
+*Joshua Coval, Erik Stafford* · instruments: US stocks · access: open_pdf · testable on our data: no
+
+- **Why:** Mutual funds with big outflows are forced to sell their holdings, pushing prices below value; prices recover over the following months. Classic forced-seller WHY - buy what distressed funds must dump.
+- **Should contain:** How to identify forced sellers from fund flows/holdings, size and timing of the price drop and rebound. Needs mutual fund holdings/flows data.
+- **Get it:** Free NBER working paper w11357 PDF https://www.nber.org/papers/w11357
+- **Save as:** `papers/inbox/asset_fire_sales_and_purchases_in_equity_markets.pdf`
+
+### P1 · Famous Firms, Earnings Clusters, and the Stock Market (2020)
+*Yixin Chen, Randolph B. Cohen, Zixuan (Kevin) Wang* · instruments: US mega caps, S&P 500, ES · access: ssrn_free_download · testable on our data: partial
+
+- **Why:** A large part of the yearly market return comes in the 24 hours before days when several famous firms report together after the close - days known in advance. WHY: optimists buy into the attention spike while short-sale limits keep pessimists out. Tradable on ES as well as the stocks.
+- **Should contain:** How clusters are defined, return close-to-close before post-close clusters, results by year. Needs a mega-cap earnings calendar (public).
+- **Get it:** SSRN abstract 3685452 -> 'Download This Paper' https://papers.ssrn.com/abstract=3685452
+- **Save as:** `papers/inbox/famous_firms_earnings_clusters_and_the_stock_market.pdf`
+
+### P2 · The 52-Week High and Momentum Investing (2004)
+*Thomas J. George, Chuan-Yang Hwang* · instruments: US stocks · access: unknown · testable on our data: partial
+
+- **Why:** Stocks near their 52-week high keep outperforming. WHY: traders anchor on the 52-week high and under-react to good news near it. Also tested on index level in later work.
+- **Should contain:** Ranking by price / 52-week high, holding periods, comparison with classic momentum.
+- **Get it:** Journal of Finance 2004; search the title on Google Scholar for a free author copy https://alphaarchitect.com/the-secret-to-momentum-is-the-52-week-high/
+- **Save as:** `papers/inbox/the_52_week_high_and_momentum_investing.pdf`
+
+### P2 · The Russell Reconstitution Effect (2001)
+** · instruments: Russell 2000 stocks · access: ssrn_free_download · testable on our data: no
+
+- **Why:** Index funds must trade every addition/deletion on reconstitution day, creating order imbalances and price pressure. The 2007 follow-up says the effect has weakened - check what survives.
+- **Should contain:** Abnormal returns from rank day to reconstitution day for additions vs deletions; reversal afterwards. Needs Russell membership lists.
+- **Get it:** SSRN abstract 278000; follow-up 'Russell Reconstitution Effect Revisited' is SSRN 960727 https://papers.ssrn.com/sol3/papers.cfm?abstract_id=278000
+- **Save as:** `papers/inbox/the_russell_reconstitution_effect.pdf`
 

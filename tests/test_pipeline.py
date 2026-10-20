@@ -52,6 +52,9 @@ class FakeLLM:
             return {"candidates": [{"title": "Scouted Paper", "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=123",
                                     "why_promising": "flows"}]}
         if agent == "librarian":
+            if "Stocks" in kw["system"]:
+                return {"papers": [{"title": "Index Inclusion Drift", "access": "open_pdf", "priority": 2,
+                                    "where_to_get_it": "arXiv", "why_promising": "forced index buying"}]}
             return {"papers": [{"title": "ES Last Half Hour Momentum", "year": 2024, "access": "ssrn_free_download",
                                 "where_to_get_it": "SSRN abstract page, Download This Paper", "priority": 1,
                                 "why_promising": "dealer hedging into the close", "instruments": ["ES"]}]}
@@ -150,7 +153,9 @@ def test_reading_list(repo, monkeypatch):
     monkeypatch.setattr(agents, "read_paper", abstract_only)
     report, _ = pipeline.run(repo, FakeLLM(), max_papers=1, scout=False, transcripts=False)
     rl = (repo.root / "papers/READING_LIST.md").read_text()
-    assert report.librarian == 1
+    assert report.librarian == 2
+    futures, stocks = rl.split("Recommended research — ES / NQ")[1].split("Recommended research — Stocks")
+    assert "ES Last Half Hour Momentum" in futures and "Index Inclusion Drift" in stocks
     assert "ES Last Half Hour Momentum" in rl and "papers/inbox/es_last_half_hour_momentum.pdf" in rl
     first_read = report.papers[0]["title"]
     assert first_read in rl.split("## 2.")[0]          # needs a manual PDF

@@ -4,7 +4,8 @@ Agents that find trading research on SSRN/arXiv, read the full papers, extract t
 and the **WHY**, and turn them into strategy specs ready to code and backtest — following
 Matteo Conti's institutional process (see [`knowledge/conti_method.md`](knowledge/conti_method.md)).
 
-This is **step one: research → strategy specs**. Backtesting on the NinjaTrader data comes next.
+This repo is **research only: papers → strategy specs**, for index futures (ES/NQ) and stocks.
+Backtesting happens in a separate project (`Backtest_Conti_Research`), which takes the specs from here.
 
 ## How it works
 
@@ -30,7 +31,7 @@ Scout (SSRN/arXiv) ─┘                                                    │
 | **Resolver** | Finds the SSRN/arXiv/journal page for a paper known only by title. |
 | **Reader** | Reads the whole 40–60 page PDF → findings, the WHY (who is forced to trade, why it persists, what kills it), our framing of the edge, angles, decay risk, data fit. |
 | **Strategist** | Turns the summary into specs with the three boxes filled: entry, exit (SL/TP/time), sizing (dev = 1 contract, live = volatility targeting) + validation plan. |
-| **Librarian** | Searches for ES / NQ / S&P 500 / Nasdaq-100 research and writes `papers/READING_LIST.md`: papers to download by hand, where to get each one, why it's promising, and the file name to save it under. Also lists papers the reader couldn't get in full. |
+| **Librarian** | One search per track — **ES/NQ index futures** and **stocks** (tracks in `config/search_topics.yaml`) — and writes `papers/READING_LIST.md`: papers to download by hand, where to get each one, why it's promising, and the file name to save it under. Also lists papers the reader couldn't get in full. |
 | **Critic** | Separate agent that scores the WHY, persistence, simplicity, testability, overfit risk → backtest / refine / park / reject. |
 
 No SSRN API is needed: search and fetching run through Claude's built-in web search and web fetch

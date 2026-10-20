@@ -157,31 +157,34 @@ def process_paper(repo: Repo, llm, paper: dict, report: RunReport) -> None:
 
 
 # ---------------------------------------------------------------------------------------------
-def update_reading_list(repo: Repo, llm, report: RunReport, search: bool) -> None:
-    """Ask the librarian for new ES/NQ papers, then write papers/READING_LIST.md.
+def reading_list_tracks(repo: Repo) -> dict:
+    tracks = (repo.load_yaml("config/search_topics.yaml", {}) or {}).get("librarian_tracks") or {}
+    return tracks or {"index_futures": {"label": "ES / NQ / index futures"}}
 
-    The list has two parts: papers the agents could not read in full (download these and drop
-    them in papers/inbox/ under the shown file name), and new recommendations.
+
+def update_reading_list(repo: Repo, llm, report: RunReport, search: bool) -> None:
+    """Ask the librarian for new papers on each track, then write papers/READING_LIST.md.
+
+    Part 1: papers the agents could not read in full (download these and drop them in
+    papers/inbox/ under the shown file name). Then one section of recommendations per track.
     """
     idx = repo.paper_index()
+    tracks = reading_list_tracks(repo)
     if search:
-        try:
-            n = repo.settings().get("limits", {}).get("max_reading_list", 10)
-            for p in agents.librarian(repo, llm, [v.get("title", "") for v in idx.values()], n):
-                slug = slugify(p["title"])
-                if slug not in idx:
-                    idx[slug] = {**p, "origin": "librarian", "status": "queued", "attempts": 0, "added": today()}
-                    report.librarian += 1
-            repo.save_paper_index(idx)
-        except Exception as e:
-            report.errors.append(f"librarian: {e}")
+        n = repo.settings().get("limits", {}).get("max_reading_list", 8)
+        for track in tracks:
+            try:
+                for p in agents.librarian(repo, llm, [v.get("title", "") for v in idx.values()], n, track):
+                    slug = slugify(p["title"])
+                    if slug not in idx:
+                        idx[slug] = {**p, "origin": "librarian", "status": "queued", "attempts": 0, "added": today()}
+                        report.librarian += 1
+            except Exception as e:
+                report.errors.append(f"librarian ({track}): {e}")
+        repo.save_paper_index(idx)
 
     need_pdf = [(k, v) for k, v in idx.items()
                 if v.get("status") == "failed" or v.get("read_mode") in ("abstract_only", "web_fetch")]
-    recs = sorted([(k, v) for k, v in idx.items()
-                   if v.get("origin") == "librarian" and v.get("status") == "queued"],
-                  key=lambda kv: (kv[1].get("priority", 3), kv[0]))
-
     L = ["# Reading list — papers to download", "",
          f"Updated {today()}. Download each PDF and save it in `papers/inbox/` **using the file name shown** "
          "(or attach it in chat). The next run reads the full paper and replaces the partial summary.", ""]
@@ -195,8 +198,15 @@ def update_reading_list(repo: Repo, llm, report: RunReport, search: bool) -> Non
             L.append(f"| {v.get('title')} ({v.get('year') or '?'}) — *{got}* | {why} | {where} | `{k}.pdf` |")
     else:
         L.append("Nothing pending.")
-    L += ["", "## 2. Recommended ES / NQ research", ""]
-    if recs:
+
+    for i, (track, cfg) in enumerate(tracks.items(), start=2):
+        recs = sorted([(k, v) for k, v in idx.items()
+                       if v.get("origin") == "librarian" and v.get("status") == "queued"
+                       and v.get("track", "index_futures") == track],
+                      key=lambda kv: (kv[1].get("priority", 3), kv[0]))
+        L += ["", f"## {i}. Recommended research — {cfg.get('label', track)}", ""]
+        if not recs:
+            L.append("No open recommendations yet.")
         for k, v in recs:
             L += [f"### P{v.get('priority', 3)} · {v.get('title')} ({v.get('year') or '?'})",
                   f"*{', '.join(v.get('authors') or [])}* · instruments: {', '.join(v.get('instruments') or []) or '-'} · "
@@ -205,8 +215,6 @@ def update_reading_list(repo: Repo, llm, report: RunReport, search: bool) -> Non
                   f"- **Should contain:** {v.get('what_it_should_contain', '')}",
                   f"- **Get it:** {v.get('where_to_get_it', '')} {v.get('url') or ''}",
                   f"- **Save as:** `papers/inbox/{k}.pdf`", ""]
-    else:
-        L.append("No open recommendations.")
     repo.write_text("papers/READING_LIST.md", "\n".join(L) + "\n")
 
 
