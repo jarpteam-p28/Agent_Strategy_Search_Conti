@@ -1,0 +1,151 @@
+//@version=6
+// Vault Break — Matteo Conti, strategy 1 of "A Hedge Fund Manager Just CRACKED Prop Trading" (long only, NQ, 30-min).
+// Spec: strategies/conti/07_vault_break.yaml. Rebuilt from the talk, the whiteboard and his MultiCharts code
+// ("VaultBreak NQ - v8 - Longs Only"). This is a STRATEGY script: results appear in TradingView's Strategy Tester.
+//
+// Rules (all clock times are CHICAGO time, as in his code)
+//   Session      starts at midnight Chicago (option: midnight New York) and ends at the 16:00 CT futures close.
+//                As in MultiCharts, a bar belongs to the date of its CLOSE time, so on 30-min bars the session
+//                starts with the 23:30–00:00 CT bar.
+//   Noise level  NoiseUp = session open + 0.30 × average session range (high − low) of the last 15 COMPLETED
+//                sessions. Fixed for the whole session.
+//   Entry        a 30-min bar closes above NoiseUp AND above the session VWAP, with close time 10:00–14:00 CT
+//                (entry condition is Time < FlattenTime 14:30). Market order → fills at the next bar's open.
+//                Up to 3 trades per session, one position at a time: after a TP/SL, re-enter if the next bar
+//                still closes above NoiseUp and VWAP.
+//   Exits        take profit 40 points ($800 on 1 NQ), stop 75 points ($1,500), flat at 14:30 CT.
+//                Optional VWAP exit from his input VWAPExitBars(7) — exact rule not shown, inferred (see input).
+//
+// Check against his screen (9/22/2026 tooltip: NoiseUp 30,945.39, SessOpen 30,836.25): this logic gives
+// average range 364.1 vs his 363.8 and NoiseUp 30,945.48 — but only with "Skip the most recent session" ON.
+//
+// Use a 30-minute NQ1! (or MNQ1!) chart with extended hours ON. Premium plans also get the 1-minute bar magnifier.
+
+strategy("Vault Break NQ (Conti)", shorttitle = "VaultBreak", overlay = true,
+     initial_capital = 100000, default_qty_type = strategy.fixed, default_qty_value = 1,
+     commission_type = strategy.commission.cash_per_contract, commission_value = 6.5, slippage = 1,
+     use_bar_magnifier = true, max_labels_count = 500)
+
+// ---------------- Inputs ----------------
+G1 = "Session & noise level"
+anchorMode = input.string("Midnight Chicago (his)", "Session starts at", options = ["Midnight Chicago (his)", "Midnight New York"], group = G1,
+     tooltip = "His code: midnight Chicago (= 01:00 New York). 'Midnight New York' (= 23:00 Chicago) moves the session open, VWAP start and range start one hour earlier.")
+noiseMult  = input.float(0.30, "Noise multiplier (× average range)", step = 0.05, group = G1, tooltip = "NoiseMult(0.3) in his code")
+atrLen     = input.int(15, "Average over completed sessions", minval = 1, group = G1, tooltip = "BoundaryATRLen(15) // rolling window, completed sessions")
+skipLast   = input.bool(true, "Skip the most recent session", group = G1, tooltip = "ON reproduces his on-screen NoiseUp (9/22/2026 check: 364.1 vs 363.8). OFF = include the session that just ended.")
+
+G2 = "Entries (Chicago time, HHMM)"
+earliest  = input.int(1000, "Earliest entry (signal bar close)", group = G2, tooltip = "EarliestEntry(1000) CT = 11:00 New York")
+flatTime  = input.int(1430, "Flatten time (also last entry)", group = G2, tooltip = "FlattenTime(1430) CT = 15:30 New York. His header: LatestEntry is inert, entries stop at FlattenTime.")
+maxTrades = input.int(3, "Max trades per session", minval = 1, group = G2)
+contracts = input.int(1, "Contracts", minval = 1, group = G2, tooltip = "Develop with 1. His prop sizing: about 5 MNQ.")
+
+G3 = "Exits (points)"
+tpPts        = input.float(40.0, "Take profit (points)", step = 1, group = G3, tooltip = "TakeProfitDollars(800) = 40 NQ points. On MNQ use 40 points too (= $80 per MNQ).")
+slPts        = input.float(75.0, "Stop loss (points)", step = 1, group = G3, tooltip = "StopLossDollars(1500) = 75 NQ points")
+vwapExitBars = input.int(0, "VWAP exit: close after N closes in a row below VWAP (0 = off)", minval = 0, group = G3,
+     tooltip = "His code has an input VWAPExitBars(7) and a counter BarsBelowVW, but the rule itself was not on screen and he never mentioned it. Try 7 to test it; 0 = rules exactly as he described them.")
+
+G4 = "Display"
+showLines = input.bool(true, "Show NoiseUp / session open / VWAP", group = G4)
+showTable = input.bool(true, "Show status box", group = G4)
+
+tzCT = "America/Chicago"
+toMin(int hhmm) =>
+    math.floor(hhmm / 100) * 60 + hhmm % 100
+
+// ---------------- Session (MultiCharts style: a bar belongs to the date of its close) ----------------
+cm     = hour(time_close, tzCT) * 60 + minute(time_close, tzCT)        // bar CLOSE time, Chicago minutes
+isNY   = anchorMode == "Midnight New York"
+aTZ    = isNY ? "America/New_York" : tzCT
+aCT    = isNY ? 1380 : 0                                                 // anchor in Chicago minutes (23:00 or 00:00)
+inSess = cm <= 960 or (aCT > 960 and cm >= aCT)                          // anchor .. 16:00 CT
+key    = year(time_close, aTZ) * 10000 + month(time_close, aTZ) * 100 + dayofmonth(time_close, aTZ)
+
+var float sessOpen    = na
+var float sessHigh    = na
+var float sessLow     = na
+var int   sessKey     = 0
+var float cTPV        = 0.0
+var float cVol        = 0.0
+var float vwap        = na
+var float boundaryATR = na
+var float noiseUp     = na
+var int   dTrades     = 0
+var int   barsBelow   = 0
+var rngBuf = array.new<float>()
+
+newSess = inSess and key != sessKey
+if newSess
+    if not na(sessHigh)                                  // store the completed session's high-low range
+        array.push(rngBuf, sessHigh - sessLow)
+        if array.size(rngBuf) > 250
+            array.shift(rngBuf)
+    sessKey  := key
+    sessOpen := open
+    sessHigh := high
+    sessLow  := low
+    cTPV     := 0.0
+    cVol     := 0.0
+    dTrades  := 0
+    n    = array.size(rngBuf)
+    skip = skipLast ? 1 : 0
+    if n >= atrLen + skip
+        sum = 0.0
+        for i = n - atrLen - skip to n - 1 - skip
+            sum += array.get(rngBuf, i)
+        boundaryATR := sum / atrLen
+    else
+        boundaryATR := na
+    noiseUp := na(boundaryATR) ? na : sessOpen + noiseMult * boundaryATR
+else if inSess
+    sessHigh := math.max(sessHigh, high)
+    sessLow  := math.min(sessLow, low)
+
+// Session VWAP from the session start (typical price × volume, as cTPV / cVol in his code)
+if inSess
+    cTPV += (high + low + close) / 3 * volume
+    cVol += volume
+    vwap := cVol > 0 ? cTPV / cVol : na
+
+// ---------------- Entries ----------------
+inEntry = inSess and cm >= toMin(earliest) and cm < toMin(flatTime)
+longSig = inEntry and not na(noiseUp) and not na(vwap) and close > noiseUp and close > vwap
+     and dTrades < maxTrades and strategy.position_size == 0
+
+if longSig
+    strategy.entry("VB.Long", strategy.long, qty = contracts)
+    dTrades += 1
+
+strategy.exit("VB.Bracket", "VB.Long", profit = tpPts / syminfo.mintick, loss = slPts / syminfo.mintick,
+     comment_profit = "VB.TP", comment_loss = "VB.SL")
+
+// ---------------- Other exits ----------------
+barsBelow := strategy.position_size > 0 and not na(vwap) and close < vwap ? barsBelow + 1 : 0
+if vwapExitBars > 0 and strategy.position_size > 0 and barsBelow >= vwapExitBars
+    strategy.close("VB.Long", comment = "VB.VWAPx")
+
+if strategy.position_size > 0 and ((inSess and cm >= toMin(flatTime)) or not inSess)
+    strategy.close_all(comment = "VB.TimeX")
+
+// ---------------- Plots ----------------
+plot(showLines and inSess ? noiseUp : na,  "NoiseUp",      color = color.orange, style = plot.style_cross, linewidth = 2)
+plot(showLines and inSess ? sessOpen : na, "Session open", color = color.gray,   style = plot.style_cross)
+plot(showLines and inSess ? vwap : na,     "VWAP",         color = color.aqua,   style = plot.style_cross)
+plotshape(longSig, "Long signal", shape.triangleup, location.belowbar, color.lime, size = size.small)
+
+var table box = table.new(position.top_right, 2, 6, bgcolor = color.new(color.black, 20), border_width = 1)
+if showTable and barstate.islast
+    table.cell(box, 0, 0, "Vault Break", text_color = color.white)
+    table.cell(box, 1, 0, timeframe.period == "30" ? "30-min ✓" : "use 30-min!", text_color = timeframe.period == "30" ? color.lime : color.orange)
+    table.cell(box, 0, 1, "Session starts", text_color = color.white)
+    table.cell(box, 1, 1, isNY ? "00:00 NY" : "00:00 CT", text_color = color.white)
+    table.cell(box, 0, 2, "Avg range (" + str.tostring(atrLen) + ")", text_color = color.white)
+    table.cell(box, 1, 2, na(boundaryATR) ? "warming up" : str.tostring(boundaryATR, "#.#"), text_color = color.white)
+    table.cell(box, 0, 3, "Noise width", text_color = color.white)
+    table.cell(box, 1, 3, na(boundaryATR) ? "n/a" : str.tostring(noiseMult * boundaryATR, "#.#") + " pts", text_color = color.white)
+    table.cell(box, 0, 4, "Above noise & VWAP", text_color = color.white)
+    aboveNow = not na(noiseUp) and close > noiseUp and close > vwap
+    table.cell(box, 1, 4, aboveNow ? "YES" : "no", text_color = aboveNow ? color.lime : color.gray)
+    table.cell(box, 0, 5, "Trades this session", text_color = color.white)
+    table.cell(box, 1, 5, str.tostring(dTrades) + " / " + str.tostring(maxTrades), text_color = color.white)

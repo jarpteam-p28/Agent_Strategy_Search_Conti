@@ -153,3 +153,6 @@ notes:
   381.8. One data point only and the Sep->Dec roll falls inside the window - needs 2-3 more of his tooltip
   readings to confirm. His SessOpen 30,836.25 equals the open of the bar stamped 00:00 CT by close time
   (i.e. the 23:30-00:00 CT bar, 00:30 ET).
+- >-
+  Code header: warm-up 20 trading days - under 15 days nothing trades; between 15 and 20 it trades with
+  the OR-size band silently off ('which is the trap'). So the OR-size filter uses a 20-day look-back.

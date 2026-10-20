@@ -99,9 +99,6 @@ data_requirements:
 data_available: partial
 open_questions:
 - 'VWAP anchor: midnight CT (as in 07) or 08:30 CT RTH open?'
-- >-
-  Must the touch of VWAP come after the opening-range break, and does a close below VWAP after arming
-  cancel the setup?
 - Earliest entry time (example trades were after 10:00 CT).
 validation:
   in_sample_pct: 70
@@ -129,3 +126,19 @@ notes:
 - >-
   Whiteboard confirms: entry 1 close > OR, 2 P touches VWAP, 3 P > VWAP, 4 ADX > 20 not increasing; exit
   TP H past 5, SL L past 20, exit 3.55 CT; size 1.
+- >-
+  Code header (screenshot): 'VWAP PULLBACK - RISK SIZING (lean input set)'; profile 'C.S.' = long-only,
+  fixed 4 contracts, ADX Elev + Decay gates ON, EOD flat 15:55 CT; NQ/MNQ 1-min; chart = full 24h CME
+  session (17:00-16:00 CT), exchange time zone.
+- >-
+  Core logic per header: ORB 08:30-09:00 CT broken by close (latched) -> VWAP retest (touch, or close-through-then-reclaim)
+  -> market entry on the reclaim close. Stop: pivot swing (StopMode 1) or pullback extreme (2). Target:
+  last confirmed 5-strength pivot.
+- >-
+  ADX gate (v3): ElevOK = ADX >= threshold, DecayOK = ADX <= ADX[1]; evaluated on the signal bar, entry
+  next bar at market. The gate DELAYS but does not cancel - latches persist, so if the reclaim is still
+  true later and ADX complies, it fires.
+- >-
+  v4 risk sizing: Qty = floor(Risk$ / perContractRisk), Risk$ = capital x risk% ; perContractRisk = (stop
+  distance + 2 ticks slippage pad) x point value; capped at Max_Contracts; if one contract risks more
+  than Risk$, trade skipped.

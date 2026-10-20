@@ -93,15 +93,12 @@ data_requirements:
 data_available: partial
 open_questions:
 - >-
-  Is the 'session' the CME Globex day (17:00 CT start) or midnight-to-close as he said? He anchors the
-  open and VWAP at midnight CT.
-- >-
   After a stop-out, does the next re-entry still count toward the max-3 if the bar was already above the
   barrier?
 - Which 1987 paper is the 'noise area' source? (librarian task)
 - >-
-  ATR day definition not proven: best fit so far = high-low, midnight CT to 17:00 ET, 15-session SMA lagged
-  one session (see notes). Confirm with more tooltip values.
+  VWAPExitBars(7) input exists in his code (with a BarsBelowVW counter) but the rule was never shown or
+  mentioned - likely 'exit after 7 closes below VWAP'. Test with and without.
 validation:
   in_sample_pct: 70
   monte_carlo_reshuffle_runs: 10000
@@ -155,3 +152,20 @@ notes:
   381.8. One data point only and the Sep->Dec roll falls inside the window - needs 2-3 more of his tooltip
   readings to confirm. His SessOpen 30,836.25 equals the open of the bar stamped 00:00 CT by close time
   (i.e. the 23:30-00:00 CT bar, 00:30 ET).
+- >-
+  Code inputs (screenshots): NoiseMult(0.3); BoundaryATRLen(15) 'rolling window, completed sessions';
+  EarliestEntry(1000) CT; LatestEntry(1500) 'inert'; MaxTradesPerDay(3); VWAPExitBars(7); TakeProfitDollars(800)
+  '40 NQ points'; StopLossDollars(1500) '75 NQ points'; FlattenTime(1430) CT; ExitOnBarClose(false) 'testing
+  only'; NumContracts(1); ShowATRPrint(false).
+- >-
+  Code variables: SessOpen/SessHigh/SessLow/SessCount, BoundaryATR, RngBuf[250] ring buffer, LegacyATR
+  'diagnostic only, drives nothing', ATRRatio, NoiseUp, VWAP from cTPV/cVol reset by vwDate, BarsBelowVW,
+  DTrades. So the 'ATR' is the average session HIGH-LOW range, not a true-range ATR.
+- >-
+  ATR CONFIRMED (TradingView NQ1! 30-min data): session = bars whose CLOSE time falls from 00:00 to 16:00
+  CT (MultiCharts dates a bar by its close, so the first bar is 23:30-00:00 CT); average of the 15 completed
+  sessions EXCLUDING the most recent one = 364.1 vs his 363.8 (0.08%). NoiseUp 30,945.48 vs his 30,945.39
+  on 9/22/2026.
+- >-
+  TradingView strategy script: indicators/tradingview/vault_break_strategy.pine (option: session from
+  midnight New York instead of Chicago - Pablo's test idea).

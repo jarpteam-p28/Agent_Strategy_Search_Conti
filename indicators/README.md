@@ -3,6 +3,7 @@
 | Indicator | TradingView (Pine v6) | Python (for backtests) | Used by |
 |---|---|---|---|
 | Drift VWAP 15m on 5m | `tradingview/drift_vwap_15m_on_5m.pine` | `conti_indicators/vwap_mtf.py` → `drift_vwap_15_on_5()` | `strategies/conti/06_drift_vwap_pullback.yaml` |
+| Vault Break (strategy, Strategy Tester) | `tradingview/vault_break_strategy.pine` | not yet | `strategies/conti/07_vault_break.yaml` |
 | Overnight Bias ORB (overnight range thirds) | `tradingview/overnight_bias_orb.pine` | not yet | `strategies/conti/09_overnight_bias_orb.yaml` |
 
 ## Drift VWAP 15m on 5m — how to add it in TradingView
