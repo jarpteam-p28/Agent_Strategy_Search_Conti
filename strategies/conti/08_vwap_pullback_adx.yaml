@@ -1,0 +1,131 @@
+id: vwap_pullback_adx
+name: VWAP Pullback with ADX gate (NQ 1-min, long only)
+status: spec
+source:
+  kind: transcript
+  ref: transcripts/03_three_prop_strategies.txt - strategy 2
+  papers: []
+finding: |
+  After price shows buying pressure by closing above the opening-range high, the first pullback that touches VWAP and closes back above it - while the trend's strength (ADX) is fading - is a long entry. Variant of the Drift VWAP Pullback (06) with an ADX gate.
+why: |
+  Institutional orders are mostly executed with VWAP algorithms, so trading activity intensifies when price returns to VWAP. With buyers in control (break of the opening range high), algo buying near VWAP pushes price back up. ADX above 20 but no longer rising means the pullback's momentum is fading.
+what_would_kill_it: Execution desks moving away from VWAP benchmarks; long-only drift disappearing.
+market:
+  instruments:
+  - NQ
+  bar_size: 1 min
+  session: RTH; opening range 08:30-09:00 CT (09:30-10:00 ET)
+  universe: null
+direction: long_only
+entry:
+  long: |
+    Gate 1 (arm): a bar closes above the 08:30-09:00 CT opening-range high. Gate 2: price touches VWAP (a wick is enough). Gate 3: a 1-min bar closes above VWAP. Gate 4: ADX > 20 and ADX not higher than on the previous bar (flat or falling). Gates 2 and 3 can happen on the same candle. If gates 1-3 are met but ADX is still rising (or below 20), wait until gate 4 is met. Enter at the open of the next bar.
+  short: null
+  filters:
+  - 'Max 1 trade per day (code: MaxTradesPerDay 1).'
+  - 'ADX gate evaluated on the signal bar: ADX(14) >= 20 and ADX <= ADX one bar ago.'
+  - RetestMode 1 = touch VWAP (alternative 2 = close through VWAP then reclaim).
+exit:
+  stop_loss: >-
+    Swing low (pivot) over the past 20 bars (StopMode 1 = 'pivot swing (original)'; alternative StopMode
+    2 = pullback extreme). Buffer 0 points.
+  take_profit: >-
+    Swing high over the past 5 bars (TargetSwingLen 5), limit order. Can equal the entry bar's high (<5%
+    of trades).
+  time_exit: >-
+    15:55 CT per whiteboard ('EXIT 3.55CT') - just before the Globex daily halt at 16:00 CT, i.e. it can
+    hold after the 15:00 CT RTH close. (Earlier read as 15:55 ET; whiteboard says CT.)
+  other: []
+position_sizing:
+  development: 1 NQ contract.
+  live: >-
+    Prop challenge: about 5 MNQ alongside 07 and 09. Code also has optional volatility sizing (UseVolSizing;
+    MM_Capital 500,000; MM_Risk_Pct 2%; Max_Contracts) - off by default.
+parameters:
+- name: opening_range
+  default: 08:30-09:00 CT
+  test_range: null
+  source: transcript/whiteboard
+- name: ADX_Len
+  default: 14
+  test_range: null
+  source: code
+- name: ADXElev_Thr
+  default: 20
+  test_range: 15, 20, 25
+  source: code
+- name: ADXDecay_LB
+  default: 1
+  test_range: 1, 2, 3
+  source: code (ADX <= ADX[1])
+- name: TargetSwingLen
+  default: 5
+  test_range: 3, 5, 10
+  source: code
+- name: StopSwingLen
+  default: 20
+  test_range: 10, 20, 30
+  source: code
+- name: MaxTradesPerDay
+  default: 1
+  test_range: 1, 2
+  source: code
+- name: RetestMode
+  default: 1
+  test_range: 1, 2
+  source: code
+- name: StopMode
+  default: 1
+  test_range: 1, 2
+  source: code
+- name: MinRR
+  default: 0
+  test_range: 0 (off), 0.5, 1
+  source: code (skip trade if target/stop distance < MinRR)
+- name: MaxStopPoints
+  default: 0
+  test_range: 0 (off), 50, 100
+  source: code (skip trade if stop distance too wide)
+variants:
+- Same rules on ES.
+- Short mirror (close below OR low, pullback to VWAP from below).
+expectations:
+- >-
+  Win rate similar to Vault Break (~65%), avg win/avg loss about 0.7, fewer trades and higher average
+  trade than 07.
+- Developed 2018-2022, out-of-sample 2023+; at new equity highs at recording.
+data_requirements:
+- NQ 1-min bars with volume, RTH, 2018+
+data_available: partial
+open_questions:
+- 'VWAP anchor: midnight CT (as in 07) or 08:30 CT RTH open?'
+- >-
+  Must the touch of VWAP come after the opening-range break, and does a close below VWAP after arming
+  cancel the setup?
+- Earliest entry time (example trades were after 10:00 CT).
+validation:
+  in_sample_pct: 70
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Bench when current drawdown exceeds the 75th percentile of Monte Carlo drawdowns, or after two failed
+    challenges in a row; resume at a new equity high.
+  extra_checks:
+  - In-sample 2018-2022, out-of-sample 2023+
+  - Combined prop simulation with 07 and 09
+  - Daily P&L correlation with 07 and 09
+related_strategies:
+- drift_vwap_pullback
+- vault_break
+- overnight_bias_orb
+- vwap_trend
+notes:
+- >-
+  Video: 'A Hedge Fund Manager Just CRACKED Prop Trading (Live On Chart)', 2026-10-06, youtu.be/A0G14JYYVTk.
+- >-
+  Code: 'VWAP ADX Production' in MultiCharts; inputs read from screen: UseVolSizing false, PositionSize
+  1, TradeLongs true, TradeShorts false, UseADXElev true, UseADXDecay true, BufferMode 2 (points), BufferAmount
+  0.
+- >-
+  Whiteboard confirms: entry 1 close > OR, 2 P touches VWAP, 3 P > VWAP, 4 ADX > 20 not increasing; exit
+  TP H past 5, SL L past 20, exit 3.55 CT; size 1.

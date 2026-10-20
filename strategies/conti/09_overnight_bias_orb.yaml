@@ -1,0 +1,138 @@
+id: overnight_bias_orb
+name: Overnight Bias Opening Range Breakout (NQ 15-min, long/short)
+status: spec
+source:
+  kind: transcript
+  ref: transcripts/03_three_prop_strategies.txt - strategy 3
+  papers: []
+finding: |
+  Where the RTH open sits inside the overnight range sets the day's bias: open in the top third -> only longs; bottom third -> only shorts; middle third -> no trade. Then trade a breakout of the first 15-minute range in the bias direction when ADX shows a trend. High reward/risk (3:1), low frequency.
+why: |
+  Overnight price discovery by participants who can trade before the cash open reveals direction. If the open is at the edge of the overnight range, overnight buyers (or sellers) were in control, and an opening-range break in that direction is likely to continue. Links to the overnight-drift research.
+what_would_kill_it: Overnight moves no longer carrying information into the session (e.g. 24-hour cash
+  trading).
+market:
+  instruments:
+  - NQ
+  bar_size: 15 min
+  session: >-
+    Globex session; overnight range = from session start until 09:30 ET (RTH open ends the overnight range);
+    opening range 09:30-09:45 ET; last entry 13:00 ET; flat 15:30 ET; RTH close 16:00 ET (code inputs
+    are ET; CT = 08:30/08:45/12:00/14:30/15:00).
+  universe: null
+direction: long_short
+entry:
+  long: |
+    Bias long if the 08:30 CT open is in the top third of the overnight range. Then when a 15-min bar closes above the opening-range high (08:30-08:45 CT bar) with ADX > 20 (any slope), enter at the next bar's open.
+  short: |
+    Bias short if the open is in the bottom third; enter when a 15-min bar closes below the opening-range low with ADX > 20.
+  filters:
+  - >-
+    Bias: open >= 0.67 of the overnight range -> long-only day (BiasLongMin 0.67); mirror for shorts;
+    middle -> no trade.
+  - Breakouts tested only after the opening range locks at 09:45 ET; no new entries after 13:00 ET.
+  - >-
+    Code: MaxTradesPerDay 4 (re-entry cap, one position at a time) - he SAID one trade per day; the code
+    allows up to 4.
+  - >-
+    Code has an opening-range SIZE band filter (details not visible) - inactive during the 15-20 day warm-up.
+  - Bias stays valid even if price later trades back into the middle or breaks the other side first.
+exit:
+  stop_loss: 0.30 x 15-session moving average of daily ATR.
+  take_profit: 3 x stop distance.
+  time_exit: Flat at 15:30 ET (14:30 CT); nothing carries overnight.
+  other:
+  - Prop daily loss limits (e.g. $1,000) may cap the loss before the stop.
+position_sizing:
+  development: 1 NQ contract.
+  live: 'Prop challenge: about 5 MNQ alongside 07 and 08; better suited to the funded phase on its own.'
+parameters:
+- name: SessStart
+  default: 09:30 ET
+  test_range: null
+  source: code
+- name: OREnd
+  default: 09:45 ET
+  test_range: null
+  source: code
+- name: LastEntry
+  default: 13:00 ET
+  test_range: 12:00, 13:00, 14:00 ET
+  source: code
+- name: FlatTime
+  default: 15:30 ET
+  test_range: null
+  source: code
+- name: SessEnd
+  default: 16:00 ET
+  test_range: null
+  source: code (also bounds the ATR reference day)
+- name: MaxTradesPerDay
+  default: 4
+  test_range: 1, 2, 4
+  source: code (talk said 1)
+- name: BiasLongMin
+  default: 0.67
+  test_range: 0.6, 0.67, 0.75
+  source: code
+- name: adx_threshold
+  default: 20
+  test_range: 15, 20, 25
+  source: transcript/indicator
+- name: stop_atr_fraction
+  default: 0.3
+  test_range: 0.2, 0.3, 0.4
+  source: transcript
+- name: reward_risk
+  default: 3
+  test_range: 2, 3, 4
+  source: transcript
+variants:
+- Same on ES.
+- Hold overnight (only where the prop firm allows it).
+expectations:
+- >-
+  Code header, zero-cost backtest: IN-SAMPLE 2006-01-01 to 2019-12-31: 1,112 trades, PF 1.35, net $50,445,
+  max DD $6,160.
+- >-
+  OUT-OF-SAMPLE 2020-01-01 to 2026-08-31: 599 trades, PF 1.66, net $257,615, max DD $20,195 (much bigger
+  $ figures partly because NQ's price level, and so its daily point ranges, grew a lot).
+- >-
+  In the talk: ~53% winners, avg win/avg loss ~1.4 (short side 50% / 1.6); ~$200k on the shown period;
+  53 outlier trades made ~$88k.
+- >-
+  Low frequency: alone it risks running out of the 20-21 day challenge window; better for the funded phase.
+data_requirements:
+- NQ 15-min bars including overnight session, daily bars for ATR, 2018+
+data_available: partial
+open_questions:
+- >-
+  Overnight range start: Globex open 18:00 ET, 23:00 CT, or midnight CT? (code: session template start)
+- 'Opening-range size band: what min/max OR size is required?'
+- Does a re-entry (up to 4/day) require a fresh break of the OR, or just another close beyond it?
+- ADX period (likely 14) on 15-min bars.
+validation:
+  in_sample_pct: 70
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Bench when current drawdown exceeds the 75th percentile of Monte Carlo drawdowns, or after two failed
+    challenges in a row; resume at a new equity high.
+  extra_checks:
+  - Long vs short symmetry
+  - Outlier dependence (remove top 5% trades)
+  - Combined prop simulation with 07 and 08
+  - Funded-phase payout simulation
+related_strategies:
+- vault_break
+- vwap_pullback_adx
+- overnight_drift_long
+- orb_overnight_session
+notes:
+- >-
+  Video: 'A Hedge Fund Manager Just CRACKED Prop Trading (Live On Chart)', 2026-10-06, youtu.be/A0G14JYYVTk.
+- >-
+  Code header: 'OFB_OvernightBiasORB_Signal - NQ 15-min, one data stream, 1 contract'; Globex template,
+  no holiday calendar hardcoded; Bar Magnifier 1-minute, IOG off; MaxBarsBack 250; warm-up 20 trading
+  days (set two months to be safe).
+- Live chart shows 'Overnight Bias Prod Indicator B' with ADX value vs the 20 line.

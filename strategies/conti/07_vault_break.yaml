@@ -1,0 +1,146 @@
+id: vault_break
+name: Vault Break (NQ 30-min noise-area breakout, long only)
+status: spec
+source:
+  kind: transcript
+  ref: >-
+    transcripts/03_three_prop_strategies.txt - 'A Hedge Fund Manager Just CRACKED Prop Trading' (strategy
+    1)
+  papers:
+  - title: (unnamed) 1987 paper introducing the intraday 'noise area' around the session open
+    year: 1987
+    note: >-
+      Conti cites it as the oldest source; title not given. Related modern work: Zarattini, Barbon & Aziz
+      (2024) 'Beat the Market' noise-area strategy (on the reading list).
+finding: |
+  Like an opening range breakout, but it only trades when price escapes a volatility-scaled "noise area" around the session open, so ordinary first-hour pushes are ignored. Long only, to ride the market's positive drift. Built for prop challenges: high win rate from a small target vs a wide stop.
+why: |
+  Most intraday moves are noise; a move larger than a fraction of recent daily volatility signals real directional pressure. Requiring price above VWAP confirms that the volume (institutional execution) behind the move is on the buy side. Long only exploits the structural upward drift of equity indexes.
+what_would_kill_it: >-
+  A regime without upward drift in the Nasdaq (long-only design), or intraday breakouts beyond the noise
+  area starting to mean-revert.
+market:
+  instruments:
+  - NQ
+  bar_size: 30 min
+  session: >-
+    Session opens 00:00 CT (01:00 ET); entries 10:00-14:30 CT (11:00-15:30 ET). VWAP and session open
+    anchored at midnight CT.
+  universe: null
+direction: long_only
+entry:
+  long: |
+    Noise-up barrier = session open price (at midnight CT) + 0.30 x the average daily ATR of the past 15 sessions (a 15-period moving average of daily ATR - not ATR(15)). The level is fixed at midnight and stays static all day. Between 10:00 and 14:30 CT, when a 30-min bar closes above the noise-up barrier AND above session VWAP, buy at the open of the next bar.
+  short: null
+  filters:
+  - >-
+    Up to 3 trades per session: after an exit (TP or SL), re-enter on the next bar that still closes above
+    the barrier and VWAP.
+  - One position at a time.
+exit:
+  stop_loss: $1,500 per NQ contract (75 points).
+  take_profit: $800 per NQ contract (40 points).
+  time_exit: Close at 14:30 CT (15:30 ET) if neither is hit.
+  other:
+  - Fills simulated with a 1-minute bar magnifier.
+position_sizing:
+  development: 1 NQ contract.
+  live: 'Prop challenge: about 5 MNQ, run together with drift-free strategies 08 and 09 (see notes).'
+parameters:
+- name: noise_atr_fraction
+  default: 0.3
+  test_range: 0.2, 0.3, 0.5, 1.0
+  source: transcript (optimized in-sample 2018-2022; trade-off vs frequency)
+- name: atr_average_sessions
+  default: 15
+  test_range: 10, 15, 20
+  source: transcript
+- name: entry_start
+  default: 10:00 CT
+  test_range: null
+  source: transcript
+- name: entry_end_and_time_exit
+  default: 14:30 CT
+  test_range: null
+  source: transcript
+- name: max_trades_per_day
+  default: 3
+  test_range: 1, 2, 3
+  source: transcript (optimized in-sample)
+- name: take_profit_usd
+  default: 800
+  test_range: null
+  source: transcript
+- name: stop_loss_usd
+  default: 1500
+  test_range: null
+  source: transcript
+variants:
+- Same on ES.
+- Short side below a noise-down barrier (not part of his version).
+expectations:
+- 'MultiCharts report (1/21/2022 - 9/24/2026, 1 NQ): 1,151 trades, all long; 779 winners = 67.68%.'
+- >-
+  Average trade $112.48; average win $739.92; average loss $1,204.69; win/loss ratio 0.61; largest win
+  $800, largest loss $1,500.
+- >-
+  Average 2.7 bars (~80 min) per trade; trade P&L std dev $965; max 11 consecutive winners, 6 consecutive
+  losers; largest consecutive loss $7,965.
+- Equity $100k -> ~$225k (~$129k net) with steady rise; new highs in Sep 2026.
+- 'Developed on 2018-2022, out-of-sample 2023 onward. Alone: roughly 40% chance of passing a challenge.'
+data_requirements:
+- NQ 30-min bars from midnight CT, plus daily bars for ATR, 2018+
+data_available: partial
+open_questions:
+- >-
+  Daily ATR definition: average of daily true ranges (TR) over 15 sessions, or a moving average of ATR(n)?
+  He says '15-period moving average of ATR' - which n for the inner ATR?
+- >-
+  Is the 'session' the CME Globex day (17:00 CT start) or midnight-to-close as he said? He anchors the
+  open and VWAP at midnight CT.
+- >-
+  After a stop-out, does the next re-entry still count toward the max-3 if the bar was already above the
+  barrier?
+- Which 1987 paper is the 'noise area' source? (librarian task)
+- >-
+  Is the ATR input named BoundaryATRLen = 15 the averaging length of daily true range (most likely: average
+  daily TR over 15 sessions)?
+validation:
+  in_sample_pct: 70
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Bench when current drawdown exceeds the 75th percentile of Monte Carlo drawdowns, or after two failed
+    challenges in a row; resume at a new equity high.
+  extra_checks:
+  - In-sample 2018-2022, out-of-sample 2023+ (as he did).
+  - Prop-firm pass simulation alone and combined with 08 and 09.
+  - Correlation of daily P&L with 08 and 09 (he reports < 0.25).
+related_strategies:
+- vwap_pullback_adx
+- overnight_bias_orb
+- orb_long_only
+notes:
+- >-
+  Video: 'A Hedge Fund Manager Just CRACKED Prop Trading (Live On Chart)', Matteo Conti / IQ Capital,
+  2026-10-06, youtu.be/A0G14JYYVTk.
+- 'His chart: orange crosses = noise-up level, grey = session open, blue = VWAP.'
+- >-
+  Code header ('VaultBreak NQ - v8 - Longs Only'): @NQ# 30-min bars, Globex session template, exchange
+  time zone (Chicago) - ALL TIME INPUTS ARE CT; EarliestEntry 1000 CT = 11:00 ET; FlattenTime 1430 CT
+  = 15:30 ET; on a local time zone the entry window silently shifts.
+- >-
+  Code header: Bar Magnifier 1-minute (intrabar fills for TP/SL on 30-min bars). Load at least BoundaryATRLen
+  + 2 sessions before the test start - with 15 the first 15 sessions take no trades.
+- >-
+  Code header: realistic NQ round-turn cost is near $13 (set in strategy properties). Order names VB8.Long,
+  VB8.TimeX, Profit Target; VB8.Carry tags a position still open at a new session date.
+- >-
+  Code header: 'LatestEntry is inert' - the entry condition includes Time < FlattenTime, so entries can
+  happen until 14:30 CT.
+- >-
+  Indicator values shown on 9/22/2026: NoiseUp 30,945.39, SessOpen 30,836.25 (noise width ~109 points),
+  VWAP 30,777.39.
+- >-
+  Whiteboard confirms: WHY 1987 noise area; entry P > noise up, P > VWAP, time 10 CT-14:30 CT, 3 trades;
+  exit TP $800, SL $1,500, X 14:30 CT; pos size 1.

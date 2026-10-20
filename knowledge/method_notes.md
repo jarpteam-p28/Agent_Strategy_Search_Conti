@@ -33,3 +33,34 @@
   simulation gave only a 5% chance of, stop the strategy and investigate.
 - **Run a portfolio of 3-4 automated strategies**, for prop firms or your own capital.
 - **Institutional job split:** 90% research, development and validation; 10% monitoring risk and performance.
+
+## 03_three_prop_strategies.txt — A Hedge Fund Manager Just CRACKED Prop Trading
+
+- **Run a small portfolio, not one strategy.** Three strategies with daily-P&L correlation below 0.25 on
+  one challenge pass more often than any single one (each alone ≈ 40%). His sizing: ~5 MNQ each,
+  ≈ 5 trading days to pass on average.
+- **Evaluation and funded phases are different problems.** Evaluation: reach the target before the
+  drawdown → high win rate, reward/risk below 1, enough trade frequency to finish inside ~20 days.
+  Funded: maximize payouts → higher reward/risk strategies (e.g. overnight bias, 3:1) become useful.
+- **The prop edge comes from geometry, not edge strength.** These strategies have modest positive
+  expectancy; what makes them work in a challenge is win rate, frequency and payoff shape vs the rules.
+- **Only run strategies at or near an equity high-water mark.** Losing (and winning) streaks cluster, so a
+  strategy in drawdown keeps failing challenges. Bench it; bring it back only when its equity curve makes a
+  new all-time high.
+- **When to bench:** two failed challenges in a row → investigate; current drawdown above the 75th
+  percentile of the Monte Carlo drawdown distribution → bench. (Monte Carlo: export trades from
+  MultiCharts, run in Python/Colab.)
+- **Don't marry a strategy.** Keep at least three live so a benched one can be replaced.
+- **Every strategy spec = WHY + entry + exit (+ sizing, 1 contract while developing).**
+- **Low-frequency strategies need care in challenges** — they can run out of time before hitting target or stop.
+- **Build custom indicators that draw the rules** so you can check visually that the code does what the rules say.
+- **Development split used:** develop 2018-2022, out-of-sample 2023 onward.
+- **Volatility-scaled levels:** use a fraction (e.g. 30%) of the 15-session average daily ATR to set
+  noise barriers and stops, so levels adapt to the regime; trade-off between the fraction and trade frequency.
+- **When the talk and the code disagree, trust the code.** In video 03 he said "one trade per day" for the
+  overnight bias strategy, but the code allows up to 4; the VWAP/ADX exit is 15:55 CT (whiteboard), not ET.
+  Specs record both and flag the difference.
+- **His code hygiene (MultiCharts headers):** state the time zone of every time input, use a 1-minute bar
+  magnifier for intrabar fills, document warm-up length (ATR look-back) so early sessions don't trade with
+  filters silently off, set realistic costs (~$13 round turn for NQ), and print the IS/OOS stats in the header.
+- **His long IS/OOS split for the overnight bias:** in-sample 2006-2019, out-of-sample 2020-2026, zero-cost.

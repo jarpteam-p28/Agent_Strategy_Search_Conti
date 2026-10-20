@@ -22,5 +22,17 @@
     ],
     "processed": "2026-10-19",
     "processed_by": "manual (Claude, in chat)"
+  },
+  "03_three_prop_strategies.txt": {
+    "hash": "9ed8cc6745d074b3",
+    "title": "A Hedge Fund Manager Just CRACKED Prop Trading (Live On Chart) (2026-10-06, youtu.be/A0G14JYYVTk)",
+    "summary": "Three NQ prop-challenge strategies with <0.25 correlation: Vault Break (30-min noise-area breakout above VWAP, long, TP $800/SL $1,500, 3 trades/day), VWAP Pullback with ADX gate (1-min, long, TP 5-bar high/SL 20-bar low), Overnight Bias ORB (15-min, long/short by open position in overnight range, ADX>20, SL 0.3x ATR, 3R). Run together at ~5 MNQ each; bench strategies in drawdown.",
+    "strategies": [
+      "vault_break",
+      "vwap_pullback_adx",
+      "overnight_bias_orb"
+    ],
+    "processed": "2026-10-19",
+    "processed_by": "manual (Claude, in chat)"
   }
 }
