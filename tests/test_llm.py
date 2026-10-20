@@ -58,3 +58,25 @@ def test_max_tokens_raises():
     c = FakeClient([msg("max_tokens", NS(type="text", text="..."))])
     with pytest.raises(AgentError):
         call(c, [web_search_tool(3)])
+
+
+class RejectsForcedClient(FakeClient):
+    """Mimics the real API error: 'tool_choice: type "tool" and "any" are not supported for this model.'"""
+    def stream(self, **kwargs):
+        if "tool_choice" in kwargs:
+            self.requests.append(kwargs)
+            raise RuntimeError('Error code: 400 - tool_choice: type "tool" and "any" are not supported for this model.')
+        return super().stream(**kwargs)
+
+
+def test_falls_back_when_forced_tool_choice_rejected():
+    c = RejectsForcedClient([
+        msg("end_turn", NS(type="text", text="thinking out loud")),
+        msg("tool_use", NS(type="tool_use", name="submit", input={"x": 3})),
+    ])
+    llm = ClaudeLLM(c)
+    out = llm.structured(agent="t", model="opus", system="s", content="hi", tool_name="submit", schema=SCHEMA)
+    assert out == {"x": 3}
+    assert "opus" in llm.no_forced_tool
+    sent = [r for r in c.requests if "tool_choice" not in r]
+    assert len(sent) == 2 and sent[1]["messages"][-1]["content"].startswith("Now call submit")

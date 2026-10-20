@@ -60,6 +60,7 @@ class ClaudeLLM:
             client = anthropic.Anthropic(max_retries=4)
         self.client = client
         self.usage = Usage()
+        self.no_forced_tool: set[str] = set()   # models that reject tool_choice type "tool"
 
     def _create(self, kwargs: dict):
         # Streaming avoids HTTP timeouts on long PDF reads.
@@ -75,15 +76,26 @@ class ClaudeLLM:
             "input_schema": schema,
         }]
         system_blocks = [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}]
+        reminder = {"type": "text", "text": f"When you are done, call the {tool_name} tool with your result."}
+        content = ([{"type": "text", "text": content}] if isinstance(content, str) else list(content)) + [reminder]
         messages: list[dict] = [{"role": "user", "content": content}]
         force = not server_tools
 
         for turn in range(max_turns):
             kwargs = dict(model=model, max_tokens=max_tokens, system=system_blocks,
                           messages=messages, tools=tools)
-            if force or turn == max_turns - 1:
+            if (force or turn == max_turns - 1) and model not in self.no_forced_tool:
                 kwargs["tool_choice"] = {"type": "tool", "name": tool_name}
-            resp = self._create(kwargs)
+            try:
+                resp = self._create(kwargs)
+            except Exception as e:  # some models (e.g. with thinking on by default) reject forced tool use
+                if "tool_choice" in kwargs and "tool_choice" in str(e) and "not supported" in str(e):
+                    log.info("%s does not support forced tool_choice; asking for the tool call instead", model)
+                    self.no_forced_tool.add(model)
+                    kwargs.pop("tool_choice")
+                    resp = self._create(kwargs)
+                else:
+                    raise
             self.usage.add(agent, resp.usage)
 
             for block in resp.content:
@@ -100,7 +112,8 @@ class ClaudeLLM:
                 continue  # server-side search/fetch loop paused; resend to let it continue
             if resp.stop_reason == "max_tokens":
                 raise AgentError(f"{agent}: hit max_tokens before submitting")
-            messages.append({"role": "user", "content": f"Now call {tool_name} with your final result."})
+            messages.append({"role": "user", "content": f"Now call {tool_name} with your final result. "
+                                                        f"Do not write anything else."})
             force = True
 
         raise AgentError(f"{agent}: no result after {max_turns} turns")

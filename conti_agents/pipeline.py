@@ -113,10 +113,16 @@ def process_paper(repo: Repo, llm, paper: dict, report: RunReport) -> None:
     entry = idx[slug]
     entry["attempts"] = entry.get("attempts", 0) + 1
     try:
-        if not paper.get("local_pdf") and not (paper.get("url") or paper.get("pdf_url")):
-            paper = agents.resolve(repo, llm, paper)
-            entry.update({k: paper.get(k) for k in ("url", "pdf_url", "venue") if paper.get(k)})
-        summary = agents.read_paper(repo, llm, paper, cache_path=repo.path(f"papers/pdfs/{slug}.pdf"))
+        existing = repo.load_json(f"papers/summaries/{slug}.json")
+        # Reuse a summary from an earlier run (e.g. when only the strategist failed), unless a new PDF
+        # was dropped in the inbox to upgrade a partial read.
+        if existing and not (paper.get("local_pdf") and existing.get("read_mode") != "full_pdf"):
+            summary = existing
+        else:
+            if not paper.get("local_pdf") and not (paper.get("url") or paper.get("pdf_url")):
+                paper = agents.resolve(repo, llm, paper)
+                entry.update({k: paper.get(k) for k in ("url", "pdf_url", "venue") if paper.get(k)})
+            summary = agents.read_paper(repo, llm, paper, cache_path=repo.path(f"papers/pdfs/{slug}.pdf"))
         if paper.get("origin") == "inbox" and summary.get("title"):
             entry["title"] = summary["title"]
         ref = f"papers/summaries/{slug}.md"
