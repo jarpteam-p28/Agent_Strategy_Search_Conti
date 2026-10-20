@@ -1,0 +1,122 @@
+//@version=6
+// Drift VWAP 15m on 5m — Matteo Conti's "DriftPullback VWAP Indicator", rebuilt for TradingView.
+// Spec: strategies/conti/06_drift_vwap_pullback.yaml   Python reference: conti_indicators/vwap_mtf.py
+//
+// What it shows (put it on a 5-minute NQ or ES chart; 1- and 3-minute charts also work):
+//   • A session VWAP calculated on 15-minute bars, anchored at 09:30 New York time.
+//     It only updates when a 15-minute bar closes, so it moves in steps every 15 minutes — like his crosses.
+//   • Cross colour (default, as on his chart): GREEN when the VWAP is higher than 15 minutes ago,
+//     RED when it is lower ("when the cross is green it means the VWAP over the past 15 minutes is increasing").
+//     Optional colour mode "All 3 conditions": green/red only when the full drift is on, grey otherwise:
+//       long  = price above VWAP, VWAP rising over 15 min, price up ≥ 0.1% over the last hour
+//       short = price below VWAP, VWAP falling over 15 min, price down ≥ 0.1% over the last hour
+//   • The trigger triangles always use the full 3-condition drift.
+//   • Optional triangles on the first pullback candle during a drift inside the trade window
+//     (red candle in a green drift = long trigger, green candle in a red drift = short trigger).
+//     Entry would be at the next bar's open. Stops, targets and daily limits belong to the strategy, not here.
+//
+// No repainting: the 15-minute bars are built from the chart's own bars and only used once they close,
+// so history and real time behave the same.
+
+indicator("Drift VWAP 15m on 5m (Conti)", shorttitle = "DriftVWAP15", overlay = true)
+
+// ---------------- Inputs ----------------
+tz           = input.string("America/New_York", "Time zone")
+sessStart    = input.int(930,  "Session start (HHMM)", tooltip = "VWAP resets here (RTH open)")
+sessEnd      = input.int(1600, "Session end (HHMM)")
+aggMin       = input.int(15,   "VWAP bar size (minutes)", minval = 1)
+lookback     = input.int(4,    "Move look-back (VWAP bars)", minval = 1, tooltip = "4 × 15 min = 1 hour")
+minMovePct   = input.float(0.1, "Min move over look-back (%)", step = 0.05)
+useTypical   = input.bool(true, "Use typical price (H+L+C)/3", tooltip = "Off = use the 15-min close")
+colorMode    = input.string("VWAP slope", "Cross colour", options = ["VWAP slope", "All 3 conditions"], tooltip = "VWAP slope = his chart: green rising, red falling")
+showTriggers = input.bool(true, "Mark pullback triggers")
+tradeStart   = input.int(1030, "Trade window start (HHMM)", tooltip = "No trades in the first hour")
+tradeEnd     = input.int(1530, "Trade window end (HHMM)",   tooltip = "No new trades after 15:30 ET")
+
+if not timeframe.isminutes or timeframe.multiplier > aggMin or aggMin % timeframe.multiplier != 0
+    runtime.error("Use a minute chart whose bar size divides " + str.tostring(aggMin) + " minutes (1, 3 or 5 min).")
+
+// ---------------- Helpers ----------------
+toMin(int hhmm) =>
+    math.floor(hhmm / 100) * 60 + hhmm % 100
+
+closeMin = hour(time_close, tz) * 60 + minute(time_close, tz)   // bar CLOSE time in New York minutes
+inSess   = closeMin > toMin(sessStart) and closeMin <= toMin(sessEnd)
+inTrade  = closeMin > toMin(tradeStart) and closeMin <= toMin(tradeEnd)
+dayKey   = year(time_close, tz) * 10000 + month(time_close, tz) * 100 + dayofmonth(time_close, tz)
+
+// ---------------- Build 15-minute bars from chart bars ----------------
+bucketMs  = aggMin * 60 * 1000
+bucketKey = math.floor((time_close - 1) / bucketMs)
+newBucket = bucketKey != nz(bucketKey[1], -1)
+
+var float bHigh = na
+var float bLow  = na
+var float bVol  = 0.0
+if newBucket
+    bHigh := high
+    bLow  := low
+    bVol  := nz(volume)
+else
+    bHigh := math.max(bHigh, high)
+    bLow  := math.min(bLow, low)
+    bVol  += nz(volume)
+
+bucketClosed = time_close % bucketMs == 0 and barstate.isconfirmed
+
+// ---------------- Session VWAP on the 15-minute bars + drift state ----------------
+var float cumPV    = 0.0
+var float cumV     = 0.0
+var float vwap15   = na
+var float vwapPrev = na
+var int   drift    = 0
+var int   slope    = 0
+var int   sessDay  = 0
+var closes15 = array.new<float>()
+
+// New session: clear everything on the first in-session bar of the day
+if inSess and dayKey != sessDay
+    sessDay  := dayKey
+    cumPV    := 0.0
+    cumV     := 0.0
+    vwap15   := na
+    vwapPrev := na
+    drift    := 0
+    slope    := 0
+
+if bucketClosed
+    array.push(closes15, close)              // every 15-min close, overnight included (for the 1-hour move)
+    if array.size(closes15) > 200
+        array.shift(closes15)
+    if inSess
+        px = useTypical ? (bHigh + bLow + close) / 3 : close
+        cumPV    += px * bVol
+        cumV     += bVol
+        vwapPrev := vwap15
+        vwap15   := cumV > 0 ? cumPV / cumV : na
+        n = array.size(closes15)
+        move = n > lookback ? close / array.get(closes15, n - 1 - lookback) - 1 : na
+        longDrift  = not na(vwapPrev) and not na(move) and close > vwap15 and vwap15 > vwapPrev and move >=  minMovePct / 100
+        shortDrift = not na(vwapPrev) and not na(move) and close < vwap15 and vwap15 < vwapPrev and move <= -minMovePct / 100
+        drift := longDrift ? 1 : shortDrift ? -1 : 0
+        slope := na(vwapPrev) ? 0 : vwap15 > vwapPrev ? 1 : vwap15 < vwapPrev ? -1 : slope
+
+if not inSess
+    drift := 0
+    slope := 0
+
+// ---------------- Plots ----------------
+colorState = colorMode == "VWAP slope" ? slope : drift
+crossColor = colorState == 1 ? color.lime : colorState == -1 ? color.red : color.gray
+plot(inSess ? vwap15 : na, "VWAP 15m", color = crossColor, style = plot.style_cross, linewidth = 2)
+
+redCandle   = close < open
+greenCandle = close > open
+longTrig  = showTriggers and inSess and inTrade and drift == 1  and redCandle   and not redCandle[1]
+shortTrig = showTriggers and inSess and inTrade and drift == -1 and greenCandle and not greenCandle[1]
+
+plotshape(longTrig,  "Long trigger (pullback)",  shape.triangleup,   location.belowbar, color.lime, size = size.tiny)
+plotshape(shortTrig, "Short trigger (pullback)", shape.triangledown, location.abovebar, color.red,  size = size.tiny)
+
+alertcondition(longTrig,  "Drift VWAP long trigger",  "Drift VWAP: long pullback trigger on {{ticker}} — enter at next bar open")
+alertcondition(shortTrig, "Drift VWAP short trigger", "Drift VWAP: short pullback trigger on {{ticker}} — enter at next bar open")

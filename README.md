@@ -51,6 +51,7 @@ papers) are read from the abstract and marked `abstract_only`. For a full read, 
 | `papers/summaries/` | One Markdown + JSON summary per paper read |
 | `papers/index.json` | Status of every paper (queued / summarized / failed) |
 | `reports/` | One report per weekly run |
+| `indicators/` | Indicators for TradingView (Pine) with matching Python versions in `conti_indicators/` |
 | `config/settings.yaml` | Models, papers per run, sources |
 | `config/data_inventory.yaml` | NinjaTrader data on the Lexar drive (ES 1-min 2013–2026, ES/NQ ticks 2021–2026) |
 | `config/search_topics.yaml` | What the scout looks for |
