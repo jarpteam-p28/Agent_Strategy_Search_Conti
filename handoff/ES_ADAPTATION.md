@@ -41,11 +41,10 @@ usable (check whether back-month ticks in neighbouring files fill any of it). Ru
 month by month with his report is the most direct replication; ES is the long-history test.
 
 ## Costs and sizing
-- ES: $50 per point, tick 0.25 = $12.50. Costs bite harder relative to the target: ~1 tick of slippage is ~3% of an
-  8.5-point target, vs ~0.6% of a 40-point NQ target. Use real commission + slippage from the start.
-- Prop simulation: size to the same dollar risk as his NQ test (≈ $1,500 per trade for Vault Break, ≈ $1,600 for
-  Drift VWAP), using MES (micro, $5/point) to get close — e.g. a 16-point ES stop = $80 per MES → ~19 MES.
-  Or run his size sweep in MES.
+- ES: $50 per point, tick 0.25 = $12.50. Use real commission + slippage from the start (1 tick ≈ 1.6% of the
+  16-point base target; ≈ 3% of the 8.5-point variant).
+- With his dollar bracket, 1 ES risks the same $1,500 per trade as his 1 NQ - so 1 ES is directly comparable in
+  dollars. Prop simulation: his settings, size sweep in MES (10 MES = 1 ES).
 
 ## Extra benefit of ES
 2013–2026 gives a real in-sample period before his out-of-sample years, e.g. in-sample 2014–2020, out-of-sample
