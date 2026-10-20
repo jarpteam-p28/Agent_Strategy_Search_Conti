@@ -20,6 +20,7 @@ class RunReport:
     strategies: list[dict] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
     scouted: int = 0
+    librarian: int = 0
 
 
 def _file_hash(path) -> str:
@@ -65,8 +66,14 @@ def build_queue(repo: Repo, llm, report: RunReport, limit: int, scout: bool) -> 
         e = idx.get(slug)
         return e is None or (e["status"] in ("queued", "failed") and e.get("attempts", 0) < MAX_ATTEMPTS)
 
-    # 1. PDFs dropped in papers/inbox (full text guaranteed)
+    # 1. PDFs dropped in papers/inbox (full text guaranteed). A PDF named after a paper's id
+    #    (e.g. the file name shown in READING_LIST.md) upgrades that paper to a full read.
     for pdf in repo.inbox_pdfs():
+        if pdf.stem in idx and idx[pdf.stem].get("read_mode") != "full_pdf":
+            e = idx[pdf.stem]
+            if e.get("local_pdf") != str(pdf.relative_to(repo.root)):
+                e.update(local_pdf=str(pdf.relative_to(repo.root)), status="queued", attempts=0)
+            continue
         slug = "inbox_" + _file_hash(pdf)
         if pending(slug):
             idx.setdefault(slug, {"title": pdf.stem, "origin": "inbox", "status": "queued", "attempts": 0})
@@ -77,8 +84,9 @@ def build_queue(repo: Repo, llm, report: RunReport, limit: int, scout: bool) -> 
         if pending(slug):
             idx.setdefault(slug, {**s, "origin": "seed", "status": "queued", "attempts": 0})
     queue = [dict(v, slug=k) for k, v in idx.items() if pending(k)]
-    origin_rank = {"inbox": 0, "seed": 1, "scout": 2}
-    queue.sort(key=lambda p: (origin_rank.get(p.get("origin"), 3), p.get("attempts", 0)))
+    origin_rank = {"inbox": 0, "seed": 1, "librarian": 2, "scout": 3}
+    queue.sort(key=lambda p: (0 if p.get("local_pdf") else 1, origin_rank.get(p.get("origin"), 4),
+                              p.get("priority", 3), p.get("attempts", 0)))
 
     # 3. Scout for new papers if there's room this week
     if scout and len(queue) < limit:
@@ -149,11 +157,67 @@ def process_paper(repo: Repo, llm, paper: dict, report: RunReport) -> None:
 
 
 # ---------------------------------------------------------------------------------------------
+def update_reading_list(repo: Repo, llm, report: RunReport, search: bool) -> None:
+    """Ask the librarian for new ES/NQ papers, then write papers/READING_LIST.md.
+
+    The list has two parts: papers the agents could not read in full (download these and drop
+    them in papers/inbox/ under the shown file name), and new recommendations.
+    """
+    idx = repo.paper_index()
+    if search:
+        try:
+            n = repo.settings().get("limits", {}).get("max_reading_list", 10)
+            for p in agents.librarian(repo, llm, [v.get("title", "") for v in idx.values()], n):
+                slug = slugify(p["title"])
+                if slug not in idx:
+                    idx[slug] = {**p, "origin": "librarian", "status": "queued", "attempts": 0, "added": today()}
+                    report.librarian += 1
+            repo.save_paper_index(idx)
+        except Exception as e:
+            report.errors.append(f"librarian: {e}")
+
+    need_pdf = [(k, v) for k, v in idx.items()
+                if v.get("status") == "failed" or v.get("read_mode") in ("abstract_only", "web_fetch")]
+    recs = sorted([(k, v) for k, v in idx.items()
+                   if v.get("origin") == "librarian" and v.get("status") == "queued"],
+                  key=lambda kv: (kv[1].get("priority", 3), kv[0]))
+
+    L = ["# Reading list — papers to download", "",
+         f"Updated {today()}. Download each PDF and save it in `papers/inbox/` **using the file name shown** "
+         "(or attach it in chat). The next run reads the full paper and replaces the partial summary.", ""]
+    L += ["## 1. Couldn't get the full text — please download", ""]
+    if need_pdf:
+        L += ["| Paper | Why it matters | Where to get it | Save as |", "|---|---|---|---|"]
+        for k, v in need_pdf:
+            why = v.get("note") or v.get("why_promising") or ""
+            where = v.get("where_to_get_it") or v.get("url") or "search the title on ssrn.com / Google Scholar"
+            got = "abstract only" if v.get("read_mode") == "abstract_only" else ("partial" if v.get("read_mode") else "failed")
+            L.append(f"| {v.get('title')} ({v.get('year') or '?'}) — *{got}* | {why} | {where} | `{k}.pdf` |")
+    else:
+        L.append("Nothing pending.")
+    L += ["", "## 2. Recommended ES / NQ research", ""]
+    if recs:
+        for k, v in recs:
+            L += [f"### P{v.get('priority', 3)} · {v.get('title')} ({v.get('year') or '?'})",
+                  f"*{', '.join(v.get('authors') or [])}* · instruments: {', '.join(v.get('instruments') or []) or '-'} · "
+                  f"access: {v.get('access', 'unknown')} · testable on our data: {v.get('testable_on_our_data', '?')}", "",
+                  f"- **Why:** {v.get('why_promising', '')}",
+                  f"- **Should contain:** {v.get('what_it_should_contain', '')}",
+                  f"- **Get it:** {v.get('where_to_get_it', '')} {v.get('url') or ''}",
+                  f"- **Save as:** `papers/inbox/{k}.pdf`", ""]
+    else:
+        L.append("No open recommendations.")
+    repo.write_text("papers/READING_LIST.md", "\n".join(L) + "\n")
+
+
+# ---------------------------------------------------------------------------------------------
 def write_report(repo: Repo, report: RunReport, usage) -> str:
     rel = f"reports/{today()}.md"
     L = [f"# Weekly research run — {today()}", ""]
     L += [f"Papers read: **{len(report.papers)}** · New strategies: **{len(report.strategies)}** · "
-          f"Scouted: **{report.scouted}** · Errors: **{len(report.errors)}**", ""]
+          f"Scouted: **{report.scouted}** · Added to reading list: **{report.librarian}** · "
+          f"Errors: **{len(report.errors)}**", "",
+          "Papers to download by hand: see [papers/READING_LIST.md](../papers/READING_LIST.md).", ""]
     if report.transcripts:
         L += ["## Transcripts mined"] + [f"- {t['file']}: strategies {', '.join(t['strategies']) or 'none'}; "
                                         f"{t['papers_added']} papers added to seeds" for t in report.transcripts] + [""]
@@ -182,7 +246,7 @@ def write_report(repo: Repo, report: RunReport, usage) -> str:
 
 
 def run(repo: Repo, llm, max_papers: int | None = None, scout: bool = True,
-        transcripts: bool = True) -> tuple[RunReport, str]:
+        transcripts: bool = True, library: bool = True) -> tuple[RunReport, str]:
     report = RunReport()
     limit = max_papers or repo.settings().get("limits", {}).get("max_papers_per_run", 4)
     if transcripts:
@@ -190,5 +254,6 @@ def run(repo: Repo, llm, max_papers: int | None = None, scout: bool = True,
     for paper in build_queue(repo, llm, report, limit, scout):
         log.info("reading: %s", paper.get("title"))
         process_paper(repo, llm, paper, report)
+    update_reading_list(repo, llm, report, search=library)
     rel = write_report(repo, report, getattr(llm, "usage", None))
     return report, rel

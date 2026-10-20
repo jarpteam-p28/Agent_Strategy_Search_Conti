@@ -5,6 +5,7 @@ models:
   reader: claude-sonnet-5-5       # reads the full 40-60 page PDF
   strategist: claude-opus-5-5     # turns finding + WHY into a strategy spec
   critic: claude-opus-5-5         # independent skeptical review
+  librarian: claude-sonnet-5-5    # ES/NQ reading list for manual download
   transcript_miner: claude-opus-5-5
 
 limits:
@@ -12,6 +13,8 @@ limits:
   max_new_candidates: 8           # how many new papers the scout proposes
   scout_max_searches: 12
   reader_max_fetches: 4
+  max_reading_list: 10            # new ES/NQ papers the librarian adds per run
+  librarian_max_searches: 15
   max_pdf_mb: 30
   max_pdf_pages: 95               # longer PDFs are cut to the first 95 pages
 

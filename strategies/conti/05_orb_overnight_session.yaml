@@ -43,7 +43,7 @@ parameters:
 variants: ["Range anchored at the London open (03:00 ET) instead of 18:00."]
 expectations: []
 data_requirements: ["1-min NQ/ES including ETH, 2015+"]
-data_available: unknown
+data_available: partial
 open_questions:
   - "Which 'open' defines the overnight range: Globex reopen, Asia, or London?"
   - "Every rule here is our assumption - Conti only stated the idea."

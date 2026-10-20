@@ -1,22 +1,44 @@
-# What historical data we have (exported from NinjaTrader to the local hard drive).
-# The strategist marks each strategy data_available: yes / partial / no based on this list.
-# TODO(Pablo): replace the placeholders below with the real list of instruments and bar sizes.
+# What historical data we have, from NinjaTrader exports on the Lexar Armor 700 drive.
+# Checked 2026-10-19. The strategist marks each strategy data_available: yes / partial / no from this list.
+# Raw data stays on the drive; it is never committed to git.
 
-source: NinjaTrader historical data export (local drive, not in this repo)
-confirmed: false   # set to true once the list below is real
+source: NinjaTrader "Last" exports on /Volumes/Lexar Armor 700 Media
+confirmed: true
 
 instruments:
-  - symbol: NQ
-    description: E-mini Nasdaq-100 futures
-    bar_sizes: [1min]
-    sessions: [ETH, RTH]
-    start: "2015-01-01"
   - symbol: ES
-    description: E-mini S&P 500 futures
+    description: E-mini S&P 500 futures, continuous front month
     bar_sizes: [1min]
     sessions: [ETH, RTH]
-    start: "2015-01-01"
+    start: "2013-12-08"
+    end: "2026-09-02"
+    timezone: UTC
+    location: "Backtest Github/data/clean_ES_master.parquet (4.08M bars, built 2026-10-07; see its MANIFEST)"
+  - symbol: ES
+    description: E-mini S&P 500 futures, raw ticks (last, bid, ask, volume)
+    bar_sizes: [tick]
+    start: "2021-06-10"
+    end: "2023-06"
+    location: "Joshua Backtest data copy of drive/2023 june-2021 september/ES MM-YY.Last.txt (contracts 09-21 to 06-23)"
+  - symbol: ES
+    description: Raw 1-min contract files (one per quarter)
+    bar_sizes: [1min]
+    start: "2013-12-08"
+    end: "2021-06-10"
+    location: "Pablo backtest data from ninjatrader/ES files/ES MM-YY.Last.txt"
+  - symbol: NQ
+    description: E-mini Nasdaq-100 futures, raw ticks (last, bid, ask, volume), one file per contract
+    bar_sizes: [tick]
+    start: "2021-07-15"
+    end: "2026-09"
+    location: "Joshua Backtest data copy of drive/NQ 2026 september-2021 september/NQ MM-YY.Last.txt"
+    gaps: "Contracts 12-21, 03-22, 03-25, 06-25, 09-25 missing; no continuous 1-min NQ series built yet"
+
+file_formats:
+  minute: "yyyyMMdd HHmmss;open;high;low;close;volume (semicolon, no header)"
+  tick: "yyyyMMdd HHmmss fffffff;last;bid;ask;volume (semicolon, no header)"
 
 not_available:
-  - Earnings dates, actual EPS and analyst consensus estimates
-  - Single-stock fundamentals
+  - NQ before mid-2021 (needed for the 2015+ overnight-drift test Conti mentions)
+  - Other futures (CL, GC, YM, RTY)
+  - Single stocks, earnings dates, actual EPS and analyst consensus estimates (needed for PEAD)

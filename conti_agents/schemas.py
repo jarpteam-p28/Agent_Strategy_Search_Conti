@@ -44,6 +44,33 @@ CANDIDATES_SCHEMA = {
 }
 
 # ---------------------------------------------------------------------------------------------
+# Librarian: reading list for Pablo to download by hand
+# ---------------------------------------------------------------------------------------------
+READING_LIST_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "papers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    **PAPER_REF["properties"],
+                    "instruments": {"type": "array", "items": STR, "description": "ES, NQ, S&P 500 index, etc."},
+                    "access": {"type": "string", "enum": ["open_pdf", "ssrn_free_download", "paywalled", "unknown"]},
+                    "where_to_get_it": {"type": "string", "description": "Exact page to download from and what to click"},
+                    "why_promising": {"type": "string", "description": "Likely finding + structural WHY"},
+                    "what_it_should_contain": {"type": "string", "description": "Tables/rules/data we expect: e.g. intraday return by half hour on ES 2000-2023"},
+                    "testable_on_our_data": {"type": "string", "enum": ["yes", "partial", "no"]},
+                    "priority": {"type": "integer", "minimum": 1, "maximum": 3, "description": "1 = read first"},
+                },
+                "required": ["title", "where_to_get_it", "why_promising", "access", "priority"],
+            },
+        }
+    },
+    "required": ["papers"],
+}
+
+# ---------------------------------------------------------------------------------------------
 # Reader: paper summary (finding + WHY + tradable edge)
 # ---------------------------------------------------------------------------------------------
 PAPER_SUMMARY_SCHEMA = {

@@ -1,0 +1,179 @@
+{
+  "beat_the_market_an_effective_intraday_momentum_strategy_for": {
+    "title": "Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)",
+    "authors": [
+      "Carlo Zarattini",
+      "Andrea Barbon",
+      "Andrew Aziz"
+    ],
+    "year": 2024,
+    "venue": "Swiss Finance Institute Research Paper 24-97",
+    "url": "https://ideas.repec.org/p/chf/rpseri/rp2497.html",
+    "pdf_url": "https://alexandria.unisg.ch/server/api/core/bitstreams/a99aba00-f967-49b3-aceb-f544dc386e0b/content",
+    "instruments": [
+      "SPY",
+      "ES"
+    ],
+    "access": "open_pdf",
+    "where_to_get_it": "Free PDF on the University of St. Gallen repository (alexandria.unisg.ch) or via SSRN / SFI",
+    "why_promising": "Intraday momentum on SPY: trade breakouts of a 'noise area' built from past intraday moves, trail with VWAP. WHY ties to dealer gamma hedging (same mechanism as Baltussen et al.).",
+    "what_it_should_contain": "Noise-band definition, entry every 30 min, VWAP trailing stop, vol-targeted sizing, 2007-2024 results",
+    "testable_on_our_data": "yes",
+    "priority": 1,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "can_day_trading_really_be_profitable": {
+    "title": "Can Day Trading Really Be Profitable?",
+    "authors": [
+      "Carlo Zarattini",
+      "Andrew Aziz"
+    ],
+    "year": 2023,
+    "venue": "SSRN",
+    "url": "https://papers.ssrn.com/abstract=4416622",
+    "instruments": [
+      "QQQ",
+      "TQQQ"
+    ],
+    "access": "ssrn_free_download",
+    "where_to_get_it": "SSRN abstract 4416622 -> 'Download This Paper' (free, may ask for a free SSRN login)",
+    "why_promising": "Opening range breakout on QQQ 2016-2023, 33% annual alpha net of commissions - same authors as the VWAP paper, directly maps onto our ORB spec on NQ. An independent replication (MQL5 blog) reports gross results reproduce but net of costs it is about zero - worth checking ourselves.",
+    "what_it_should_contain": "Exact ORB rules (5-min range, stop, sizing by ATR), stock-in-play filter, yearly results",
+    "testable_on_our_data": "yes",
+    "priority": 1,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "dash_for_cash_monthly_market_impact_of_institutional_liquidi": {
+    "title": "Dash for Cash: Monthly Market Impact of Institutional Liquidity Needs",
+    "authors": [
+      "Erkko Etula",
+      "Kalle Rinne",
+      "Matti Suominen",
+      "Lauri Vaittinen"
+    ],
+    "year": 2020,
+    "venue": "Review of Financial Studies 33(1)",
+    "url": "https://academic.oup.com/rfs/article/33/1/75/5494694",
+    "pdf_url": "https://orbilu.uni.lu/bitstream/10993/21145/1/Dash4Cash.pdf",
+    "instruments": [
+      "S&P 500",
+      "ES"
+    ],
+    "access": "open_pdf",
+    "where_to_get_it": "Free working-paper PDF on orbilu.uni.lu or aalto.fi",
+    "why_promising": "Equity prices fall into the days before month end and rise after, because institutions must raise cash for monthly payments (pensions, payroll). Classic forced-flow WHY.",
+    "what_it_should_contain": "Daily return pattern around turn of month, size of the effect in S&P 500 futures, which days to be long/short",
+    "testable_on_our_data": "yes",
+    "priority": 2,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "does_overnight_news_explain_overnight_returns": {
+    "title": "Does Overnight News Explain Overnight Returns?",
+    "year": 2025,
+    "venue": "arXiv 2507.04481",
+    "url": "https://arxiv.org/abs/2507.04481",
+    "pdf_url": "https://arxiv.org/pdf/2507.04481",
+    "instruments": [
+      "US stocks",
+      "index"
+    ],
+    "access": "open_pdf",
+    "where_to_get_it": "Free on arXiv",
+    "why_promising": "Tests whether news flow, rather than a risk premium, drives overnight returns - helps decide which WHY behind the overnight effect is real.",
+    "what_it_should_contain": "Overnight return decomposition by news vs no-news nights",
+    "testable_on_our_data": "partial",
+    "priority": 3,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "hedging_demand_and_market_intraday_momentum": {
+    "title": "Hedging Demand and Market Intraday Momentum",
+    "authors": [
+      "Guido Baltussen",
+      "Zhi Da",
+      "Sten Lammers",
+      "Martin Martens"
+    ],
+    "year": 2021,
+    "venue": "Journal of Financial Economics",
+    "url": "https://doi.org/10.1016/j.jfineco.2021.04.029",
+    "pdf_url": "https://pure.eur.nl/files/58145484/1_s2.0_S0304405X21001598_main.pdf",
+    "instruments": [
+      "ES",
+      "NQ",
+      "60+ futures"
+    ],
+    "access": "open_pdf",
+    "where_to_get_it": "Free PDF on Erasmus University repository (pure.eur.nl, 'Hedging Demand and Market Intraday Momentum')",
+    "why_promising": "Return from prior close to 15:30 predicts the last 30 minutes in 60+ futures, 1974-2020. WHY: option dealers and leveraged-ETF managers who are short gamma must buy into rallies and sell into drops near the close.",
+    "what_it_should_contain": "Last-30-min predictability by asset class and by gamma level; reversal over following days; strategy returns",
+    "testable_on_our_data": "yes",
+    "priority": 1,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "the_overnight_drift": {
+    "title": "The Overnight Drift",
+    "authors": [
+      "Nina Boyarchenko",
+      "Lars C. Larsen",
+      "Paul Whelan"
+    ],
+    "year": 2023,
+    "venue": "Review of Financial Studies 36(9)",
+    "url": "https://doi.org/10.1093/rfs/hhad020",
+    "pdf_url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr917.pdf",
+    "instruments": [
+      "ES",
+      "NQ",
+      "YM"
+    ],
+    "access": "open_pdf",
+    "where_to_get_it": "Free NY Fed Staff Report 917 PDF (newyorkfed.org)",
+    "why_promising": "E-mini returns concentrated around 2-3 a.m. ET (European open), explained by dealers' inventory risk from end-of-day order imbalances. Their July 2026 follow-up (Liberty Street Economics, 'The Disappearing Overnight Drift') says the effect has been near zero since 2021 - a direct test of Conti's overnight claim.",
+    "what_it_should_contain": "Hour-by-hour E-mini returns 1998-2020, link to closing order imbalance; timing rules for an overnight window",
+    "testable_on_our_data": "yes",
+    "priority": 1,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  },
+  "the_pre_fomc_announcement_drift": {
+    "title": "The Pre-FOMC Announcement Drift",
+    "authors": [
+      "David O. Lucca",
+      "Emanuel Moench"
+    ],
+    "year": 2015,
+    "venue": "Journal of Finance",
+    "url": "https://libertystreeteconomics.newyorkfed.org/2012/07/the-puzzling-pre-fomc-announcement-drift",
+    "instruments": [
+      "ES",
+      "S&P 500"
+    ],
+    "access": "unknown",
+    "where_to_get_it": "NY Fed Staff Report 512 (free on newyorkfed.org) - search 'Lucca Moench pre-FOMC announcement drift staff report'",
+    "why_promising": "S&P 500 rose a large share of its total return in the 24 hours before scheduled FOMC announcements. Later work (SSRN 'The Disappearing Pre-FOMC Announcement Drift') says it faded - test both on ES.",
+    "what_it_should_contain": "Return in the 24h before 14:00 ET FOMC releases, 1994-2011; needs a list of FOMC dates (public)",
+    "testable_on_our_data": "yes",
+    "priority": 2,
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-10-19"
+  }
+}

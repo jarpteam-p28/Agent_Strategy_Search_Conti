@@ -52,6 +52,7 @@ jobs:
           add-paths: |
             papers/index.json
             papers/seeds.yaml
+            papers/READING_LIST.md
             papers/summaries/**
             strategies/**
             knowledge/method_notes.md

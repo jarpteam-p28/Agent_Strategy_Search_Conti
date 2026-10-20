@@ -30,6 +30,7 @@ Scout (SSRN/arXiv) ─┘                                                    │
 | **Resolver** | Finds the SSRN/arXiv/journal page for a paper known only by title. |
 | **Reader** | Reads the whole 40–60 page PDF → findings, the WHY (who is forced to trade, why it persists, what kills it), our framing of the edge, angles, decay risk, data fit. |
 | **Strategist** | Turns the summary into specs with the three boxes filled: entry, exit (SL/TP/time), sizing (dev = 1 contract, live = volatility targeting) + validation plan. |
+| **Librarian** | Searches for ES / NQ / S&P 500 / Nasdaq-100 research and writes `papers/READING_LIST.md`: papers to download by hand, where to get each one, why it's promising, and the file name to save it under. Also lists papers the reader couldn't get in full. |
 | **Critic** | Separate agent that scores the WHY, persistence, simplicity, testability, overfit risk → backtest / refine / park / reject. |
 
 No SSRN API is needed: search and fetching run through Claude's built-in web search and web fetch
@@ -44,12 +45,13 @@ papers) are read from the abstract and marked `abstract_only`. For a full read, 
 | `knowledge/conti_method.md` | The playbook every agent follows |
 | `strategies/conti/` | Strategies Conti described (transcript 01: ORB long-only, VWAP trend, PEAD, overnight drift, overnight ORB idea) |
 | `strategies/candidates/` | Strategies the agents derived from papers, each with a critic `review` |
+| `papers/READING_LIST.md` | **Papers for you to download** — save each PDF in `papers/inbox/` under the shown name |
 | `papers/seeds.yaml` | Papers Conti named — read first |
 | `papers/summaries/` | One Markdown + JSON summary per paper read |
 | `papers/index.json` | Status of every paper (queued / summarized / failed) |
 | `reports/` | One report per weekly run |
 | `config/settings.yaml` | Models, papers per run, sources |
-| `config/data_inventory.yaml` | **Fill in** what NinjaTrader history you have |
+| `config/data_inventory.yaml` | NinjaTrader data on the Lexar drive (ES 1-min 2013–2026, ES/NQ ticks 2021–2026) |
 | `config/search_topics.yaml` | What the scout looks for |
 
 ## Setup (one time)
@@ -58,8 +60,7 @@ papers) are read from the abstract and marked `abstract_only`. For a full read, 
    name `ANTHROPIC_API_KEY`, value = your key from console.anthropic.com.
 2. **Allow the Action to open PRs**: **Settings → Actions → General → Workflow permissions** →
    "Read and write permissions" and tick "Allow GitHub Actions to create and approve pull requests".
-3. **Data inventory**: edit `config/data_inventory.yaml` with your real instruments and bar sizes.
-4. First run: **Actions → Weekly research run → Run workflow** (set max papers to 1–2 for a test).
+3. First run: **Actions → Weekly research run → Run workflow** (set max papers to 1–2 for a test).
 
 ## Run locally
 

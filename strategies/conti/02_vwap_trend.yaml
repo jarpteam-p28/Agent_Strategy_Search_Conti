@@ -50,7 +50,7 @@ variants:
 expectations:
   - "Directional moves after VWAP crosses; many small losers, fewer large winners."
 data_requirements: ["1-min OHLCV with volume, RTH session, 2018+"]
-data_available: unknown
+data_available: partial  # ES 1-min 2013-2026 = yes; NQ only ticks 2021-2026 with gaps; CL not available
 open_questions:
   - "Is it always in the market (flip straight from long to short on a cross), or flat until a new close beyond VWAP?"
   - "Flat by 16:00, or hold overnight? (paper is a day-trading system: assume flat)"

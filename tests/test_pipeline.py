@@ -51,6 +51,10 @@ class FakeLLM:
         if agent == "scout":
             return {"candidates": [{"title": "Scouted Paper", "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=123",
                                     "why_promising": "flows"}]}
+        if agent == "librarian":
+            return {"papers": [{"title": "ES Last Half Hour Momentum", "year": 2024, "access": "ssrn_free_download",
+                                "where_to_get_it": "SSRN abstract page, Download This Paper", "priority": 1,
+                                "why_promising": "dealer hedging into the close", "instruments": ["ES"]}]}
         if agent == "resolver":
             return {"title": "resolved", "url": "https://ssrn.com/abstract=999"}
         if agent == "reader":
@@ -137,3 +141,25 @@ def test_ssrn_pdf_urls():
 def test_summary_markdown_renders():
     md = agents.summary_markdown(SUMMARY)
     assert "## The WHY" in md and "Pension rebalancing" in md
+
+
+def test_reading_list(repo, monkeypatch):
+    # reader can only see abstracts -> those papers land in the "please download" section
+    def abstract_only(repo_, llm, paper, cache_path=None):
+        return dict(SUMMARY, title=paper["title"], read_mode="abstract_only")
+    monkeypatch.setattr(agents, "read_paper", abstract_only)
+    report, _ = pipeline.run(repo, FakeLLM(), max_papers=1, scout=False, transcripts=False)
+    rl = (repo.root / "papers/READING_LIST.md").read_text()
+    assert report.librarian == 1
+    assert "ES Last Half Hour Momentum" in rl and "papers/inbox/es_last_half_hour_momentum.pdf" in rl
+    first_read = report.papers[0]["title"]
+    assert first_read in rl.split("## 2.")[0]          # needs a manual PDF
+
+    # Pablo drops the PDF under the suggested name -> it is re-queued first, as a full read
+    slug = next(k for k, v in repo.paper_index().items() if v.get("title") == first_read)
+    (repo.root / "papers/inbox").mkdir(exist_ok=True)
+    (repo.root / f"papers/inbox/{slug}.pdf").write_bytes(b"%PDF-1.4 fake")
+    monkeypatch.setattr(agents, "read_paper", lambda r, l, p, cache_path=None: dict(SUMMARY, title=p["title"], read_mode="full_pdf"))
+    report2, _ = pipeline.run(repo, FakeLLM(), max_papers=1, scout=False, transcripts=False, library=False)
+    assert report2.papers[0]["title"] == first_read and report2.papers[0]["read_mode"] == "full_pdf"
+    assert first_read not in (repo.root / "papers/READING_LIST.md").read_text().split("## 2.")[0]

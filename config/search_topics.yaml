@@ -30,3 +30,16 @@ avoid:
   - Pure theory with no testable trading rule
   - Results that need data we can never get (proprietary order books, private fund data)
   - High-frequency strategies (sub-second) we can't execute
+
+# The librarian builds papers/READING_LIST.md from these: research we can test on our ES/NQ data.
+librarian_focus:
+  - ES / S&P 500 futures intraday return patterns (first and last half hour, lunch, close)
+  - NQ / Nasdaq-100 futures and QQQ intraday momentum and reversal
+  - Overnight (globex) vs regular-session returns in index futures
+  - Opening range breakout and gap behaviour in index futures
+  - VWAP, TWAP and institutional execution flow effects on index futures
+  - Month-end, quarter-end and index rebalancing flows in S&P 500 futures
+  - Option expiration, 0DTE and dealer gamma hedging effects on S&P 500 intraday moves
+  - Futures roll and settlement effects
+  - Macro announcement (FOMC, CPI, NFP) drift in index futures
+  - Volatility-targeted sizing for equity index futures

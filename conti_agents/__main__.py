@@ -4,6 +4,7 @@
     python -m conti_agents run --max-papers 1  # cheaper test run
     python -m conti_agents run --no-scout      # only seeds + inbox PDFs
     python -m conti_agents transcripts         # only mine new transcripts
+    python -m conti_agents reading-list        # only refresh the ES/NQ reading list
     python -m conti_agents validate            # check every strategy YAML against the schema
 """
 from __future__ import annotations
@@ -40,6 +41,8 @@ def main(argv=None) -> int:
     r.add_argument("--max-papers", type=int)
     r.add_argument("--no-scout", action="store_true")
     r.add_argument("--no-transcripts", action="store_true")
+    r.add_argument("--no-library", action="store_true", help="skip the librarian search")
+    sub.add_parser("reading-list", help="only refresh papers/READING_LIST.md (librarian search)")
     sub.add_parser("transcripts")
     sub.add_parser("validate")
     a = p.parse_args(argv)
@@ -57,8 +60,13 @@ def main(argv=None) -> int:
         pipeline.process_transcripts(repo, llm, report)
         print(report)
         return 0
+    if a.cmd == "reading-list":
+        report = pipeline.RunReport()
+        pipeline.update_reading_list(repo, llm, report, search=True)
+        print(repo.read_text("papers/READING_LIST.md"))
+        return 0
     report, rel = pipeline.run(repo, llm, max_papers=a.max_papers, scout=not a.no_scout,
-                               transcripts=not a.no_transcripts)
+                               transcripts=not a.no_transcripts, library=not a.no_library)
     print(f"report: {rel}")
     print(repo.read_text(rel))
     return 0

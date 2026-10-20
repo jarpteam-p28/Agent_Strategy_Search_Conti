@@ -48,9 +48,10 @@ variants:
   - "Compare against holding RTH only (09:30 -> 16:00) as a control."
   - "ES, YM, RTY: same code."
 expectations:
-  - "~90% of buy-and-hold return comes from the overnight leg (NQ 2015-2026)."
+  - "~90% of buy-and-hold return comes from the overnight leg (NQ 2015-2026) - Conti's claim."
+  - "CHALLENGE: Boyarchenko, Larsen & Whelan (NY Fed, Liberty Street Economics, July 2026) find the E-mini overnight drift (concentrated 2-3 a.m. ET) has averaged about zero since 2021, for ES, NQ and YM. Split results pre/post 2021 before trusting this strategy."
 data_requirements: ["Intraday NQ/ES with ETH and RTH, 2015+"]
-data_available: unknown
+data_available: partial
 open_questions:
   - "Hold over weekends and holidays?"
   - "Fill at the 16:00 bar close or the 16:15 futures settle?"
@@ -59,6 +60,6 @@ validation:
   monte_carlo_reshuffle_runs: 10000
   monte_carlo_bootstrap_runs: 20000
   kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
-  extra_checks: ["Overnight leg vs RTH leg decomposition", "Results by year"]
+  extra_checks: ["Overnight leg vs RTH leg decomposition", "Results by year", "Pre-2021 vs 2021+ split", "Hour-by-hour overnight returns (is it all 2-3 a.m. ET?)"]
 related_strategies: [orb_overnight_session, orb_long_only]
 notes: []

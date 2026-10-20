@@ -14,8 +14,8 @@ import httpx
 
 from . import prompts
 from .llm import web_fetch_tool, web_search_tool
-from .schemas import (CANDIDATES_SCHEMA, PAPER_REF, PAPER_SUMMARY_SCHEMA, REVIEW_SCHEMA,
-                      STRATEGIES_OUTPUT_SCHEMA, TRANSCRIPT_EXTRACT_SCHEMA)
+from .schemas import (CANDIDATES_SCHEMA, PAPER_REF, PAPER_SUMMARY_SCHEMA, READING_LIST_SCHEMA,
+                      REVIEW_SCHEMA, STRATEGIES_OUTPUT_SCHEMA, TRANSCRIPT_EXTRACT_SCHEMA)
 from .store import Repo, dump_yaml
 
 log = logging.getLogger(__name__)
@@ -86,6 +86,24 @@ def scout(repo: Repo, llm, known_titles: list[str], n: int) -> list[dict]:
                                       s.get("sources", {}).get("web_search_domains"))],
     )
     return out.get("candidates", [])[:n]
+
+
+# =============================================================================================
+# 1b. Librarian - reading list of ES/NQ research for Pablo to download by hand
+# =============================================================================================
+def librarian(repo: Repo, llm, known_titles: list[str], n: int) -> list[dict]:
+    lim = repo.settings().get("limits", {})
+    focus = repo.load_yaml("config/search_topics.yaml", {}).get("librarian_focus", [])
+    content = (f"Find up to {n} papers for the reading list.\n\nFocus areas:\n"
+               + "\n".join(f"- {f}" for f in focus)
+               + "\n\nAlready known - skip these:\n" + "\n".join(f"- {t}" for t in known_titles))
+    out = llm.structured(
+        agent="librarian", model=_model(repo, "librarian"),
+        system=fill(prompts.LIBRARIAN, method=repo.method_text(), data_inventory=repo.data_inventory_text()),
+        content=content, tool_name="submit_reading_list", schema=READING_LIST_SCHEMA,
+        server_tools=[web_search_tool(lim.get("librarian_max_searches", 15))],
+    )
+    return out.get("papers", [])[:n]
 
 
 # =============================================================================================
