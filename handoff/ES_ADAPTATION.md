@@ -1,4 +1,8 @@
-# Running Conti's NQ strategies on ES — PROPOSED translation (decide at A1)
+# Running Conti's NQ strategies on ES — PROPOSED (decide at A1)
+
+**Pablo's decision (2026-10-20): run it exactly like Conti does.** Base = his code unchanged on ES. For Vault Break
+his exits are in DOLLARS (TakeProfitDollars 800, StopLossDollars 1500), so on ES the base is **$800 / $1,500 per
+contract = 16 / 30 ES points**. The volatility translations below are logged variants only, not the base.
 
 Why ES: Pablo's ES 1-minute data is complete from Dec 2013 to Sep 2026; the NQ tick files miss five contracts
 (12-21, 03-22, 03-25, 06-25, 09-25). Conti himself says to run the same code on ES.
@@ -20,15 +24,21 @@ over 2013–2026 (an ES day ranged ~33 points in 2019 and ~92 in 2026).
 | Rule | On NQ (his) | ES translation — **proposed base** | ES variant to log |
 |---|---|---|---|
 | Vault Break noise level | 0.30 × 15-session avg range | unchanged (already volatility-scaled) | — |
-| Vault Break TP / SL | 40 / 75 points fixed | **0.10 / 0.20 × 15-session avg range** (what 40/75 were vs NQ's ~380-pt avg range in 2022-26) | fixed 8.5 / 16 ES points (÷ 4.7) |
+| Vault Break TP / SL | $800 / $1,500 per contract (= 40 / 75 NQ pts) | **$800 / $1,500 = 16 / 30 ES points (his code as written)** | 8.5 / 16 ES points (÷ 4.7, same shape as on NQ); 0.10 / 0.20 × avg range |
 | Drift VWAP min 1-hour move | 0.10 % | 0.10 % | 0.075 % (ES moves ~1.35× less in % terms) |
-| Drift VWAP TP long / TP short / SL | 40 / 50 / 80 points fixed | **0.10 / 0.13 / 0.21 × 15-session avg range** | fixed 8.5 / 10.75 / 17 ES points |
+| Drift VWAP TP long / TP short / SL | 40 / 50 / 80 NQ points (code not shown) | **same dollars: $800 / $1,000 / $1,600 = 16 / 20 / 32 ES points** | 8.5 / 10.75 / 17 ES points; 0.10 / 0.13 / 0.21 × avg range |
 | Overnight Bias stop / target | 0.30 × avg range, 3R | unchanged (already volatility-scaled) | — |
 | Overnight thirds, opening range, ADX > 20 | — | unchanged | — |
 | Session times | CT / ET as in each sheet | unchanged (ES and NQ trade the same hours) | — |
 
-The ATR-scaled base is a change from his fixed-point rules — it keeps the same *shape* (small target, wide stop,
-high win rate) across 13 years of different volatility. It must be logged as a deliberate translation (A1/A2).
+Caution: on ES the $800 / $1,500 bracket is about 4.7x wider relative to ES's daily range than it was on NQ, so expect
+fewer target hits and more 14:30 time exits than his NQ report. That is what 'his code on ES' really does.
+
+## Closest possible copy of his own test: NQ on the months we have
+His Vault Break report is NQ 1/2022 → 9/2026. Pablo's NQ files miss the front months 12-21, 03-22, 03-25, 06-25,
+09-25 (≈ Sep 2021–Mar 2022 and Dec 2024–Sep 2025), so roughly Mar 2022 → Nov 2024 and Sep 2025 → Sep 2026 are
+usable (check whether back-month ticks in neighbouring files fill any of it). Running his rules there and comparing
+month by month with his report is the most direct replication; ES is the long-history test.
 
 ## Costs and sizing
 - ES: $50 per point, tick 0.25 = $12.50. Costs bite harder relative to the target: ~1 tick of slippage is ~3% of an

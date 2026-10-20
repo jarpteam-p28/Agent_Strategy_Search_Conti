@@ -20,7 +20,8 @@ Full spec: `strategies/conti/07_vault_break.yaml`. TradingView version: `indicat
   < 14:30 CT → buy at market, filled at the **next bar's open**.
 - **Re-entry:** max **3 trades per session**, one position at a time. After TP or SL, a new entry fires on the next
   bar that again closes above NoiseUp and VWAP.
-- **Exits:** take profit **40 points** ($800 on 1 NQ), stop loss **75 points** ($1,500), limit/stop orders checked
+- **Exits:** take profit **$800**, stop loss **$1,500 per contract** (his code: TakeProfitDollars / StopLossDollars;
+  = 40 / 75 points on NQ, **16 / 30 points on ES**), limit/stop orders checked
   intrabar on 1-minute data (he uses a 1-minute bar magnifier). Time exit: flat at **14:30 CT** (15:30 ET).
 - **Costs:** his header says set commission + slippage, "realistic NQ round turn is near $13". Use $13 round turn
   plus the project's standard slippage.
@@ -63,7 +64,8 @@ setup, so the >70%-at-1:1 rule doesn't apply directly. Still audit it fully.
 
 ## Variants to log (A2)
 Base; VWAP exit 7; session from midnight NY; noise multiplier 0.2 / 0.5 (sensitivity only); max trades 1 / 2;
-**ES fixed points 8.5 / 16** (ES test); **average range including the most recent session**. Total on ES: 1 base + 7 variants = 8.
+**ES 8.5 / 16 points** (same shape as on NQ); **ES 0.10 / 0.20 × average range**; **average range including the most
+recent session**. Total on ES: 1 base + 8 variants = 9. Base = his code exactly (Pablo, 2026-10-20).
 
 Note for the split: Conti chose 0.30 / 3 trades / 40-75 on NQ 2018-2022, so on any instrument 2018-2022 is not fully
 unseen for these parameters. Cleanest test of his rules as given: 2023 onward + the holdout.

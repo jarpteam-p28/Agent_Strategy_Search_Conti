@@ -13,13 +13,13 @@
 //                (entry condition is Time < FlattenTime 14:30). Market order → fills at the next bar's open.
 //                Up to 3 trades per session, one position at a time: after a TP/SL, re-enter if the next bar
 //                still closes above NoiseUp and VWAP.
-//   Exits        take profit 40 points ($800 on 1 NQ), stop 75 points ($1,500), flat at 14:30 CT.
+//   Exits        take profit $800, stop $1,500 per contract (his code; = 40/75 NQ points, 16/30 ES points), flat at 14:30 CT.
 //                Optional VWAP exit from his input VWAPExitBars(7) — exact rule not shown, inferred (see input).
 //
 // Check against his screen (9/22/2026 tooltip: NoiseUp 30,945.39, SessOpen 30,836.25): this logic gives
 // average range 364.1 vs his 363.8 and NoiseUp 30,945.48 — but only with "Skip the most recent session" ON.
 //
-// ES: use an ES1! chart and set "Target / stop measured in" = "Fraction of average range (ES base)".
+// Exits default to his code: $800 target / $1,500 stop per contract (NQ 40/75 pts, ES 16/30 pts).
 // Use a 30-minute NQ1! (or MNQ1!) chart with extended hours ON. Premium plans also get the 1-minute bar magnifier.
 
 strategy("Vault Break NQ (Conti)", shorttitle = "VaultBreak", overlay = true,
@@ -42,12 +42,14 @@ maxTrades = input.int(3, "Max trades per session", minval = 1, group = G2)
 contracts = input.int(1, "Contracts", minval = 1, group = G2, tooltip = "Develop with 1. His prop sizing: about 5 MNQ.")
 
 G3 = "Exits"
-exitMode     = input.string("Points (his NQ rules)", "Target / stop measured in", options = ["Points (his NQ rules)", "Fraction of average range (ES base)"], group = G3,
-     tooltip = "ES test base: target 0.10 x and stop 0.20 x the session's average range (what 40/75 NQ points were in 2022-26). See handoff/ES_ADAPTATION.md.")
+exitMode     = input.string("Dollars per contract (his code)", "Target / stop measured in", options = ["Dollars per contract (his code)", "Points", "Fraction of average range"], group = G3,
+     tooltip = "His code: TakeProfitDollars(800), StopLossDollars(1500). On NQ = 40 / 75 points, on ES = 16 / 30 points, on MNQ = 400 / 750 points. 'Points' and 'Fraction' are variants only.")
+tpUsd        = input.float(800, "Take profit ($ per contract)", step = 50, group = G3)
+slUsd        = input.float(1500, "Stop loss ($ per contract)", step = 50, group = G3)
 tpFrac       = input.float(0.10, "Target (x average range)", step = 0.01, group = G3)
 slFrac       = input.float(0.20, "Stop (x average range)", step = 0.01, group = G3)
-tpPts        = input.float(40.0, "Take profit (points)", step = 1, group = G3, tooltip = "TakeProfitDollars(800) = 40 NQ points. On MNQ use 40 points too (= $80 per MNQ).")
-slPts        = input.float(75.0, "Stop loss (points)", step = 1, group = G3, tooltip = "StopLossDollars(1500) = 75 NQ points")
+tpPts        = input.float(40.0, "Take profit (points, if Points)", step = 1, group = G3, tooltip = "TakeProfitDollars(800) = 40 NQ points. On MNQ use 40 points too (= $80 per MNQ).")
+slPts        = input.float(75.0, "Stop loss (points, if Points)", step = 1, group = G3, tooltip = "StopLossDollars(1500) = 75 NQ points")
 vwapExitBars = input.int(0, "VWAP exit: close after N closes in a row below VWAP (0 = off)", minval = 0, group = G3,
      tooltip = "His code has an input VWAPExitBars(7) and a counter BarsBelowVW, but the rule itself was not on screen and he never mentioned it. Try 7 to test it; 0 = rules exactly as he described them.")
 
@@ -122,9 +124,8 @@ if longSig
     strategy.entry("VB.Long", strategy.long, qty = contracts)
     dTrades += 1
 
-useFrac = exitMode == "Fraction of average range (ES base)"
-tpUse   = useFrac ? tpFrac * boundaryATR : tpPts
-slUse   = useFrac ? slFrac * boundaryATR : slPts
+tpUse = exitMode == "Dollars per contract (his code)" ? tpUsd / syminfo.pointvalue : exitMode == "Points" ? tpPts : tpFrac * boundaryATR
+slUse = exitMode == "Dollars per contract (his code)" ? slUsd / syminfo.pointvalue : exitMode == "Points" ? slPts : slFrac * boundaryATR
 strategy.exit("VB.Bracket", "VB.Long", profit = math.round(tpUse / syminfo.mintick), loss = math.round(slUse / syminfo.mintick),
      comment_profit = "VB.TP", comment_loss = "VB.SL")
 

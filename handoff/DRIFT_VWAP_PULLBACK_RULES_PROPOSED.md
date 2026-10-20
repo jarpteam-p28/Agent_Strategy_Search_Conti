@@ -20,7 +20,8 @@ TradingView indicator: `indicators/tradingview/drift_vwap_15m_on_5m.pine`.
   buy at market, filled at the **next 5-min bar's open**. Short: first green 5-min candle in a short drift.
 - **Re-entry:** after a trade closes, the next counter-colour candle in the same drift is a new trigger (his trade
   list: three shorts in one downtrend on 08/03/2021).
-- **Exits:** long TP **40 points**, short TP **50 points**, SL **80 points** both sides (intrabar on 1-minute data).
+- **Exits:** long TP **40 points**, short TP **50 points**, SL **80 points** both sides on NQ = $800 / $1,000 / $1,600
+  per contract; on ES the same dollars = **16 / 20 / 32 ES points** (base, 'exactly like him'). Intrabar on 1-minute data.
   Flatten at **15:55 ET**.
 - **Guard rails:** no entries 09:30–10:30 ET; no new entries after 15:30 ET; one position at a time; max **4 trades per
   day**; stop for the day after **2 losses**.
