@@ -9,6 +9,7 @@ Nothing here is locked until Pablo approves it in the backtest chat.
 | `VAULT_BREAK_RULES_PROPOSED.md` | Vault Break (30-min noise breakout, long only) | NQ | 2022-01 → 2026-09 |
 | `DRIFT_VWAP_PULLBACK_RULES_PROPOSED.md` | Drift VWAP Pullback (5-min, 15-min VWAP drift, long/short) | NQ | 2021-01 → 2026-07 |
 | `OVERNIGHT_BIAS_ORB_RULES_PROPOSED.md` | Overnight Bias ORB (15-min, long/short) | NQ | 2006 → 2026-08 |
+| `EVALUATION_WINDOWS.md` | Conti window + full history, each split 80/20 in time (reporting views, not variants) | ES | — |
 | `ES_ADAPTATION.md` | **How to run these NQ strategies on ES** (Pablo's choice: ES data is complete 2013-2026) | ES | — |
 | `reference/vwap_mtf.py` | Python 15-min VWAP on 5-min + drift state (tested, no look-ahead) | — | — |
 
