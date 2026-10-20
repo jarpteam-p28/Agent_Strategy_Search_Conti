@@ -1,0 +1,156 @@
+//@version=6
+// Conti Noise Levels — the levels from his Vault Break strategy, as an indicator (no trades).
+// Spec: strategies/conti/07_vault_break.yaml · same math as indicators/tradingview/vault_break_strategy.pine.
+//
+//   Session      midnight Chicago (option: midnight New York) → 16:00 CT futures close. A bar belongs to the date of
+//                its CLOSE time (MultiCharts style), so on 30-min bars the session starts with the 23:30–00:00 CT bar.
+//   Avg range    average session high − low of the last 15 COMPLETED sessions, skipping the most recent one
+//                (matches his screen on 9/22/2026: 364.1 vs his 363.8).
+//   NoiseUp      session open + 0.30 × avg range   (his long trigger level)
+//   NoiseDown    session open − 0.30 × avg range   (mirror, for reference — his v8 code is long only)
+//   VWAP         session VWAP from the session start.
+//
+// Works on any intraday chart. By default the levels are calculated on 30-minute bars (his chart) even when you
+// look at a 1/5/15-minute chart, so the numbers match his. All of them are known at the session's first bar
+// (open + completed sessions only), so nothing repaints. Turn extended hours ON.
+
+indicator("Conti Noise Levels", shorttitle = "Noise Levels", overlay = true, max_labels_count = 500)
+
+// ---------------- Inputs ----------------
+G1 = "Noise level"
+anchorMode = input.string("Midnight Chicago (his)", "Session starts at", options = ["Midnight Chicago (his)", "Midnight New York"], group = G1)
+noiseMult  = input.float(0.30, "Noise multiplier (× average range)", step = 0.05, group = G1, tooltip = "NoiseMult(0.3) in his code")
+atrLen     = input.int(15, "Average over completed sessions", minval = 1, group = G1)
+skipLast   = input.bool(true, "Skip the most recent session", group = G1, tooltip = "ON reproduces his on-screen NoiseUp. OFF = include the session that just ended.")
+use30      = input.bool(true, "Calculate on 30-min bars (his chart)", group = G1, tooltip = "Keeps the levels identical to his 30-minute chart when you view a lower timeframe.")
+extraMult  = input.float(0.0, "Extra level (× average range, 0 = off)", step = 0.05, group = G1, tooltip = "Optional second band, e.g. 0.5 or 1.0, drawn above and below the session open.")
+
+G2 = "Show"
+showDown   = input.bool(true, "NoiseDown (mirror level)", group = G2)
+showOpen   = input.bool(true, "Session open", group = G2)
+showVWAP   = input.bool(true, "Session VWAP", group = G2)
+showWindow = input.bool(true, "Shade his entry window", group = G2)
+earliest   = input.int(1000, "Entry window start (CT, HHMM)", group = G2)
+flatTime   = input.int(1430, "Entry window end / flatten (CT, HHMM)", group = G2)
+showSig    = input.bool(true, "Mark 30-min closes above NoiseUp and VWAP (30-min chart only)", group = G2)
+showLabels = input.bool(true, "Price labels on the right", group = G2)
+showTable  = input.bool(true, "Info box", group = G2)
+
+tzCT = "America/Chicago"
+toMin(int hhmm) =>
+    math.floor(hhmm / 100) * 60 + hhmm % 100
+
+// ---------------- Session levels (run on the chart or on 30-min bars) ----------------
+levels() =>
+    cm     = hour(time_close, tzCT) * 60 + minute(time_close, tzCT)
+    isNY   = anchorMode == "Midnight New York"
+    aTZ    = isNY ? "America/New_York" : tzCT
+    aCT    = isNY ? 1380 : 0
+    inSess = cm <= 960 or (aCT > 960 and cm >= aCT)
+    key    = year(time_close, aTZ) * 10000 + month(time_close, aTZ) * 100 + dayofmonth(time_close, aTZ)
+    var float sOpen = na
+    var float sHigh = na
+    var float sLow  = na
+    var float avgR  = na
+    var int   sKey  = 0
+    var rng = array.new<float>()
+    if inSess and key != sKey
+        if not na(sHigh)
+            rng.push(sHigh - sLow)
+            if rng.size() > 250
+                rng.shift()
+        sKey  := key
+        sOpen := open
+        sHigh := high
+        sLow  := low
+        n    = rng.size()
+        skip = skipLast ? 1 : 0
+        if n >= atrLen + skip
+            s = 0.0
+            for i = n - atrLen - skip to n - 1 - skip
+                s += rng.get(i)
+            avgR := s / atrLen
+        else
+            avgR := na
+    else if inSess
+        sHigh := math.max(sHigh, high)
+        sLow  := math.min(sLow, low)
+    [sOpen, avgR, sKey, inSess]
+
+[oC, rC, kC, iC] = levels()
+// lookahead_on is safe here: every value returned is fixed at the OPEN of the 30-min bar (session open, completed
+// sessions, clock time), never its high/low/close.
+[o3, r3, k3, i3] = request.security(syminfo.tickerid, "30", levels(), lookahead = barmerge.lookahead_on)
+
+htf      = use30 and timeframe.isintraday and timeframe.in_seconds() < 1800
+sessOpen = htf ? o3 : oC
+avgRange = htf ? r3 : rC
+sessKey  = htf ? k3 : kC
+inS      = htf ? i3 : iC
+
+noiseUp = na(avgRange) ? na : sessOpen + noiseMult * avgRange
+noiseDn = na(avgRange) ? na : sessOpen - noiseMult * avgRange
+extraUp = extraMult > 0 and not na(avgRange) ? sessOpen + extraMult * avgRange : na
+extraDn = extraMult > 0 and not na(avgRange) ? sessOpen - extraMult * avgRange : na
+
+// ---------------- Session VWAP (chart bars, restarted when the session changes) ----------------
+var int   vKey = 0
+var float cTPV = 0.0
+var float cVol = 0.0
+if inS and sessKey != vKey
+    vKey := sessKey
+    cTPV := 0.0
+    cVol := 0.0
+if inS
+    cTPV += hlc3 * volume
+    cVol += volume
+vwap = inS and cVol > 0 ? cTPV / cVol : na
+
+// ---------------- Plots ----------------
+plot(inS ? noiseUp : na, "NoiseUp", color = color.orange, linewidth = 2, style = plot.style_linebr)
+plot(inS and showDown ? noiseDn : na, "NoiseDown", color = color.fuchsia, linewidth = 2, style = plot.style_linebr)
+plot(inS and showOpen ? sessOpen : na, "Session open", color = color.gray, style = plot.style_linebr)
+plot(inS and showVWAP ? vwap : na, "VWAP", color = color.aqua, style = plot.style_linebr)
+plot(inS ? extraUp : na, "Extra level up", color = color.new(color.orange, 50), style = plot.style_linebr)
+plot(inS and showDown ? extraDn : na, "Extra level down", color = color.new(color.fuchsia, 50), style = plot.style_linebr)
+
+cmChart  = hour(time_close, tzCT) * 60 + minute(time_close, tzCT)
+inWindow = inS and cmChart > toMin(earliest) and cmChart <= toMin(flatTime)
+bgcolor(showWindow and inWindow ? color.new(color.orange, 92) : na, title = "Entry window")
+
+is30   = timeframe.period == "30"
+sigBar = showSig and is30 and barstate.isconfirmed and inS and cmChart >= toMin(earliest) and cmChart < toMin(flatTime)
+     and not na(noiseUp) and not na(vwap) and close > noiseUp and close > vwap
+plotshape(sigBar, "Close above NoiseUp & VWAP", shape.triangleup, location.belowbar, color.lime, size = size.tiny)
+
+// ---------------- Labels on the right ----------------
+var label lUp = na
+var label lDn = na
+var label lOp = na
+if barstate.islast
+    label.delete(lUp)
+    label.delete(lDn)
+    label.delete(lOp)
+    if showLabels and inS and not na(noiseUp)
+        lUp := label.new(bar_index + 2, noiseUp, "NoiseUp " + str.tostring(noiseUp, format.mintick), style = label.style_label_left, color = color.new(color.orange, 20), textcolor = color.black, size = size.small)
+        if showDown
+            lDn := label.new(bar_index + 2, noiseDn, "NoiseDown " + str.tostring(noiseDn, format.mintick), style = label.style_label_left, color = color.new(color.fuchsia, 20), textcolor = color.white, size = size.small)
+        if showOpen
+            lOp := label.new(bar_index + 2, sessOpen, "Open " + str.tostring(sessOpen, format.mintick), style = label.style_label_left, color = color.new(color.gray, 20), textcolor = color.white, size = size.small)
+
+// ---------------- Info box ----------------
+var table box = table.new(position.top_right, 2, 6, bgcolor = color.new(color.black, 20), border_width = 1)
+if showTable and barstate.islast
+    table.cell(box, 0, 0, "Noise levels", text_color = color.white)
+    table.cell(box, 1, 0, htf ? "calc on 30-min" : timeframe.period + "-min", text_color = color.white)
+    table.cell(box, 0, 1, "Avg range (" + str.tostring(atrLen) + ")", text_color = color.white)
+    table.cell(box, 1, 1, na(avgRange) ? "warming up" : str.tostring(avgRange, "#.##"), text_color = color.white)
+    table.cell(box, 0, 2, "Noise width", text_color = color.white)
+    table.cell(box, 1, 2, na(avgRange) ? "n/a" : str.tostring(noiseMult * avgRange, "#.##") + " pts", text_color = color.white)
+    table.cell(box, 0, 3, "NoiseUp / Down", text_color = color.white)
+    table.cell(box, 1, 3, na(noiseUp) ? "n/a" : str.tostring(noiseUp, format.mintick) + " / " + str.tostring(noiseDn, format.mintick), text_color = color.white)
+    table.cell(box, 0, 4, "Price vs NoiseUp", text_color = color.white)
+    table.cell(box, 1, 4, na(noiseUp) ? "n/a" : str.tostring(close - noiseUp, "+#.##;-#.##") + " pts", text_color = close > noiseUp ? color.lime : color.gray)
+    aboveNow = not na(noiseUp) and not na(vwap) and close > noiseUp and close > vwap
+    table.cell(box, 0, 5, "Above NoiseUp & VWAP", text_color = color.white)
+    table.cell(box, 1, 5, aboveNow ? "YES" : "no", text_color = aboveNow ? color.lime : color.gray)
