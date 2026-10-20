@@ -56,7 +56,7 @@ Updated 2026-10-20. Download each PDF and save it in `papers/inbox/` **using the
 
 - **Why:** E-mini returns concentrated around 2-3 a.m. ET (European open), explained by dealers' inventory risk from end-of-day order imbalances. Their July 2026 follow-up (Liberty Street Economics, 'The Disappearing Overnight Drift') says the effect has been near zero since 2021 - a direct test of Conti's overnight claim.
 - **Should contain:** Hour-by-hour E-mini returns 1998-2020, link to closing order imbalance; timing rules for an overnight window
-- **Get it:** Free NY Fed Staff Report 917 PDF (newyorkfed.org) https://doi.org/10.1093/rfs/hhad020
+- **Get it:** Free NY Fed Staff Report 917 PDF: https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr917.pdf (journal version: https://doi.org/10.1093/rfs/hhad020)
 - **Save as:** `papers/inbox/the_overnight_drift.pdf`
 
 ### P2 · Assessing the Profitability of Timely Opening Range Breakout on Index Futures Markets (2019)
@@ -187,7 +187,7 @@ Updated 2026-10-20. Download each PDF and save it in `papers/inbox/` **using the
 
 - **Why:** Stocks near their 52-week high keep outperforming. WHY: traders anchor on the 52-week high and under-react to good news near it. Also tested on index level in later work.
 - **Should contain:** Ranking by price / 52-week high, holding periods, comparison with classic momentum.
-- **Get it:** Journal of Finance 2004; search the title on Google Scholar for a free author copy https://alphaarchitect.com/the-secret-to-momentum-is-the-52-week-high/
+- **Get it:** Free PDF copy: http://basehitinvesting.com/wp-content/uploads/2013/01/52-Week-High-and-Momentum-Investing.pdf (the Alpha Architect page is only a blog summary). Journal of Finance 2004, George & Hwang.
 - **Save as:** `papers/inbox/the_52_week_high_and_momentum_investing.pdf`
 
 ### P2 · The Russell Reconstitution Effect (2001)
