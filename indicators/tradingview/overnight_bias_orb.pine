@@ -13,7 +13,8 @@
 //   • Trigger (triangle, only on closed bars): after 09:45 and before 13:00, a 15-min bar CLOSES above the
 //     opening-range high on a long-bias day (below the low on a short-bias day) with ADX > 20 (any slope).
 //     Entry = next bar's open. The bias stays valid even if price wanders back into the middle third.
-//   • Exits shown in the trigger label: stop = 30% of the average RTH daily range of the last 15 sessions,
+//   • Exits shown in the trigger label: stop = 30% of the 15-day SIMPLE average of the daily true range
+//     (his "15-period moving average of ATR"; day = Globex 18:00-16:00 ET by default),
 //     target = 3 × stop, flat by 15:30 if neither is hit.
 //   • Status box (top right): today's bias, where the open sat in the range, ADX, stop/target in points.
 //
@@ -38,7 +39,8 @@ adxThr    = input.float(20, "ADX must be above", group = G2)
 maxSig    = input.int(1, "Max triangles per day", minval = 1, maxval = 4, group = G2, tooltip = "His code allows up to 4 trades a day, but this indicator can't know when a trade closes. 1 = first breakout only; higher values also mark later fresh breakouts.")
 
 G3 = "Exits & display"
-atrDays   = input.int(15, "Average daily range over (RTH days)", group = G3)
+atrDays   = input.int(15, "Average daily range over (days)", group = G3, tooltip = "Conti: a 15-period SIMPLE moving average of the daily true range (not TradingView's Wilder ATR).")
+dayMode   = input.string("Globex day (18:00-16:00)", "Daily range measured over", options = ["Globex day (18:00-16:00)", "RTH only (09:30-16:00)"], group = G3, tooltip = "His code: the RTH close (16:00) bounds the ATR reference day on a Globex session -> 18:00 to 16:00 ET.")
 stopFrac  = input.float(0.30, "Stop = fraction of average daily range", step = 0.05, group = G3)
 rr        = input.float(3.0, "Target = R × stop", step = 0.5, group = G3)
 showZones = input.bool(true, "Shade top / bottom thirds", group = G3)
@@ -84,23 +86,35 @@ var int   bias         = 0
 var float orH          = na
 var float orL          = na
 var int   sigCount     = 0
-var float rH           = na
-var float rL           = na
-var float lastRthClose = na
+// daily range (for the 15-day average) - see block below
+var float dH           = na
+var float dL           = na
+var float lastDayClose = na
 var float prevDayClose = na
 var float avgRange     = na
 var trs = array.new<float>()
 
-if firstRTH
-    // close out the previous RTH day's true range
-    if not na(rH)
-        tr = na(prevDayClose) ? rH - rL : math.max(rH, prevDayClose) - math.min(rL, prevDayClose)
+dayStart = dayMode == "RTH only (09:30-16:00)" ? sRTH : toMin(1800)
+inDay    = inWin(m, dayStart, eRTH)
+firstDay = inDay and not inDay[1]
+if firstDay
+    // close out the previous day's true range: max(high, prior close) - min(low, prior close)
+    if not na(dH)
+        tr = na(prevDayClose) ? dH - dL : math.max(dH, prevDayClose) - math.min(dL, prevDayClose)
         array.push(trs, tr)
         if array.size(trs) > atrDays
             array.shift(trs)
-        prevDayClose := lastRthClose
-    avgRange := array.size(trs) >= atrDays ? array.avg(trs) : na
+        prevDayClose := lastDayClose
+    avgRange := array.size(trs) >= atrDays ? array.avg(trs) : na   // simple 15-day average
+    dH := high
+    dL := low
+else if inDay
+    dH := math.max(dH, high)
+    dL := math.min(dL, low)
+if inDay
+    lastDayClose := close
 
+if firstRTH
     lockH := onH
     lockL := onL
     rng = lockH - lockL
@@ -110,22 +124,14 @@ if firstRTH
     orH := high
     orL := low
     sigCount := 0
-    rH := high
-    rL := low
 
     biasTxt = bias == 1 ? "LONG ONLY" : bias == -1 ? "SHORT ONLY" : "NO TRADE"
     biasCol = bias == 1 ? color.green : bias == -1 ? color.red : color.gray
     label.new(bar_index, na(lockH) ? high : lockH, biasTxt + "\nopen at " + (na(openFrac) ? "n/a" : str.tostring(math.round(openFrac * 100)) + "%") + " of o/n range",
               style = label.style_label_down, color = color.new(biasCol, 15), textcolor = color.white, size = size.small)
-else if inRTH
-    rH := math.max(rH, high)
-    rL := math.min(rL, low)
-    if inOR
-        orH := math.max(orH, high)
-        orL := math.min(orL, low)
-
-if inRTH
-    lastRthClose := close
+else if inRTH and inOR
+    orH := math.max(orH, high)
+    orL := math.min(orL, low)
 
 // ---------------- Trigger ----------------
 [diPlus, diMinus, adxV] = ta.dmi(adxLen, adxLen)

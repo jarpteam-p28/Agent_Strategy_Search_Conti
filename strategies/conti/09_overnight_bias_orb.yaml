@@ -136,3 +136,8 @@ notes:
   no holiday calendar hardcoded; Bar Magnifier 1-minute, IOG off; MaxBarsBack 250; warm-up 20 trading
   days (set two months to be safe).
 - Live chart shows 'Overnight Bias Prod Indicator B' with ADX value vs the 20 line.
+- >-
+  RESOLVED (transcript 03): ATR = a 15-period SIMPLE moving average of the daily true range ('a 15-period
+  moving average of ATR... not an ATR with a look-back of 15' - he agreed). Daily bar = Globex day bounded
+  by the 16:00 ET RTH close (his code: SessEnd 1600 'bounds the ATR reference's day'). TradingView's built-in
+  ATR(15) uses Wilder smoothing and will differ slightly.

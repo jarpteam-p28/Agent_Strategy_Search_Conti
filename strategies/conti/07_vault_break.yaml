@@ -93,18 +93,12 @@ data_requirements:
 data_available: partial
 open_questions:
 - >-
-  Daily ATR definition: average of daily true ranges (TR) over 15 sessions, or a moving average of ATR(n)?
-  He says '15-period moving average of ATR' - which n for the inner ATR?
-- >-
   Is the 'session' the CME Globex day (17:00 CT start) or midnight-to-close as he said? He anchors the
   open and VWAP at midnight CT.
 - >-
   After a stop-out, does the next re-entry still count toward the max-3 if the bar was already above the
   barrier?
 - Which 1987 paper is the 'noise area' source? (librarian task)
-- >-
-  Is the ATR input named BoundaryATRLen = 15 the averaging length of daily true range (most likely: average
-  daily TR over 15 sessions)?
 validation:
   in_sample_pct: 70
   monte_carlo_reshuffle_runs: 10000
@@ -144,3 +138,8 @@ notes:
 - >-
   Whiteboard confirms: WHY 1987 noise area; entry P > noise up, P > VWAP, time 10 CT-14:30 CT, 3 trades;
   exit TP $800, SL $1,500, X 14:30 CT; pos size 1.
+- >-
+  RESOLVED (transcript 03): ATR = a 15-period SIMPLE moving average of the daily true range ('a 15-period
+  moving average of ATR... not an ATR with a look-back of 15' - he agreed). Daily bar = Globex day bounded
+  by the 16:00 ET RTH close (his code: SessEnd 1600 'bounds the ATR reference's day'). TradingView's built-in
+  ATR(15) uses Wilder smoothing and will differ slightly.
