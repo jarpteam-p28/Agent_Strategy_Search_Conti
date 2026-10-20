@@ -13,7 +13,7 @@
 //   • The trigger triangles always use the full 3-condition drift.
 //   • Optional triangles on the first pullback candle during a drift inside the trade window
 //     (red candle in a green drift = long trigger, green candle in a red drift = short trigger).
-//     Entry would be at the next bar's open. Stops, targets and daily limits belong to the strategy, not here.
+//     Triangles appear only after the candle has CLOSED (no flicker); entry = next bar's open. Stops, targets and daily limits belong to the strategy, not here.
 //
 // No repainting: the 15-minute bars are built from the chart's own bars and only used once they close,
 // so history and real time behave the same.
@@ -117,8 +117,8 @@ plot(inSess ? vwap15 : na, "VWAP 15m", color = crossColor, style = plot.style_cr
 
 redCandle   = close < open
 greenCandle = close > open
-longTrig  = showTriggers and inSess and inTrade and drift == 1  and redCandle   and not redCandle[1]
-shortTrig = showTriggers and inSess and inTrade and drift == -1 and greenCandle and not greenCandle[1]
+longTrig  = showTriggers and barstate.isconfirmed and inSess and inTrade and drift == 1  and redCandle   and not redCandle[1]
+shortTrig = showTriggers and barstate.isconfirmed and inSess and inTrade and drift == -1 and greenCandle and not greenCandle[1]
 
 plotshape(longTrig,  "Long trigger (pullback)",  shape.triangleup,   location.belowbar, color.lime, size = size.tiny)
 plotshape(shortTrig, "Short trigger (pullback)", shape.triangledown, location.abovebar, color.red,  size = size.tiny)
