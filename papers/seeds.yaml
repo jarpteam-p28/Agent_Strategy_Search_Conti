@@ -67,3 +67,43 @@
     the Vault Break)
   year: 1987
   note: transcript 03 - find the actual paper; see also 'Beat the Market' (Zarattini, Barbon, Aziz 2024)
+- title: Infrequent Rebalancing, Return Autocorrelation, and Seasonality
+  authors:
+  - Vincent Bogousslavsky
+  venue: Journal of Finance
+  year: 2016
+  note: >-
+    Theory the paper cites for the intraday momentum mechanism (infrequent rebalancing). Named in the
+    abstract.
+- title: Equilibrium effects of intraday order-splitting benchmarks
+  authors:
+  - J. H. Choi
+  - K. Larsen
+  - D. J. Seppi
+  venue: Mathematics and Financial Economics, 15(2)
+  year: 2021
+  note: >-
+    Cited for VWAP benchmarking. Best source for the WHY: how VWAP-benchmarked order splitting shapes
+    intraday prices and volume.
+- title: 'Improving VWAP strategies: A dynamic volume approach'
+  authors:
+  - J. Białkowski
+  - S. Darolles
+  - G. Le Fol
+  venue: Journal of Banking & Finance, 32(9)
+  year: 2008
+  note: >-
+    Cited for the claim that VWAP execution is about half of institutional trading; useful for modelling
+    how algos spread volume through the day.
+- title: >-
+    Can Day Trading Really Be Profitable? Evidence of sustainable long-term profits from opening range
+    breakout (ORB) day trading strategy vs. benchmark in the US stock market
+  authors:
+  - C. Zarattini
+  - A. Aziz
+  venue: SSRN
+  year: 2023
+  url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4416622
+  note: >-
+    The authors' earlier ORB paper, cited as the companion study. It is the same family as the ORB strategy
+    in the Conti method and could be combined with the VWAP filter.
