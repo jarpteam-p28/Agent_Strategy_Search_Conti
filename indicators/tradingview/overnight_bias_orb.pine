@@ -1,0 +1,185 @@
+//@version=6
+// Overnight Bias ORB — Matteo Conti's strategy 3 from "A Hedge Fund Manager Just CRACKED Prop Trading".
+// Spec: strategies/conti/09_overnight_bias_orb.yaml
+//
+// Put it on a 15-minute NQ1! (or ES1!) chart with extended hours ON. All times are New York (ET).
+//
+// What it shows
+//   • Overnight range: high and low from the overnight start (default 18:00 ET, Globex open) to the 09:30 open,
+//     split into thirds. Top third shaded green, bottom third red, middle left clear.
+//   • Bias at the 09:30 open (label): open in the top third (≥ 67% of the range) → LONG ONLY day;
+//     bottom third (≤ 33%) → SHORT ONLY day; middle → NO TRADE. An open above the overnight high counts as top.
+//   • Opening range: high/low of the first 15 minutes (09:30–09:45), orange.
+//   • Trigger (triangle, only on closed bars): after 09:45 and before 13:00, a 15-min bar CLOSES above the
+//     opening-range high on a long-bias day (below the low on a short-bias day) with ADX > 20 (any slope).
+//     Entry = next bar's open. The bias stays valid even if price wanders back into the middle third.
+//   • Exits shown in the trigger label: stop = 30% of the average RTH daily range of the last 15 sessions,
+//     target = 3 × stop, flat by 15:30 if neither is hit.
+//   • Status box (top right): today's bias, where the open sat in the range, ADX, stop/target in points.
+//
+// No repainting: levels lock at 09:30 / 09:45 and triggers only print on closed bars.
+
+indicator("Overnight Bias ORB (Conti)", shorttitle = "ONBias", overlay = true, max_labels_count = 500)
+
+// ---------------- Inputs ----------------
+G1 = "Times (New York, HHMM)"
+onStart   = input.int(1800, "Overnight range start", group = G1, tooltip = "18:00 = Globex open (his code: overnight = Globex session until the RTH open). Transcript also mentions 23:00 CT (= 0000 ET) and midnight CT (= 0100 ET).")
+rthStart  = input.int(930,  "RTH open (ends the overnight range)", group = G1)
+orEnd     = input.int(945,  "Opening range end", group = G1)
+lastEntry = input.int(1300, "Last entry", group = G1, tooltip = "His code: after 13:00 too little session is left to reach the target")
+flatTime  = input.int(1530, "Flat by", group = G1)
+rthEnd    = input.int(1600, "RTH close", group = G1)
+
+G2 = "Bias & trigger"
+biasTop   = input.float(0.67, "Long bias if open ≥ this fraction of the range", step = 0.01, group = G2)
+biasBot   = input.float(0.33, "Short bias if open ≤ this fraction of the range", step = 0.01, group = G2)
+adxLen    = input.int(14, "ADX length", group = G2)
+adxThr    = input.float(20, "ADX must be above", group = G2)
+maxSig    = input.int(1, "Max triangles per day", minval = 1, maxval = 4, group = G2, tooltip = "His code allows up to 4 trades a day, but this indicator can't know when a trade closes. 1 = first breakout only; higher values also mark later fresh breakouts.")
+
+G3 = "Exits & display"
+atrDays   = input.int(15, "Average daily range over (RTH days)", group = G3)
+stopFrac  = input.float(0.30, "Stop = fraction of average daily range", step = 0.05, group = G3)
+rr        = input.float(3.0, "Target = R × stop", step = 0.5, group = G3)
+showZones = input.bool(true, "Shade top / bottom thirds", group = G3)
+showLive  = input.bool(true, "Show overnight range while it builds", group = G3)
+showTable = input.bool(true, "Show status box", group = G3)
+
+tz = "America/New_York"
+
+// ---------------- Time helpers ----------------
+toMin(int hhmm) =>
+    math.floor(hhmm / 100) * 60 + hhmm % 100
+
+inWin(int mm, int s, int e) =>
+    s > e ? (mm > s or mm <= e) : (mm > s and mm <= e)   // close-stamped bars; handles windows that cross midnight
+
+m       = hour(time_close, tz) * 60 + minute(time_close, tz)
+sON     = toMin(onStart)
+sRTH    = toMin(rthStart)
+eOR     = toMin(orEnd)
+eLast   = toMin(lastEntry)
+eRTH    = toMin(rthEnd)
+
+inON     = inWin(m, sON, sRTH)
+inRTH    = inWin(m, sRTH, eRTH)
+inOR     = inWin(m, sRTH, eOR)
+firstRTH = inRTH and not inRTH[1]
+
+// ---------------- Overnight range (builds overnight, locks at the RTH open) ----------------
+var float onH = na
+var float onL = na
+if inON and not inON[1]
+    onH := high
+    onL := low
+else if inON
+    onH := math.max(onH, high)
+    onL := math.min(onL, low)
+
+// ---------------- RTH day: lock range, bias, opening range, daily-range average ----------------
+var float lockH        = na
+var float lockL        = na
+var float openFrac     = na
+var int   bias         = 0
+var float orH          = na
+var float orL          = na
+var int   sigCount     = 0
+var float rH           = na
+var float rL           = na
+var float lastRthClose = na
+var float prevDayClose = na
+var float avgRange     = na
+var trs = array.new<float>()
+
+if firstRTH
+    // close out the previous RTH day's true range
+    if not na(rH)
+        tr = na(prevDayClose) ? rH - rL : math.max(rH, prevDayClose) - math.min(rL, prevDayClose)
+        array.push(trs, tr)
+        if array.size(trs) > atrDays
+            array.shift(trs)
+        prevDayClose := lastRthClose
+    avgRange := array.size(trs) >= atrDays ? array.avg(trs) : na
+
+    lockH := onH
+    lockL := onL
+    rng = lockH - lockL
+    openFrac := rng > 0 ? (open - lockL) / rng : na
+    bias := na(openFrac) ? 0 : openFrac >= biasTop ? 1 : openFrac <= biasBot ? -1 : 0
+
+    orH := high
+    orL := low
+    sigCount := 0
+    rH := high
+    rL := low
+
+    biasTxt = bias == 1 ? "LONG ONLY" : bias == -1 ? "SHORT ONLY" : "NO TRADE"
+    biasCol = bias == 1 ? color.green : bias == -1 ? color.red : color.gray
+    label.new(bar_index, na(lockH) ? high : lockH, biasTxt + "\nopen at " + (na(openFrac) ? "n/a" : str.tostring(math.round(openFrac * 100)) + "%") + " of o/n range",
+              style = label.style_label_down, color = color.new(biasCol, 15), textcolor = color.white, size = size.small)
+else if inRTH
+    rH := math.max(rH, high)
+    rL := math.min(rL, low)
+    if inOR
+        orH := math.max(orH, high)
+        orL := math.min(orL, low)
+
+if inRTH
+    lastRthClose := close
+
+// ---------------- Trigger ----------------
+[diPlus, diMinus, adxV] = ta.dmi(adxLen, adxLen)
+
+stopPts = na(avgRange) ? na : stopFrac * avgRange
+canEnter = barstate.isconfirmed and inRTH and m > eOR and m <= eLast and sigCount < maxSig and not na(orH)
+breakUp   = sigCount == 0 ? close > orH : close > orH and close[1] <= orH
+breakDown = sigCount == 0 ? close < orL : close < orL and close[1] >= orL
+longSig  = canEnter and bias == 1  and breakUp   and adxV > adxThr
+shortSig = canEnter and bias == -1 and breakDown and adxV > adxThr
+
+if longSig or shortSig
+    sigCount += 1
+    exitTxt = na(stopPts) ? "\n(stop needs " + str.tostring(atrDays) + " days of history)" : "\nSL " + str.tostring(stopPts, "#.##") + " pts / TP " + str.tostring(stopPts * rr, "#.##") + " pts"
+    if longSig
+        label.new(bar_index, low, "LONG next open" + exitTxt, style = label.style_label_up, color = color.new(color.green, 10), textcolor = color.white, size = size.small)
+    else
+        label.new(bar_index, high, "SHORT next open" + exitTxt, style = label.style_label_down, color = color.new(color.red, 10), textcolor = color.white, size = size.small)
+
+plotshape(longSig,  "Long trigger",  shape.triangleup,   location.belowbar, color.green, size = size.small)
+plotshape(shortSig, "Short trigger", shape.triangledown, location.abovebar, color.red,   size = size.small)
+alertcondition(longSig,  "Overnight bias LONG",  "Overnight Bias ORB: LONG breakout on {{ticker}} — enter next bar open")
+alertcondition(shortSig, "Overnight bias SHORT", "Overnight Bias ORB: SHORT breakout on {{ticker}} — enter next bar open")
+
+// ---------------- Plots ----------------
+rngL    = lockH - lockL
+topLine = lockL + rngL * biasTop
+botLine = lockL + rngL * biasBot
+pH = plot(inRTH ? lockH : na, "Overnight high", color = color.new(color.gray, 0), style = plot.style_linebr, linewidth = 2)
+pT = plot(inRTH ? topLine : na, "Top-third line", color = color.new(color.green, 30), style = plot.style_linebr)
+pB = plot(inRTH ? botLine : na, "Bottom-third line", color = color.new(color.red, 30), style = plot.style_linebr)
+pL = plot(inRTH ? lockL : na, "Overnight low", color = color.new(color.gray, 0), style = plot.style_linebr, linewidth = 2)
+fill(pH, pT, color = showZones ? color.new(color.green, 88) : na, title = "Top third")
+fill(pB, pL, color = showZones ? color.new(color.red, 88) : na, title = "Bottom third")
+
+plot(inRTH ? orH : na, "Opening range high", color = color.orange, style = plot.style_linebr, linewidth = 2)
+plot(inRTH ? orL : na, "Opening range low",  color = color.orange, style = plot.style_linebr, linewidth = 2)
+
+plot(showLive and inON ? onH : na, "Overnight high (building)", color = color.new(color.gray, 50), style = plot.style_linebr)
+plot(showLive and inON ? onL : na, "Overnight low (building)",  color = color.new(color.gray, 50), style = plot.style_linebr)
+
+// ---------------- Status box ----------------
+var table box = table.new(position.top_right, 2, 6, bgcolor = color.new(color.black, 20), border_width = 1)
+if showTable and barstate.islast
+    biasNow = bias == 1 ? "LONG ONLY" : bias == -1 ? "SHORT ONLY" : "NO TRADE"
+    table.cell(box, 0, 0, "Overnight Bias ORB", text_color = color.white)
+    table.cell(box, 1, 0, timeframe.period == "15" ? "15-min ✓" : "use 15-min!", text_color = timeframe.period == "15" ? color.lime : color.orange)
+    table.cell(box, 0, 1, "Bias today", text_color = color.white)
+    table.cell(box, 1, 1, biasNow, text_color = bias == 1 ? color.lime : bias == -1 ? color.red : color.gray)
+    table.cell(box, 0, 2, "Open in o/n range", text_color = color.white)
+    table.cell(box, 1, 2, na(openFrac) ? "n/a" : str.tostring(math.round(openFrac * 100)) + "%", text_color = color.white)
+    table.cell(box, 0, 3, "ADX (> " + str.tostring(adxThr) + ")", text_color = color.white)
+    table.cell(box, 1, 3, str.tostring(adxV, "#.0"), text_color = adxV > adxThr ? color.lime : color.gray)
+    table.cell(box, 0, 4, "Stop / Target (pts)", text_color = color.white)
+    table.cell(box, 1, 4, na(stopPts) ? "n/a" : str.tostring(stopPts, "#.#") + " / " + str.tostring(stopPts * rr, "#.#"), text_color = color.white)
+    table.cell(box, 0, 5, "Signals today", text_color = color.white)
+    table.cell(box, 1, 5, str.tostring(sigCount) + " / " + str.tostring(maxSig), text_color = color.white)
