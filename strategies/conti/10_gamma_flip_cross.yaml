@@ -57,7 +57,7 @@ expectations:
 data_requirements:
   - "Minute-by-minute 0DTE NDX option trades (strike, type, volume) to compute dealer gamma levels without look-ahead"
   - "NQ 1-min bars, RTH"
-data_available: no
+data_available: "no"
 open_questions:
   - "Exact gamma-flip computation: dealer positioning assumption (dealer short calls/puts sold to customers?), use of volume traded inside each minute only, which strikes."
   - "How to source 0DTE NDX option trade data (vendor) - not in our NinjaTrader data."
