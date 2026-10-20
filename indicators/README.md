@@ -12,7 +12,7 @@
 What you see:
 - **Crosses** = session VWAP built from 15-minute bars, anchored 09:30 ET, updating every 15 minutes.
 - **Colour** = VWAP direction vs 15 minutes ago (green rising, red falling) — as on Conti's chart.
-  Setting "Cross colour → All 3 conditions" shows green/red only when the full drift is on (grey otherwise).
+  Settings → Inputs → "Colour only when ALL 3 conditions are met" shows green/red only when the full drift is on (grey otherwise).
 - **Triangles** = first pullback candle during a full 3-condition drift, 10:30–15:30 ET
   (red candle in a long drift / green candle in a short drift); entry is the next bar's open.
 

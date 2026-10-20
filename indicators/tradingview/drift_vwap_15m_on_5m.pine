@@ -7,7 +7,7 @@
 //     It only updates when a 15-minute bar closes, so it moves in steps every 15 minutes — like his crosses.
 //   • Cross colour (default, as on his chart): GREEN when the VWAP is higher than 15 minutes ago,
 //     RED when it is lower ("when the cross is green it means the VWAP over the past 15 minutes is increasing").
-//     Optional colour mode "All 3 conditions": green/red only when the full drift is on, grey otherwise:
+//     Settings → Inputs → "Colour only when ALL 3 conditions are met": green/red only when the full drift is on, grey otherwise:
 //       long  = price above VWAP, VWAP rising over 15 min, price up ≥ 0.1% over the last hour
 //       short = price below VWAP, VWAP falling over 15 min, price down ≥ 0.1% over the last hour
 //   • The trigger triangles always use the full 3-condition drift.
@@ -21,17 +21,22 @@
 indicator("Drift VWAP 15m on 5m (Conti)", shorttitle = "DriftVWAP15", overlay = true)
 
 // ---------------- Inputs ----------------
-tz           = input.string("America/New_York", "Time zone")
-sessStart    = input.int(930,  "Session start (HHMM)", tooltip = "VWAP resets here (RTH open)")
-sessEnd      = input.int(1600, "Session end (HHMM)")
-aggMin       = input.int(15,   "VWAP bar size (minutes)", minval = 1)
-lookback     = input.int(4,    "Move look-back (VWAP bars)", minval = 1, tooltip = "4 × 15 min = 1 hour")
-minMovePct   = input.float(0.1, "Min move over look-back (%)", step = 0.05)
-useTypical   = input.bool(true, "Use typical price (H+L+C)/3", tooltip = "Off = use the 15-min close")
-colorMode    = input.string("VWAP slope", "Cross colour", options = ["VWAP slope", "All 3 conditions"], tooltip = "VWAP slope = his chart: green rising, red falling")
-showTriggers = input.bool(true, "Mark pullback triggers")
-tradeStart   = input.int(1030, "Trade window start (HHMM)", tooltip = "No trades in the first hour")
-tradeEnd     = input.int(1530, "Trade window end (HHMM)",   tooltip = "No new trades after 15:30 ET")
+G1 = "Colour"
+all3         = input.bool(false, "Colour only when ALL 3 conditions are met", group = G1, tooltip = "OFF (default) = his chart: green when VWAP is rising, red when falling.\nON = green/red only when price vs VWAP, VWAP slope AND the 0.1% one-hour move all agree; grey otherwise.")
+showTriggers = input.bool(true, "Show pullback trigger triangles", group = G1)
+
+G2 = "Drift conditions"
+minMovePct   = input.float(0.1, "Min move over look-back (%)", step = 0.05, group = G2)
+lookback     = input.int(4,    "Move look-back (VWAP bars)", minval = 1, group = G2, tooltip = "4 × 15 min = 1 hour")
+useTypical   = input.bool(true, "Use typical price (H+L+C)/3", group = G2, tooltip = "Off = use the 15-min close")
+
+G3 = "Session"
+tz           = input.string("America/New_York", "Time zone", group = G3)
+sessStart    = input.int(930,  "Session start (HHMM)", group = G3, tooltip = "VWAP resets here (RTH open)")
+sessEnd      = input.int(1600, "Session end (HHMM)", group = G3)
+aggMin       = input.int(15,   "VWAP bar size (minutes)", minval = 1, group = G3)
+tradeStart   = input.int(1030, "Trade window start (HHMM)", group = G3, tooltip = "No trades in the first hour")
+tradeEnd     = input.int(1530, "Trade window end (HHMM)", group = G3, tooltip = "No new trades after 15:30 ET")
 
 if not timeframe.isminutes or timeframe.multiplier > aggMin or aggMin % timeframe.multiplier != 0
     runtime.error("Use a minute chart whose bar size divides " + str.tostring(aggMin) + " minutes (1, 3 or 5 min).")
@@ -106,7 +111,7 @@ if not inSess
     slope := 0
 
 // ---------------- Plots ----------------
-colorState = colorMode == "VWAP slope" ? slope : drift
+colorState = all3 ? drift : slope
 crossColor = colorState == 1 ? color.lime : colorState == -1 ? color.red : color.gray
 plot(inSess ? vwap15 : na, "VWAP 15m", color = crossColor, style = plot.style_cross, linewidth = 2)
 
