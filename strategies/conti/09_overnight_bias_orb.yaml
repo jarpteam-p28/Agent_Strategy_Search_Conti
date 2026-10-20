@@ -111,6 +111,9 @@ open_questions:
 - 'Opening-range size band: what min/max OR size is required?'
 - Does a re-entry (up to 4/day) require a fresh break of the OR, or just another close beyond it?
 - ADX period (likely 14) on 15-min bars.
+- >-
+  ATR day definition not proven: best fit so far = high-low, midnight CT to 17:00 ET, 15-session SMA lagged
+  one session (see notes). Confirm with more tooltip values.
 validation:
   in_sample_pct: 70
   monte_carlo_reshuffle_runs: 10000
@@ -141,3 +144,12 @@ notes:
   moving average of ATR... not an ATR with a look-back of 15' - he agreed). Daily bar = Globex day bounded
   by the 16:00 ET RTH close (his code: SessEnd 1600 'bounds the ATR reference's day'). TradingView's built-in
   ATR(15) uses Wilder smoothing and will differ slightly.
+- >-
+  ATR check against his screen (9/22/2026 tooltip: NoiseUp 30,945.39 - SessOpen 30,836.25 = 109.14 = 0.30
+  x 363.8): using TradingView NQ1! 30-min data, the closest definition is the plain HIGH-LOW range from
+  midnight CT (01:00 ET) to the 17:00 ET futures close, averaged (simple) over the 15 sessions ending
+  the session BEFORE the most recent one: 360.9 (0.8% off). Midnight CT->16:00 ET: 359.1 (1.3%). With
+  true range (gaps): 375.5 (3.2%). Full Globex day 18:00->16:00/17:00: 381.8/383.6 (5%). RTH true range:
+  381.8. One data point only and the Sep->Dec roll falls inside the window - needs 2-3 more of his tooltip
+  readings to confirm. His SessOpen 30,836.25 equals the open of the bar stamped 00:00 CT by close time
+  (i.e. the 23:30-00:00 CT bar, 00:30 ET).
