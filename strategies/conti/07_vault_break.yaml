@@ -78,6 +78,10 @@ parameters:
 variants:
 - Same on ES.
 - Short side below a noise-down barrier (not part of his version).
+- >-
+  ES version (Pablo's primary backtest instrument, full 2013-2026 data): see handoff/ES_ADAPTATION.md
+  for the NQ->ES translation (range-scaled TP/SL base, fixed ES points variant; NQ/ES daily-range ratio
+  median 4.7 in 2021-26).
 expectations:
 - 'MultiCharts report (1/21/2022 - 9/24/2026, 1 NQ): 1,151 trades, all long; 779 winners = 67.68%.'
 - >-

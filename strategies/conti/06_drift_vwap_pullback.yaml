@@ -3,103 +3,179 @@ name: Drift VWAP Pullback (NQ, prop-firm challenge strategy)
 status: spec
 source:
   kind: transcript
-  ref: "transcripts/02_drift_vwap_pullback_prop_firms.txt - 'How a Quant Hedge Fund Exploits the Math of Prop Firms'"
+  ref: >-
+    transcripts/02_drift_vwap_pullback_prop_firms.txt - 'How a Quant Hedge Fund Exploits the Math of Prop
+    Firms'
   papers: []
-finding: >
-  Conti's own strategy, built from his market-making experience rather than a paper. When the session
-  VWAP shows an established drift (price on one side of VWAP, VWAP sloping that way, and price moved at
-  least 0.1% in the last hour), the first pullback candle is a high-probability entry in the drift
-  direction. Reported: 300%+ over 4,000+ trades, 64% win rate, developed on 2020-2024 data and
-  out-of-sample from 2024 to Aug 2026.
-why: >
-  Execution traders at banks and brokers fill 90-95% of portfolio managers' orders with VWAP algorithms.
-  Those algos trade most heavily when price is near VWAP, because a fill there is most likely to match
-  their benchmark. So near VWAP the imbalance between buying and selling algos is revealed, producing
-  sharp moves in the direction of the side in control. The three conditions give the level (price vs
-  VWAP), the direction (VWAP slope) and the speed (1-hour move).
-what_would_kill_it: >
-  Execution desks moving away from VWAP-benchmarked algos (e.g. to arrival-price / implementation
-  shortfall), or so many traders front-running VWAP pullbacks that the move happens before the candle closes.
+finding: |
+  Conti's own strategy, built from his market-making experience rather than a paper. When the session VWAP shows an established drift (price on one side of VWAP, VWAP sloping that way, and price moved at least 0.1% in the last hour), the first pullback candle is a high-probability entry in the drift direction. Reported: 300%+ over 4,000+ trades, 64% win rate, developed on 2020-2024 data and out-of-sample from 2024 to Aug 2026.
+why: |
+  Execution traders at banks and brokers fill 90-95% of portfolio managers' orders with VWAP algorithms. Those algos trade most heavily when price is near VWAP, because a fill there is most likely to match their benchmark. So near VWAP the imbalance between buying and selling algos is revealed, producing sharp moves in the direction of the side in control. The three conditions give the level (price vs VWAP), the direction (VWAP slope) and the speed (1-hour move).
+what_would_kill_it: |
+  Execution desks moving away from VWAP-benchmarked algos (e.g. to arrival-price / implementation shortfall), or so many traders front-running VWAP pullbacks that the move happens before the candle closes.
 market:
-  instruments: [NQ]
-  bar_size: "5 min execution bars; trend checked on 15 min bars"
-  session: "RTH 09:30-16:00 America/New_York; VWAP anchored at 09:30, computed on the 15-min series and read on the 5-min chart"
+  instruments:
+  - NQ
+  bar_size: 5 min execution bars; trend checked on 15 min bars
+  session: >-
+    RTH 09:30-16:00 America/New_York; VWAP anchored at 09:30, computed on the 15-min series and read on
+    the 5-min chart
   universe: null
 direction: long_short
 entry:
-  long: >
-    Trend check every 15 minutes (on each 15-min bar close), long trend = all three true:
-    (1) price above VWAP, (2) VWAP higher than 15 minutes ago, (3) NQ up at least 0.1% over the past
-    hour (last four 15-min bars). Trigger: the first red 5-min candle (pullback toward VWAP) after the
-    conditions are met - it does not need to touch VWAP. Enter with a market order at the open of the next bar.
-  short: >
-    Mirror: price below VWAP, VWAP lower than 15 minutes ago, NQ down at least 0.1% over the past hour.
-    Trigger: the first green 5-min candle; enter at the open of the next bar.
+  long: |
+    Trend check every 15 minutes (on each 15-min bar close), long trend = all three true: (1) price above VWAP, (2) VWAP higher than 15 minutes ago, (3) NQ up at least 0.1% over the past hour (last four 15-min bars). Trigger: the first red 5-min candle (pullback toward VWAP) after the conditions are met - it does not need to touch VWAP. Enter with a market order at the open of the next bar.
+  short: |
+    Mirror: price below VWAP, VWAP lower than 15 minutes ago, NQ down at least 0.1% over the past hour. Trigger: the first green 5-min candle; enter at the open of the next bar.
   filters:
-    - "No trades 09:30-10:30 ET (let VWAP form)."
-    - "No new trades after 15:30 ET."
-    - "One position at a time."
-    - "Max 4 trades per day (optimized in-sample for prop-firm pass rate)."
-    - "Max 2 losses per day, then stop for the day."
+  - No trades 09:30-10:30 ET (let VWAP form).
+  - No new trades after 15:30 ET.
+  - One position at a time.
+  - Max 4 trades per day (optimized in-sample for prop-firm pass rate).
+  - Max 2 losses per day, then stop for the day.
 exit:
-  stop_loss: "Long: 80 points. Short: 80 points."
-  take_profit: "Long: 40 points. Short: 50 points."
-  time_exit: "Flatten everything at 15:55 ET."
+  stop_loss: 'Long: 80 points. Short: 80 points.'
+  take_profit: 'Long: 40 points. Short: 50 points.'
+  time_exit: Flatten everything at 15:55 ET.
   other: []
 position_sizing:
-  development: "1 NQ contract (or 10 MNQ)."
-  live: >
-    For prop-firm challenges: 1 NQ / 10 MNQ as tested. Conti says the average trade is too small to
-    make money on your own capital - the edge is the high win rate versus the challenge rules.
+  development: 1 NQ contract (or 10 MNQ).
+  live: |
+    For prop-firm challenges: 1 NQ / 10 MNQ as tested. Conti says the average trade is too small to make money on your own capital - the edge is the high win rate versus the challenge rules.
 parameters:
-  - {name: min_hour_move_pct, default: 0.1, test_range: "0.05, 0.1, 0.15, 0.2", source: "transcript (optimized in-sample 2020-2024)"}
-  - {name: vwap_slope_lookback_min, default: 15, test_range: null, source: transcript}
-  - {name: no_trade_until, default: "10:30", test_range: "10:00, 10:30", source: transcript}
-  - {name: last_entry, default: "15:30", test_range: null, source: transcript}
-  - {name: flatten_at, default: "15:55", test_range: null, source: transcript}
-  - {name: stop_points, default: 80, test_range: "60, 80, 100", source: transcript}
-  - {name: target_points_long, default: 40, test_range: "30, 40, 50", source: transcript}
-  - {name: target_points_short, default: 50, test_range: "40, 50, 60", source: transcript}
-  - {name: max_trades_per_day, default: 4, test_range: "1, 2, 3, 4", source: transcript}
-  - {name: max_losses_per_day, default: 2, test_range: null, source: transcript}
+- name: min_hour_move_pct
+  default: 0.1
+  test_range: 0.05, 0.1, 0.15, 0.2
+  source: transcript (optimized in-sample 2020-2024)
+- name: vwap_slope_lookback_min
+  default: 15
+  test_range: null
+  source: transcript
+- name: no_trade_until
+  default: '10:30'
+  test_range: 10:00, 10:30
+  source: transcript
+- name: last_entry
+  default: '15:30'
+  test_range: null
+  source: transcript
+- name: flatten_at
+  default: '15:55'
+  test_range: null
+  source: transcript
+- name: stop_points
+  default: 80
+  test_range: 60, 80, 100
+  source: transcript
+- name: target_points_long
+  default: 40
+  test_range: 30, 40, 50
+  source: transcript
+- name: target_points_short
+  default: 50
+  test_range: 40, 50, 60
+  source: transcript
+- name: max_trades_per_day
+  default: 4
+  test_range: 1, 2, 3, 4
+  source: transcript
+- name: max_losses_per_day
+  default: 2
+  test_range: null
+  source: transcript
 variants:
-  - "Same rules on ES (scale points to ES volatility)."
-  - "VWAP from 5-min bars instead of 15-min bars."
+- Same rules on ES (scale points to ES volatility).
+- VWAP from 5-min bars instead of 15-min bars.
+- >-
+  ES version (Pablo's primary backtest instrument, full 2013-2026 data): see handoff/ES_ADAPTATION.md
+  for the NQ->ES translation (range-scaled TP/SL base, fixed ES points variant; NQ/ES daily-range ratio
+  median 4.7 in 2021-26).
 expectations:
-  - "MultiCharts report, NQ 5-min, 1 contract, 04 Jan 2021 - 31 Jul 2026: 4,130 trades (2,156 long / 1,974 short), 64.09% winners (long 66.51%, short 61.45%)."
-  - "Net profit $306,590 on $100,000 initial capital (306.6%); profit factor 1.15; Sharpe 0.46; max strategy drawdown $29,055; account size required $27,635."
-  - "Average trade $74.23 (long $74.04, short $74.45); average win $866 (long $767, short $984); average loss $1,341 (long $1,303, short $1,377); win/loss ratio 0.65; largest win $3,040, largest loss $2,815; average 14.9 bars (about 75 min) in a trade."
-  - "Equity curve rises in both halves; flat-ish stretch mid-2022 to late 2023."
-  - "Single prop challenge pass rate about 49.8%, average 3.4 days to pass (20,000 simulations)."
-  - "Pass at least one challenge: 74.8% in 2 attempts, 87.3% in 3, 93.6% in 4 (consistent with independent 50% tries)."
-  - "Positive but thin average trade - may not survive commissions/slippage on a personal account."
-data_requirements: ["NQ 1-min or tick data with volume, RTH, 2020-2026"]
+- >-
+  MultiCharts report, NQ 5-min, 1 contract, 04 Jan 2021 - 31 Jul 2026: 4,130 trades (2,156 long / 1,974
+  short), 64.09% winners (long 66.51%, short 61.45%).
+- >-
+  Net profit $306,590 on $100,000 initial capital (306.6%); profit factor 1.15; Sharpe 0.46; max strategy
+  drawdown $29,055; account size required $27,635.
+- >-
+  Average trade $74.23 (long $74.04, short $74.45); average win $866 (long $767, short $984); average
+  loss $1,341 (long $1,303, short $1,377); win/loss ratio 0.65; largest win $3,040, largest loss $2,815;
+  average 14.9 bars (about 75 min) in a trade.
+- Equity curve rises in both halves; flat-ish stretch mid-2022 to late 2023.
+- Single prop challenge pass rate about 49.8%, average 3.4 days to pass (20,000 simulations).
+- >-
+  Pass at least one challenge: 74.8% in 2 attempts, 87.3% in 3, 93.6% in 4 (consistent with independent
+  50% tries).
+- Positive but thin average trade - may not survive commissions/slippage on a personal account.
+data_requirements:
+- NQ 1-min or tick data with volume, RTH, 2020-2026
 data_available: partial
 open_questions:
-  - "RESOLVED by the trade list: after a trade closes, the next counter-colour candle in the same trend is a new trigger (e.g. 08/03/2021: three shorts in a row in one downtrend, all hitting TP)."
-  - "Must the three conditions still be true when the trigger candle closes, or only at the last 15-min check?"
-  - "Max 2 losses per day: any two losses, or two in a row? (he says both)"
-  - "VWAP on 15-min bars: use typical price (H+L+C)/3 x volume, or exact tick VWAP? (the 15-min series makes his VWAP update in steps every 15 minutes)"
-  - "When neither the long nor the short conditions hold, is the cross hidden (no trend) - and does an open 'first pullback' setup reset?"
-  - "Prop firm rules used in the simulation (account size, profit target, drawdown type and size, daily loss limit) were not stated."
-  - "Costs: the trade list shows stop-loss exits of 80.5 points ($1,610) and targets filled exactly ($800 long, $1,000 short), so it looks like about 2 ticks of slippage on stops and no commission. Re-test with commissions (~$4-5 per side per NQ) - with a $74 average trade, costs matter."
+- >-
+  RESOLVED by the trade list: after a trade closes, the next counter-colour candle in the same trend is
+  a new trigger (e.g. 08/03/2021: three shorts in a row in one downtrend, all hitting TP).
+- >-
+  Must the three conditions still be true when the trigger candle closes, or only at the last 15-min check?
+- 'Max 2 losses per day: any two losses, or two in a row? (he says both)'
+- >-
+  VWAP on 15-min bars: use typical price (H+L+C)/3 x volume, or exact tick VWAP? (the 15-min series makes
+  his VWAP update in steps every 15 minutes)
+- >-
+  When neither the long nor the short conditions hold, is the cross hidden (no trend) - and does an open
+  'first pullback' setup reset?
+- >-
+  Prop firm rules used in the simulation (account size, profit target, drawdown type and size, daily loss
+  limit) were not stated.
+- >-
+  Costs: the trade list shows stop-loss exits of 80.5 points ($1,610) and targets filled exactly ($800
+  long, $1,000 short), so it looks like about 2 ticks of slippage on stops and no commission. Re-test
+  with commissions (~$4-5 per side per NQ) - with a $74 average trade, costs matter.
 validation:
   in_sample_pct: 60
   monte_carlo_reshuffle_runs: 10000
   monte_carlo_bootstrap_runs: 20000
-  kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
+  kill_switch: Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number
+    of trades.
   extra_checks:
-    - "In-sample 2020-2024 frozen, out-of-sample 2024-2026 (as Conti did)."
-    - "Prop-firm pass simulation: resample the trade list 20,000 times against a specific firm's rules; report pass rate, days to pass, pass-in-N-attempts."
-    - "Cost stress: 1 and 2 ticks of slippage per side."
-related_strategies: [vwap_trend]
+  - In-sample 2020-2024 frozen, out-of-sample 2024-2026 (as Conti did).
+  - >-
+    Prop-firm pass simulation: resample the trade list 20,000 times against a specific firm's rules; report
+    pass rate, days to pass, pass-in-N-attempts.
+  - 'Cost stress: 1 and 2 ticks of slippage per side.'
+related_strategies:
+- vwap_trend
 notes:
-  - "Conti developed and tested it in MultiCharts; the trade list was exported to Python for the prop-firm simulation."
-  - "Screenshots (transcripts/screenshots/02_*, local only) confirm the on-chart rule text word for word: LONG = PRICE above the VWAP / VWAP rising over the past 15 minutes / over the past 1 hour the NQ price increased at least 0.1%; SHORT = mirror; TRIGGER = LONGS first red candle towards the VWAP, SHORTS first green candle towards the VWAP."
-  - "His 'DriftPullback VWAP Indicator' plots one cross every 15 minutes at the 15-min VWAP value: red when the short conditions hold, green when the long conditions hold. Crosses start right after the RTH open even though trading only starts at 10:30 ET."
-  - "Chart setup: @NQ continuous contract, upper pane 5-min, lower pane 15-min (VWAP source). The chart axis appears to be exchange time (Chicago, CT): RTH open shows at 08:30 and the crosses stop around 14:50 CT (15:50 ET). Code all times in ET."
-  - "Example day on screen: short-trend crosses from the open until about 11:15 CT, then flips to long-trend crosses as price reclaims VWAP; long triggers were the red pullback candles above the rising VWAP."
-  - "Video: 'Ex-Market Maker Shows the Exact VWAP Setup That Gets Traders Funded' (IQ Capital channel, 2026-08-07, youtu.be/wm4A6qo0g3I)."
-  - "Trade list times (e.g. entries 09:45-13:10) are in chart time = Chicago (CT); add 1 hour for ET. Signal names: DriftPB.L / DriftPB.S; exits L.TP, L.SL, S.TP, S.SL."
-  - "Prop-firm simulation setup (Colab notebook 'PropFirm_MonteCarlo_The_Protocol'): 50K account, END-OF-DAY drawdown limit -$2,500, profit target +$3,000, max 20 trading days, 1 NQ (10 MNQ). It bootstraps DAILY P&L (pool of 1,455 weekdays, 1,422 with trades), 20,000 runs. Results: pass 49.8% (95% CI 49.1-50.5%), fail by drawdown 50.2%, fail by time 0%, average 3.4 days to pass, average max drawdown $2,078, 95th-percentile max drawdown $4,661, expected 2.0 challenges per pass. It also sweeps position size in MNQ contracts."
-  - "Caveat: max strategy drawdown ($29k) is ~12x the challenge's $2,500 limit - the pass rate depends on the challenge ending quickly (3.4 days), not on a smooth equity curve."
+- >-
+  Conti developed and tested it in MultiCharts; the trade list was exported to Python for the prop-firm
+  simulation.
+- >-
+  Screenshots (transcripts/screenshots/02_*, local only) confirm the on-chart rule text word for word:
+  LONG = PRICE above the VWAP / VWAP rising over the past 15 minutes / over the past 1 hour the NQ price
+  increased at least 0.1%; SHORT = mirror; TRIGGER = LONGS first red candle towards the VWAP, SHORTS first
+  green candle towards the VWAP.
+- >-
+  His 'DriftPullback VWAP Indicator' plots one cross every 15 minutes at the 15-min VWAP value: red when
+  the short conditions hold, green when the long conditions hold. Crosses start right after the RTH open
+  even though trading only starts at 10:30 ET.
+- >-
+  Chart setup: @NQ continuous contract, upper pane 5-min, lower pane 15-min (VWAP source). The chart axis
+  appears to be exchange time (Chicago, CT): RTH open shows at 08:30 and the crosses stop around 14:50
+  CT (15:50 ET). Code all times in ET.
+- >-
+  Example day on screen: short-trend crosses from the open until about 11:15 CT, then flips to long-trend
+  crosses as price reclaims VWAP; long triggers were the red pullback candles above the rising VWAP.
+- >-
+  Video: 'Ex-Market Maker Shows the Exact VWAP Setup That Gets Traders Funded' (IQ Capital channel, 2026-08-07,
+  youtu.be/wm4A6qo0g3I).
+- >-
+  Trade list times (e.g. entries 09:45-13:10) are in chart time = Chicago (CT); add 1 hour for ET. Signal
+  names: DriftPB.L / DriftPB.S; exits L.TP, L.SL, S.TP, S.SL.
+- >-
+  Prop-firm simulation setup (Colab notebook 'PropFirm_MonteCarlo_The_Protocol'): 50K account, END-OF-DAY
+  drawdown limit -$2,500, profit target +$3,000, max 20 trading days, 1 NQ (10 MNQ). It bootstraps DAILY
+  P&L (pool of 1,455 weekdays, 1,422 with trades), 20,000 runs. Results: pass 49.8% (95% CI 49.1-50.5%),
+  fail by drawdown 50.2%, fail by time 0%, average 3.4 days to pass, average max drawdown $2,078, 95th-percentile
+  max drawdown $4,661, expected 2.0 challenges per pass. It also sweeps position size in MNQ contracts.
+- >-
+  Caveat: max strategy drawdown ($29k) is ~12x the challenge's $2,500 limit - the pass rate depends on
+  the challenge ending quickly (3.4 days), not on a smooth equity curve.

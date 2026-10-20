@@ -90,6 +90,10 @@ parameters:
 variants:
 - Same on ES.
 - Hold overnight (only where the prop firm allows it).
+- >-
+  ES version (Pablo's primary backtest instrument, full 2013-2026 data): see handoff/ES_ADAPTATION.md
+  for the NQ->ES translation (range-scaled TP/SL base, fixed ES points variant; NQ/ES daily-range ratio
+  median 4.7 in 2021-26).
 expectations:
 - >-
   Code header, zero-cost backtest: IN-SAMPLE 2006-01-01 to 2019-12-31: 1,112 trades, PF 1.35, net $50,445,
