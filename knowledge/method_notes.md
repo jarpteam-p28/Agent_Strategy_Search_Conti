@@ -9,6 +9,12 @@
   firm's rules (profit target, drawdown, daily loss limit, time limit), and report: single-challenge pass
   rate, average days to pass, and probability of passing at least one within N attempts
   (≈ 1 − (1 − p)^N). Treat challenges as a business: cost per attempt vs probability of getting funded.
+- **How he builds the prop simulation (from his notebook):** resample whole trading DAYS (daily P&L,
+  including zero-trade days) rather than single trades, so intraday guard rails and clustering are kept.
+  Walk each simulated challenge day by day: pass when cumulative P&L ≥ target, fail when it breaches the
+  drawdown limit (end-of-day for an EOD account), fail on time after the max days. Report pass rate with a
+  confidence interval, failure mode split (drawdown vs time), days to pass, average and 95th-percentile max
+  drawdown, expected challenges per pass, and a sweep over position size (number of MNQ).
 - **Three conditions = level, direction, speed.** A trend filter should say where price is versus a key
   level (above/below VWAP), which way that level is moving (VWAP slope), and how fast price is moving
   (minimum % move over the last hour).

@@ -66,20 +66,23 @@ variants:
   - "Same rules on ES (scale points to ES volatility)."
   - "VWAP from 5-min bars instead of 15-min bars."
 expectations:
-  - "Win rate around 64%; average win about $866 vs average loss about $1,300 per NQ contract."
+  - "MultiCharts report, NQ 5-min, 1 contract, 04 Jan 2021 - 31 Jul 2026: 4,130 trades (2,156 long / 1,974 short), 64.09% winners (long 66.51%, short 61.45%)."
+  - "Net profit $306,590 on $100,000 initial capital (306.6%); profit factor 1.15; Sharpe 0.46; max strategy drawdown $29,055; account size required $27,635."
+  - "Average trade $74.23 (long $74.04, short $74.45); average win $866 (long $767, short $984); average loss $1,341 (long $1,303, short $1,377); win/loss ratio 0.65; largest win $3,040, largest loss $2,815; average 14.9 bars (about 75 min) in a trade."
+  - "Equity curve rises in both halves; flat-ish stretch mid-2022 to late 2023."
   - "Single prop challenge pass rate about 49.8%, average 3.4 days to pass (20,000 simulations)."
   - "Pass at least one challenge: 74.8% in 2 attempts, 87.3% in 3, 93.6% in 4 (consistent with independent 50% tries)."
   - "Positive but thin average trade - may not survive commissions/slippage on a personal account."
 data_requirements: ["NQ 1-min or tick data with volume, RTH, 2020-2026"]
 data_available: partial
 open_questions:
-  - "'First' pullback: first red candle once per trend episode, or again after every new trend confirmation?"
+  - "RESOLVED by the trade list: after a trade closes, the next counter-colour candle in the same trend is a new trigger (e.g. 08/03/2021: three shorts in a row in one downtrend, all hitting TP)."
   - "Must the three conditions still be true when the trigger candle closes, or only at the last 15-min check?"
   - "Max 2 losses per day: any two losses, or two in a row? (he says both)"
   - "VWAP on 15-min bars: use typical price (H+L+C)/3 x volume, or exact tick VWAP? (the 15-min series makes his VWAP update in steps every 15 minutes)"
   - "When neither the long nor the short conditions hold, is the cross hidden (no trend) - and does an open 'first pullback' setup reset?"
   - "Prop firm rules used in the simulation (account size, profit target, drawdown type and size, daily loss limit) were not stated."
-  - "Commission and slippage assumptions behind the 300% figure."
+  - "Costs: the trade list shows stop-loss exits of 80.5 points ($1,610) and targets filled exactly ($800 long, $1,000 short), so it looks like about 2 ticks of slippage on stops and no commission. Re-test with commissions (~$4-5 per side per NQ) - with a $74 average trade, costs matter."
 validation:
   in_sample_pct: 60
   monte_carlo_reshuffle_runs: 10000
@@ -96,4 +99,7 @@ notes:
   - "His 'DriftPullback VWAP Indicator' plots one cross every 15 minutes at the 15-min VWAP value: red when the short conditions hold, green when the long conditions hold. Crosses start right after the RTH open even though trading only starts at 10:30 ET."
   - "Chart setup: @NQ continuous contract, upper pane 5-min, lower pane 15-min (VWAP source). The chart axis appears to be exchange time (Chicago, CT): RTH open shows at 08:30 and the crosses stop around 14:50 CT (15:50 ET). Code all times in ET."
   - "Example day on screen: short-trend crosses from the open until about 11:15 CT, then flips to long-trend crosses as price reclaims VWAP; long triggers were the red pullback candles above the rising VWAP."
-  - "Video: 'Ex-Market Maker Shows the Exact VWAP Setup That Gets Traders...' (IQ Capital channel)."
+  - "Video: 'Ex-Market Maker Shows the Exact VWAP Setup That Gets Traders Funded' (IQ Capital channel, 2026-08-07, youtu.be/wm4A6qo0g3I)."
+  - "Trade list times (e.g. entries 09:45-13:10) are in chart time = Chicago (CT); add 1 hour for ET. Signal names: DriftPB.L / DriftPB.S; exits L.TP, L.SL, S.TP, S.SL."
+  - "Prop-firm simulation setup (Colab notebook 'PropFirm_MonteCarlo_The_Protocol'): 50K account, END-OF-DAY drawdown limit -$2,500, profit target +$3,000, max 20 trading days, 1 NQ (10 MNQ). It bootstraps DAILY P&L (pool of 1,455 weekdays, 1,422 with trades), 20,000 runs. Results: pass 49.8% (95% CI 49.1-50.5%), fail by drawdown 50.2%, fail by time 0%, average 3.4 days to pass, average max drawdown $2,078, 95th-percentile max drawdown $4,661, expected 2.0 challenges per pass. It also sweeps position size in MNQ contracts."
+  - "Caveat: max strategy drawdown ($29k) is ~12x the challenge's $2,500 limit - the pass rate depends on the challenge ending quickly (3.4 days), not on a smooth equity curve."
