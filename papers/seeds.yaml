@@ -1,0 +1,41 @@
+# Papers named by Conti that the agents should read first (from transcripts and screenshots).
+# The transcript miner appends new ones here automatically.
+
+- title: Market Intraday Momentum
+  authors: [Lei Gao, Yufeng Han, Sophia Zhengzi Li, Guofu Zhou]
+  year: 2018
+  note: "transcript 01 - opening range breakout"
+- title: "Volume Weighted Average Price (VWAP): The Holy Grail for Day Trading Systems"
+  authors: [Carlo Zarattini, Andrew Aziz]
+  year: 2023
+  note: "transcript 01 - VWAP trend"
+- title: Volatility-Managed Portfolios
+  authors: [Alan Moreira, Tyler Muir]
+  year: 2017
+  url: https://ssrn.com/abstract=2659431
+  note: "transcript 01 - volatility-targeted sizing"
+- title: The Impact of Volatility Targeting
+  authors: [Campbell R. Harvey, Edward Hoyle, Russell Korgaonkar, Sandy Rattray, Matthew Sargaison, Otto Van Hemert]
+  year: 2018
+  url: https://ssrn.com/abstract=3175538
+  note: "transcript 01 - volatility-targeted sizing"
+- title: "Return Differences between Trading and Non-trading Hours: Like Night and Day"
+  authors: [Michael Cliff, Michael J. Cooper, Huseyin Gulen]
+  year: 2008
+  note: "transcript 01 - overnight drift"
+- title: Comparing the Post-Earnings Announcement Drift for Surprises Calculated from Analyst and Time Series Forecasts
+  authors: [Joshua Livnat, Richard R. Mendenhall]
+  year: 2006
+  note: "transcript 01 - PEAD"
+- title: "Post-Earnings-Announcement Drift: Delayed Price Response or Risk Premium?"
+  authors: [Victor L. Bernard, Jacob K. Thomas]
+  year: 1989
+  note: "transcript 01 - PEAD (likely not on SSRN; may need the PDF dropped in papers/inbox)"
+- title: An Empirical Evaluation of Accounting Income Numbers
+  authors: [Ray Ball, Philip Brown]
+  year: 1968
+  note: "transcript 01 - PEAD (likely not on SSRN; may need the PDF dropped in papers/inbox)"
+- title: A Review of the Post-Earnings-Announcement Drift
+  authors: [Josef Fink]
+  year: 2021
+  note: "transcript 01 screenshot - PEAD literature review (open access)"

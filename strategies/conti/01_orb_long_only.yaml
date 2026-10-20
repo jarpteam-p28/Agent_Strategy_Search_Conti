@@ -1,0 +1,81 @@
+id: orb_long_only
+name: Opening Range Breakout (long only, 30-min range)
+status: spec
+source:
+  kind: transcript
+  ref: "transcript 01 (Chart Fanatics) - section I 'Market Intraday Momentum'"
+  papers:
+    - title: Market Intraday Momentum
+      authors: [Lei Gao, Yufeng Han, Sophia Zhengzi Li, Guofu Zhou]
+      year: 2018
+      venue: Journal of Financial Economics
+      note: Overnight gap + first 30 min return predicts the last 30 min of RTH.
+    - title: Volatility-Managed Portfolios
+      authors: [Alan Moreira, Tyler Muir]
+      year: 2017
+      url: https://ssrn.com/abstract=2659431
+      note: Basis for volatility-targeted sizing.
+    - title: The Impact of Volatility Targeting
+      authors: [Campbell R. Harvey, Edward Hoyle, Russell Korgaonkar, Sandy Rattray, Matthew Sargaison, Otto Van Hemert]
+      year: 2018
+      url: https://ssrn.com/abstract=3175538
+      note: Basis for volatility-targeted sizing.
+finding: >
+  The overnight gap plus the first 30 minutes of regular trading (09:30-10:00 ET) reveal the
+  buyer/seller imbalance and predict the direction of the rest of the session.
+why: >
+  News, earnings and global positioning accumulate while the market is closed. Many large players
+  can only trade after 09:30, so their orders collide in the first 30 minutes and reveal the
+  imbalance. The imbalance is too large to be absorbed in 30 minutes and carries through the day
+  (intraday momentum).
+what_would_kill_it: >
+  Large institutions (pension/mutual funds) being allowed or choosing to trade pre-market, so the
+  imbalance is absorbed before the open.
+market:
+  instruments: [NQ, ES]
+  bar_size: "5 min (open question; range defined on 1-min data)"
+  session: "RTH 09:30-16:00 America/New_York"
+  universe: null
+direction: long_only
+entry:
+  long: "Bar closes above the high of the 09:30-10:00 ET range -> buy at that bar's close."
+  short: null
+  filters: ["One trade per day (open question)", "No entry after time_exit"]
+exit:
+  stop_loss: "Low of the 09:30-10:00 ET range."
+  take_profit: "Entry + R x (entry - stop), R = 1 or 2."
+  time_exit: "Flat at 15:30 ET if neither stop nor target was hit."
+  other: []
+position_sizing:
+  development: "1 contract fixed."
+  live: >
+    Volatility targeting: fixed dollar risk per trade (whiteboard: $10,000);
+    contracts = risk_dollars / (range_points x point_value), floored, min 1.
+parameters:
+  - {name: range_start, default: "09:30", test_range: null, source: transcript}
+  - {name: range_minutes, default: 30, test_range: "15, 30, 45, 60", source: "transcript says academia finds 30 optimal"}
+  - {name: reward_risk, default: 1.0, test_range: "1.0, 1.5, 2.0", source: transcript}
+  - {name: time_exit, default: "15:30", test_range: "15:30, 15:55", source: transcript}
+  - {name: risk_dollars_live, default: 10000, test_range: null, source: "whiteboard"}
+variants:
+  - "Short side: sell when a bar closes below the range low (Conti expects it to be weaker)."
+  - "Volatility-targeted sizing vs 1 contract: compare risk-adjusted return."
+  - "Overnight-session version (see orb_overnight_session)."
+expectations:
+  - "Long-only should beat long/short; breakdowns get absorbed by dip buyers."
+  - "Edge should not be only beta: check it still made money in 2022."
+  - "R between 1 and 2 is near optimal."
+data_requirements: ["1-min OHLCV for NQ/ES with RTH session times, 2015+"]
+data_available: unknown
+open_questions:
+  - "Bar size used to confirm the breakout close (1, 5 or 15 min)?"
+  - "Allow re-entry after a stop-out the same day?"
+  - "Use front-month continuous contract with back-adjustment?"
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
+  extra_checks: ["Performance in 2022 down market", "Results by year"]
+related_strategies: [orb_overnight_session, overnight_drift_long]
+notes: []

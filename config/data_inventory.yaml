@@ -1,0 +1,22 @@
+# What historical data we have (exported from NinjaTrader to the local hard drive).
+# The strategist marks each strategy data_available: yes / partial / no based on this list.
+# TODO(Pablo): replace the placeholders below with the real list of instruments and bar sizes.
+
+source: NinjaTrader historical data export (local drive, not in this repo)
+confirmed: false   # set to true once the list below is real
+
+instruments:
+  - symbol: NQ
+    description: E-mini Nasdaq-100 futures
+    bar_sizes: [1min]
+    sessions: [ETH, RTH]
+    start: "2015-01-01"
+  - symbol: ES
+    description: E-mini S&P 500 futures
+    bar_sizes: [1min]
+    sessions: [ETH, RTH]
+    start: "2015-01-01"
+
+not_available:
+  - Earnings dates, actual EPS and analyst consensus estimates
+  - Single-stock fundamentals

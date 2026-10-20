@@ -1,0 +1,57 @@
+id: orb_overnight_session
+name: Opening Range Breakout on the overnight session (idea)
+status: idea
+source:
+  kind: transcript
+  ref: "transcript 01 (Chart Fanatics) - closing idea combining sections I and IV"
+  papers:
+    - title: "Return Differences between Trading and Non-trading Hours: Like Night and Day"
+      authors: [Michael Cliff, Michael J. Cooper, Huseyin Gulen]
+      year: 2008
+    - title: Market Intraday Momentum
+      authors: [Lei Gao, Yufeng Han, Sophia Zhengzi Li, Guofu Zhou]
+      year: 2018
+finding: >
+  Conti's own angle: if ~90% of index returns happen overnight, the biggest directional moves may
+  be there, so an opening range breakout run during the overnight session could capture them.
+why: >
+  Overnight liquidity is thin and new information (news, earnings, other regions opening) hits the
+  market; the resulting imbalances may trend the same way the RTH opening imbalance does.
+what_would_kill_it: "If overnight returns are a smooth premium rather than breakout-style moves."
+market:
+  instruments: [NQ, ES]
+  bar_size: "5 min (assumption)"
+  session: "ETH 18:00 -> 09:30 America/New_York"
+  universe: null
+direction: long_only
+entry:
+  long: "Bar closes above the high of the first N minutes after the ETH open (18:00 ET) - assumption, Conti gave no rules."
+  short: null
+  filters: []
+exit:
+  stop_loss: "Low of the opening range."
+  take_profit: "1R-2R."
+  time_exit: "Flat by 09:30 ET."
+  other: []
+position_sizing:
+  development: "1 contract fixed."
+  live: "Volatility targeting."
+parameters:
+  - {name: range_start, default: "18:00", test_range: "18:00, 20:00 (Asia), 03:00 (Europe)", source: assumption}
+  - {name: range_minutes, default: 30, test_range: "15, 30, 60", source: assumption}
+  - {name: reward_risk, default: 1.0, test_range: "1, 2", source: "carried from orb_long_only"}
+variants: ["Range anchored at the London open (03:00 ET) instead of 18:00."]
+expectations: []
+data_requirements: ["1-min NQ/ES including ETH, 2015+"]
+data_available: unknown
+open_questions:
+  - "Which 'open' defines the overnight range: Globex reopen, Asia, or London?"
+  - "Every rule here is our assumption - Conti only stated the idea."
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
+  extra_checks: []
+related_strategies: [orb_long_only, overnight_drift_long]
+notes: []

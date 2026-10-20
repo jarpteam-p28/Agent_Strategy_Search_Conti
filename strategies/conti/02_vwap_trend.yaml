@@ -1,0 +1,65 @@
+id: vwap_trend
+name: VWAP Trend (1-min, price vs session VWAP)
+status: spec
+source:
+  kind: transcript
+  ref: "transcript 01 (Chart Fanatics) - section II 'VWAP: The Holy Grail of DTS'"
+  papers:
+    - title: "Volume Weighted Average Price (VWAP): The Holy Grail for Day Trading Systems"
+      authors: [Carlo Zarattini, Andrew Aziz]
+      year: 2023
+      venue: "Industry paper (Concretum Research / Peak Capital Trading), SSRN"
+      note: >
+        QQQ and TQQQ, 2 Jan 2018 - 28 Sep 2023. $25k grew to about $192.7k net of commissions
+        (671%), max drawdown 9.4%, Sharpe 2.1, vs QQQ buy-and-hold 126%, max DD 37%, Sharpe 0.7.
+finding: >
+  On 1-minute bars, being long while price is above session VWAP and short while below,
+  exiting when price crosses back to VWAP, produced strong returns on QQQ with low drawdown.
+why: >
+  Almost every institutional desk executes orders with VWAP algos, which participate in
+  proportion to volume and try to match VWAP. When price crosses VWAP, the flow of these algos
+  amplifies the directional move.
+what_would_kill_it: >
+  Institutions moving away from VWAP-benchmarked execution, or an instrument where VWAP algos
+  are not widely used.
+market:
+  instruments: [NQ, ES, CL]
+  bar_size: "1 min"
+  session: "RTH 09:30-16:00 America/New_York; VWAP anchored at 09:30"
+  universe: "Later: single stocks"
+direction: long_short
+entry:
+  long: "1-min bar closes above session VWAP -> go long at the close."
+  short: "1-min bar closes below session VWAP -> go short at the close."
+  filters: ["Wait N minutes after 09:30 before the first signal (parameter)"]
+exit:
+  stop_loss: "Price crosses back to VWAP (close on the other side)."
+  take_profit: null
+  time_exit: "Flat at session close (assumed; open question)."
+  other: []
+position_sizing:
+  development: "1 contract fixed."
+  live: "Volatility targeting (contracts = risk / volatility) or % of portfolio for stocks (e.g. 10% of $100k)."
+parameters:
+  - {name: vwap_anchor, default: "09:30", test_range: "09:30, previous-day VWAP", source: "transcript (Conti suggests from open)"}
+  - {name: warmup_minutes, default: 5, test_range: "0, 5, 15, 30, 60", source: "transcript says optimize this in backtest"}
+  - {name: bar_minutes, default: 1, test_range: "1, 2, 5", source: paper}
+variants:
+  - "Same code on ES, CL and single stocks: the WHY applies wherever VWAP algos are used."
+  - "Long-only version."
+expectations:
+  - "Directional moves after VWAP crosses; many small losers, fewer large winners."
+data_requirements: ["1-min OHLCV with volume, RTH session, 2018+"]
+data_available: unknown
+open_questions:
+  - "Is it always in the market (flip straight from long to short on a cross), or flat until a new close beyond VWAP?"
+  - "Flat by 16:00, or hold overnight? (paper is a day-trading system: assume flat)"
+  - "Commission and slippage assumptions on 1-min trading frequency."
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
+  extra_checks: ["Sensitivity to commissions/slippage", "Results by year and by instrument"]
+related_strategies: []
+notes: []

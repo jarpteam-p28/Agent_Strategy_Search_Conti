@@ -1,0 +1,32 @@
+# What the scout looks for on SSRN / arXiv. Conti searches SSRN by plain keywords
+# (e.g. "trading") and browses results; these steer it toward testable anomalies.
+
+prefer:
+  - Intraday patterns in equity index futures (opening range, intraday momentum, last half hour)
+  - Overnight vs intraday returns
+  - Order flow and execution mechanics of institutions (VWAP/TWAP algos, rebalancing, fund flows)
+  - Calendar and structural flows (month-end, index rebalancing, option expiration, futures roll)
+  - Volatility targeting and volatility-managed sizing
+  - Trend following and time-series momentum in futures
+  - Mean reversion after overreaction / liquidity shocks
+  - Earnings and news drift
+  - Commodity futures anomalies (crude oil, gold)
+
+keywords:
+  - intraday momentum
+  - overnight returns
+  - opening range
+  - market close
+  - VWAP
+  - order imbalance
+  - institutional trading
+  - rebalancing flows
+  - time series momentum futures
+  - volatility managed
+  - return predictability intraday
+  - anomaly futures
+
+avoid:
+  - Pure theory with no testable trading rule
+  - Results that need data we can never get (proprietary order books, private fund data)
+  - High-frequency strategies (sub-second) we can't execute

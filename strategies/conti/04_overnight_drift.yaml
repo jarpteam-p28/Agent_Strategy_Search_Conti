@@ -1,0 +1,64 @@
+id: overnight_drift_long
+name: Overnight Drift (long close-to-open)
+status: spec
+source:
+  kind: transcript
+  ref: "transcript 01 (Chart Fanatics) - section IV 'Overnight Market Anomaly'"
+  papers:
+    - title: "Return Differences between Trading and Non-trading Hours: Like Night and Day"
+      authors: [Michael Cliff, Michael J. Cooper, Huseyin Gulen]
+      year: 2008
+      venue: SSRN
+      note: >
+        US equity premium over the prior decade came almost entirely from overnight (close-to-open)
+        returns; day returns near zero. Holds for stocks, indexes and index futures. Driven in part
+        by high opening prices that decline in the first hour.
+finding: >
+  About 90% of equity index returns come from holding overnight (16:00 -> 09:30); regular-hours
+  returns are close to flat. Conti says it still holds on NQ from 2015 to 2026.
+why: >
+  Two theories: (1) overnight risk premium - holders are paid for carrying risk while the market is
+  closed and illiquid (but 90% looks too big for this alone); (2) overnight illiquidity - news hits
+  a thin market, prices overreact at the open, then drift back toward fair value during the day.
+what_would_kill_it: >
+  Deeper overnight liquidity (24h trading of stocks/ETFs) removing the overreaction, or crowding of
+  the close-to-open trade.
+market:
+  instruments: [NQ, ES]
+  bar_size: "1 min (only need prices at 16:00 and 09:30)"
+  session: "Overnight 16:00 -> next 09:30 America/New_York"
+  universe: null
+direction: long_only
+entry:
+  long: "Buy at 16:00 ET (RTH close)."
+  short: null
+  filters: []
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: "Sell at 09:30 ET next session (RTH open)."
+  other: ["Weekends: hold Friday 16:00 -> Monday 09:30 (open question)"]
+position_sizing:
+  development: "1 contract fixed."
+  live: "Volatility targeting: more contracts when volatility is low, fewer when high."
+parameters:
+  - {name: entry_time, default: "16:00", test_range: "15:55, 16:00", source: transcript}
+  - {name: exit_time, default: "09:30", test_range: "09:30, 09:35", source: transcript}
+variants:
+  - "Compare against holding RTH only (09:30 -> 16:00) as a control."
+  - "ES, YM, RTY: same code."
+expectations:
+  - "~90% of buy-and-hold return comes from the overnight leg (NQ 2015-2026)."
+data_requirements: ["Intraday NQ/ES with ETH and RTH, 2015+"]
+data_available: unknown
+open_questions:
+  - "Hold over weekends and holidays?"
+  - "Fill at the 16:00 bar close or the 16:15 futures settle?"
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
+  extra_checks: ["Overnight leg vs RTH leg decomposition", "Results by year"]
+related_strategies: [orb_overnight_session, orb_long_only]
+notes: []

@@ -1,0 +1,16 @@
+{
+  "01_chart_fanatics_institutional_pipeline.txt": {
+    "hash": "da206453c9a7b219",
+    "title": "Ex Bank Trader: I Made €30M for Banks & Here's the Secret Behind It (Chart Fanatics, youtu.be/yW6c0K8uGvw)",
+    "summary": "Institutional pipeline (idea -> rules -> code -> backtest -> validation -> live); 90% of ideas come from SSRN papers; don't copy the paper, find the WHY; four worked examples: ORB, VWAP trend, PEAD, overnight drift.",
+    "strategies": [
+      "orb_long_only",
+      "vwap_trend",
+      "pead_long",
+      "overnight_drift_long",
+      "orb_overnight_session"
+    ],
+    "processed": "2026-10-19",
+    "processed_by": "manual (Claude, in chat)"
+  }
+}

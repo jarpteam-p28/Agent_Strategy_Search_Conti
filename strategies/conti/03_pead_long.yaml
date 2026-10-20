@@ -1,0 +1,84 @@
+id: pead_long
+name: Post-Earnings Announcement Drift (long, small/mid caps)
+status: spec
+source:
+  kind: transcript
+  ref: "transcript 01 (Chart Fanatics) - section III 'PEAD'"
+  papers:
+    - title: An Empirical Evaluation of Accounting Income Numbers
+      authors: [Ray Ball, Philip Brown]
+      year: 1968
+      venue: Journal of Accounting Research
+      note: First documentation; good-news stocks keep drifting up, bad-news down.
+    - title: "Post-Earnings-Announcement Drift: Delayed Price Response or Risk Premium?"
+      authors: [Victor L. Bernard, Jacob K. Thomas]
+      year: 1989
+      venue: Journal of Accounting Research, Vol. 27 Supplement
+      note: Drift lasts about 60 trading days.
+    - title: Comparing the Post-Earnings Announcement Drift for Surprises Calculated from Analyst and Time Series Forecasts
+      authors: [Joshua Livnat, Richard R. Mendenhall]
+      year: 2006
+      venue: Journal of Accounting Research, Vol. 44 No. 1
+      note: Drift is larger when the surprise is measured against analyst consensus.
+    - title: A Review of the Post-Earnings-Announcement Drift
+      authors: [Josef Fink]
+      year: 2021
+      venue: Journal of Behavioral and Experimental Finance
+      note: Literature review shown on screen (likely the "newer paper" about mega caps having no edge - verify).
+finding: >
+  After a positive earnings surprise with a positive price reaction, stocks keep drifting higher
+  for weeks (about 60 trading days). The drift is stronger when actual EPS beats analyst
+  consensus. Today it works in small/mid caps but not mega caps.
+why: >
+  (1) Slow information diffusion: small/mid caps have low analyst coverage, so the news is not
+  priced immediately. (2) Liquidity constraints: funds can't build a full position in one day and
+  spread the buying over days or weeks, which creates the drift.
+what_would_kill_it: >
+  More analyst coverage / faster information flow in small and mid caps; companies managing
+  expectations ahead of the release (pre-announcements), which already kills much of the short side.
+market:
+  instruments: ["US small/mid-cap stocks"]
+  bar_size: "1 day"
+  session: "Daily, entry at RTH open America/New_York"
+  universe: "US small and mid caps (monitor 20-30 names); later European stocks"
+direction: long_only
+entry:
+  long: >
+    On the first session after the earnings release: positive price reaction (gap up / positive
+    open-to-close) AND actual EPS > consensus EPS -> buy at the open of the following day.
+  short: null
+  filters: ["Exclude mega caps", "Exclude names that pre-announced"]
+exit:
+  stop_loss: "None in the base version. In-sample only: test e.g. -5% from entry-day open, or the pre-earnings close."
+  take_profit: null
+  time_exit: "Sell after 60 trading days."
+  other: []
+position_sizing:
+  development: "Equal weight: 1-2% of portfolio per position (or fixed dollars)."
+  live: "Test sizing by surprise size (EPS vs consensus) or by price reaction; keep the best risk-adjusted version."
+parameters:
+  - {name: holding_days, default: 60, test_range: "20, 40, 60", source: "Bernard & Thomas 1989"}
+  - {name: min_eps_surprise_pct, default: 0, test_range: "0, 5%, 10%", source: assumption}
+  - {name: weight_per_name, default: "1.5%", test_range: "1%, 2%", source: transcript}
+  - {name: stop_loss_pct, default: "none", test_range: "none, 5%, 10%", source: "transcript (in-sample only)"}
+variants:
+  - "Same rules on European small/mid caps (less coverage, lower liquidity)."
+  - "Short side for misses (Conti: weaker now because of pre-announcements)."
+expectations:
+  - "No edge in mega caps; edge in small/mid caps."
+data_requirements:
+  - "Daily OHLCV for US small/mid-cap stocks"
+  - "Earnings dates, actual EPS and consensus EPS estimates (not in NinjaTrader history)"
+data_available: partial
+open_questions:
+  - "Exact definition of 'positive price reaction': gap up, open-to-close, or both?"
+  - "Which earnings/estimates data source? (e.g. a paid API)"
+  - "How many names at once, and what if more than 30 qualify?"
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: "Stop if live drawdown exceeds the 95th percentile simulated drawdown for the same number of trades."
+  extra_checks: ["Mega cap vs small/mid split", "Survivorship-bias-free universe"]
+related_strategies: []
+notes: []
