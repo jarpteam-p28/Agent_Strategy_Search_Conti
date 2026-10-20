@@ -76,7 +76,8 @@ open_questions:
   - "'First' pullback: first red candle once per trend episode, or again after every new trend confirmation?"
   - "Must the three conditions still be true when the trigger candle closes, or only at the last 15-min check?"
   - "Max 2 losses per day: any two losses, or two in a row? (he says both)"
-  - "VWAP on 15-min bars: use typical price (H+L+C)/3 x volume, or exact tick VWAP?"
+  - "VWAP on 15-min bars: use typical price (H+L+C)/3 x volume, or exact tick VWAP? (the 15-min series makes his VWAP update in steps every 15 minutes)"
+  - "When neither the long nor the short conditions hold, is the cross hidden (no trend) - and does an open 'first pullback' setup reset?"
   - "Prop firm rules used in the simulation (account size, profit target, drawdown type and size, daily loss limit) were not stated."
   - "Commission and slippage assumptions behind the 300% figure."
 validation:
@@ -91,3 +92,8 @@ validation:
 related_strategies: [vwap_trend]
 notes:
   - "Conti developed and tested it in MultiCharts; the trade list was exported to Python for the prop-firm simulation."
+  - "Screenshots (transcripts/screenshots/02_*, local only) confirm the on-chart rule text word for word: LONG = PRICE above the VWAP / VWAP rising over the past 15 minutes / over the past 1 hour the NQ price increased at least 0.1%; SHORT = mirror; TRIGGER = LONGS first red candle towards the VWAP, SHORTS first green candle towards the VWAP."
+  - "His 'DriftPullback VWAP Indicator' plots one cross every 15 minutes at the 15-min VWAP value: red when the short conditions hold, green when the long conditions hold. Crosses start right after the RTH open even though trading only starts at 10:30 ET."
+  - "Chart setup: @NQ continuous contract, upper pane 5-min, lower pane 15-min (VWAP source). The chart axis appears to be exchange time (Chicago, CT): RTH open shows at 08:30 and the crosses stop around 14:50 CT (15:50 ET). Code all times in ET."
+  - "Example day on screen: short-trend crosses from the open until about 11:15 CT, then flips to long-trend crosses as price reclaims VWAP; long triggers were the red pullback candles above the rising VWAP."
+  - "Video: 'Ex-Market Maker Shows the Exact VWAP Setup That Gets Traders...' (IQ Capital channel)."
