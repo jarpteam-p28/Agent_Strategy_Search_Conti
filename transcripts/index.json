@@ -12,5 +12,15 @@
     ],
     "processed": "2026-10-19",
     "processed_by": "manual (Claude, in chat)"
+  },
+  "02_drift_vwap_pullback_prop_firms.txt": {
+    "hash": "4216221667ab6fe1",
+    "title": "How a QUANT Hedge Fund Exploits the Math of Prop Firms",
+    "summary": "Conti's Drift VWAP Pullback on NQ (5-min entries, 15-min VWAP trend: price vs VWAP, VWAP slope, >=0.1% 1h move; first counter candle; SL 80 / TP 40-50; guard rails). Designed to pass prop challenges: 64% win rate, 49.8% single-challenge pass, 93.6% within 4 attempts (20,000 sims). Method: prop-firm pass simulation, trust the machine, Monte Carlo yardsticks.",
+    "strategies": [
+      "drift_vwap_pullback"
+    ],
+    "processed": "2026-10-19",
+    "processed_by": "manual (Claude, in chat)"
   }
 }
