@@ -67,3 +67,31 @@
     the Vault Break)
   year: 1987
   note: transcript 03 - find the actual paper; see also 'Beat the Market' (Zarattini, Barbon, Aziz 2024)
+- title: Infrequent Rebalancing, Return Autocorrelation, and Seasonality
+  authors:
+  - Vincent Bogousslavsky
+  venue: Journal of Finance
+  year: 2016
+  note: >-
+    The main theoretical explanation for the effect (investors rebalancing late in the day and at fixed
+    intervals); useful for deriving what would make it stronger or weaker.
+- title: Intraday Patterns in the Cross-Section of Stock Returns
+  authors:
+  - Steven L. Heston
+  - Robert A. Korajczyk
+  - Ronnie Sadka
+  venue: Journal of Finance
+  year: 2010
+  note: >-
+    Finds half-hour returns of individual stocks repeat at the same time of day on following days for
+    up to 40 days; a possible cross-sectional angle for stocks (we have no stock data).
+- title: The Pre-FOMC Announcement Drift
+  authors:
+  - David O. Lucca
+  - Emanuel Moench
+  venue: Journal of Finance
+  year: 2015
+  note: >-
+    Equity premium earned in the 24 hours before scheduled FOMC announcements. Related to the paper's
+    finding that FOMC days have the strongest intraday momentum; candidate for a news-day strategy on
+    ES.

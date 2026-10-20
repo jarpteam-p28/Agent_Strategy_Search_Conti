@@ -1,0 +1,78 @@
+{
+  "title": "Volume Weighted Average Price (VWAP): The Holy Grail for Day Trading Systems",
+  "year": 2023,
+  "authors": [
+    "Carlo Zarattini",
+    "Andrew Aziz"
+  ],
+  "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4631351",
+  "paper_type": "industry",
+  "read_mode": "abstract_only",
+  "one_line": "Being long QQQ while intraday price is above VWAP and short while it is below, flat at the close, beat buy-and-hold on return, drawdown and Sharpe over 2018–2023, net of commissions (abstract-level claim, full text not read).",
+  "findings": [
+    {
+      "statement": "A simple VWAP trend day-trading rule (long above VWAP, short below VWAP) on QQQ turned $25k into about $192.7k (+671%) net of commissions from 2 Jan 2018 to 28 Sep 2023.",
+      "evidence": "Abstract: max drawdown 9.4%, Sharpe 2.1, versus QQQ buy-and-hold +126%, max drawdown 37%, Sharpe 0.7."
+    },
+    {
+      "statement": "Running the same rule on TQQQ (3x leveraged QQQ ETF) gave $25k to about $2.09M (+8,242%, about 116% a year), with max drawdown close to passive QQQ's.",
+      "evidence": "Abstract. Leverage on a day-trading signal avoids overnight decay and gap risk, but results depend heavily on the 2020–2021 high-volatility regime."
+    },
+    {
+      "statement": "The sample includes two bear markets and several volatility spikes, and the authors say the system works across regimes. They describe it as a promising building block, not a finished system.",
+      "evidence": "Abstract. I did not see the year-by-year tables, trade counts, win rate, or exact entry and exit and stop rules."
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics of big players (VWAP algos), with a secondary link to the idea that VWAP marks the day's volume-weighted fair value and so shows who is in control.",
+    "mechanism": "Institutional desks benchmark execution to VWAP, and many use VWAP algos. When price holds above VWAP, buyers are paying up relative to the day's average and algos and benchmarked orders keep adding in that direction. When price holds below VWAP, the reverse happens. The result is intraday continuation of the imbalance. Big orders also have to be worked through the day, so flow persists. The abstract itself speaks only of 'detecting market imbalances' and gives no deeper mechanism, so this WHY is mostly ours, consistent with Conti's own VWAP work.",
+    "who_is_forced": "Institutional desks with VWAP-benchmarked parent orders, which must participate in volume as price moves. Passive and benchmark-tracking funds that cannot chase early have to buy or sell later at worse prices. Retail traders who follow the VWAP line add to the effect.",
+    "why_it_persists": "VWAP is the standard institutional execution benchmark and this will not change soon. The effect comes from how orders are placed, not from information that gets arbitraged away. The cost is that the signal is public and easy to trade, so it is crowded and the raw edge is thin.",
+    "what_would_kill_it": "Institutions moving away from VWAP to arrival-price or implementation-shortfall algos. Very high commissions or slippage, because the strategy trades often. Choppy, low-volatility regimes where price crosses VWAP repeatedly (whipsaw). Wide crowding of the same rule. A regime where trend days become rare. Also, the huge TQQQ result is likely carried by the 2020–2021 volatility, not by a stable edge."
+  },
+  "tradable_edge": "Treat VWAP as a state-and-speed filter for intraday trend, not as a standalone flip-flop signal. Be long only when price is above VWAP, VWAP is rising and the last hour's move is large enough. Mirror this for shorts, or run long-only. Use guard rails: skip the first hour so VWAP has formed, cap trades per day, stop after N losses, no late entries, and flatten before the close. Size by volatility. Test on index futures (ES, and MNQ/NQ where data permits), since the same VWAP-algo WHY applies. The paper's headline numbers are a ceiling, not an expectation. Validate with an in-sample/out-of-sample split and Monte Carlo.",
+  "angles": [
+    "Run on ES 1-min (2013–2026) as the proxy for QQQ. Use RTH only, flat at the close, with a fixed 1-contract size in development.",
+    "Add the level/direction/speed conditions from Conti's video 02: price vs VWAP, VWAP slope, and a minimum % move over the last hour.",
+    "Long-only versus long+short. Index breakdowns tend to get absorbed by dip buyers, so the short side is probably weaker.",
+    "Event-based entry (the moment price crosses VWAP) versus state-based (being on one side of VWAP). Playbook note 04 says events beat states.",
+    "Pullback-to-VWAP entry in the trend direction, with a high win rate and reward/risk under 1, which fits prop-firm challenge geometry.",
+    "Use the volatility regime as a filter: skip days with a narrow range or low ATR, when VWAP crossings are noise.",
+    "Extend to NQ from the tick files (2021–2026) to compare, though no continuous series exists yet.",
+    "Use as one uncorrelated leg next to the overnight-bias and ORB strategies, and check daily P&L correlation (below 0.25)."
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "The paper is from late 2023 (revised 2025) and has 45k+ downloads, so the plain VWAP-side rule is widely known. VWAP is also a public indicator. The WHY (VWAP execution benchmark) is structural, so the effect should survive in weaker form. Realistic post-cost edge on index futures is likely much smaller than the TQQQ headline, and out-of-sample post-2023 results are unknown."
+  },
+  "data_fit": "Partly testable. ES 1-min ETH+RTH from 2013 to 2026 is enough to compute session VWAP and test the idea, using ES as a proxy for QQQ. NQ has ticks only from 2021 and no continuous 1-min series. QQQ and TQQQ data are not in the inventory, so the paper's exact test cannot be replicated. Intraday VWAP needs volume, which the 1-min ES files have. Time zone is UTC, so RTH sessions need converting from ET and daylight saving. Costs for ES are about $4–5 round turn, to be set realistically. Not available: the paper's exact entry, exit and stop rules, because I only read the abstract.",
+  "caveats": [
+    "I read only the SSRN abstract page. Both fetches (the abstract page and the PDF link) returned just the abstract, so the method, rules, tables and references were not seen.",
+    "Exact rules (bar size, entry timing, stops, exit time, position sizing, commission assumptions) are unknown to me and must be taken from the full PDF before setting starting parameters.",
+    "The abstract comes from Concretum Group and Bear Bull Traders authors. Returns are reported on compounded equity with no stated out-of-sample test.",
+    "The TQQQ result is a leveraged compounding result and probably overstates what is repeatable. The authors say it is not a fully developed system.",
+    "ETFs trade 4:00–20:00 ET and a QQQ strategy is not the same as ES futures VWAP, which has different volume and session conventions."
+  ],
+  "reported_results": {
+    "headline": "QQQ VWAP trend strategy +671% vs +126% buy-and-hold from 2018 to Sep 2023. TQQQ version +8,242%.",
+    "key_stats": [
+      "QQQ: $25,000 to $192,656, max drawdown 9.4%, Sharpe 2.1",
+      "QQQ buy-and-hold: +126%, max drawdown 37%, Sharpe 0.7",
+      "TQQQ: $25,000 to $2,085,417, about 116% a year, drawdown similar to passive QQQ"
+    ],
+    "costs_included": "Net of commissions per the abstract. Slippage treatment is unknown."
+  },
+  "setting": {
+    "data_frequency": "Intraday (bar size not visible in the abstract)",
+    "holding_period": "Intraday (day trading system)",
+    "instruments": [
+      "QQQ",
+      "TQQQ"
+    ],
+    "markets": [
+      "US equity ETFs (Nasdaq-100)"
+    ],
+    "sample_period": "2018-01-02 to 2023-09-28"
+  },
+  "referenced_papers_worth_reading": []
+}
