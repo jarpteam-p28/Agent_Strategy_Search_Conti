@@ -3,7 +3,7 @@ name: Noise Area Intraday Momentum (ES/NQ, long/short, band+VWAP trailing stop)
 status: spec
 source:
   kind: paper
-  ref: papers/summaries/1987_paper_on_the_intraday_noise_area_around_the_session_ope.md
+  ref: papers/summaries/beat_the_market_intraday_momentum_spy_zarattini.md
   papers:
   - title: 'Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)'
     authors:

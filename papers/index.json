@@ -1,5 +1,5 @@
 {
-  "1987_paper_on_the_intraday_noise_area_around_the_session_ope": {
+  "beat_the_market_intraday_momentum_spy_zarattini": {
     "title": "1987 paper on the intraday noise area around the session open (title unknown - cited by Conti for the Vault Break)",
     "year": 1987,
     "note": "transcript 03 - find the actual paper; see also 'Beat the Market' (Zarattini, Barbon, Aziz 2024)",
@@ -10,7 +10,7 @@
     "pdf_url": "https://alexandria.unisg.ch/bitstreams/a99aba00-f967-49b3-aceb-f544dc386e0b/download",
     "venue": "SSRN Working Paper 4824172 / Swiss Finance Institute Research Paper No. 24-97",
     "read_mode": "full_pdf",
-    "summary": "papers/summaries/1987_paper_on_the_intraday_noise_area_around_the_session_ope.md",
+    "summary": "papers/summaries/beat_the_market_intraday_momentum_spy_zarattini.md",
     "updated": "2026-10-20",
     "strategies": [
       "noise_area_momentum_es",
