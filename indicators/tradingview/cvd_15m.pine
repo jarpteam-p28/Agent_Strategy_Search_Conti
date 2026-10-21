@@ -1,0 +1,188 @@
+//@version=6
+// CVD 15m (Conti-style) — cumulative volume delta checked every 15 minutes, with the same three checks Conti uses
+// on his 15-minute VWAP (level, direction, speed). Companion to drift_vwap_15m_on_5m.pine.
+//
+//   Delta      every chart bar is split into buying vs selling volume using 1-minute bars inside it
+//              (close > open = buying volume, close < open = selling volume, unchanged = same side as before) —
+//              the same idea as TradingView's built-in CVD. Cumulated from the session start.
+//   Session    09:30 New York (default, like the Drift VWAP) or midnight Chicago (like Vault Break).
+//   Every 15-minute close:
+//     Level      CVD > 0 (buyers ahead since the open)                     | short: CVD < 0
+//     Direction  CVD higher than 15 minutes ago                            | short: lower
+//     Speed      CVD change over the last hour ÷ volume in that hour ≥ 5%  | short: ≤ −5%
+//   Crosses: GREEN when CVD rose vs 15 min ago, RED when it fell (like the VWAP crosses). Option: colour only when all 3 agree.
+//   Background: green/red when the CVD (all 3) AND Conti's 15-min VWAP drift (all 3) point the same way.
+// Use a 1-, 3- or 5-minute chart. Values appear only after each 15-minute bar closes — no repainting.
+
+indicator("CVD 15m (Conti-style)", shorttitle = "CVD15", overlay = false, format = format.volume)
+
+// ---------------- Inputs ----------------
+G1 = "Colour"
+all3     = input.bool(false, "Colour only when ALL 3 CVD conditions are met", group = G1, tooltip = "OFF = green when CVD rose over the last 15 min, red when it fell.\nON = green/red only when level, direction AND speed all agree; grey otherwise.")
+showLine = input.bool(true, "Show running CVD line", group = G1)
+showBg   = input.bool(true, "Shade when CVD and VWAP drift agree", group = G1)
+showMark = input.bool(true, "Mark the start of each agreement", group = G1)
+showTbl  = input.bool(true, "Info box", group = G1)
+
+G2 = "CVD conditions"
+minImbPct = input.float(5.0, "Min imbalance over look-back (% of volume)", step = 1.0, group = G2, tooltip = "Starting point 5%. Pick the real threshold from your data (e.g. top 30% of past readings).")
+lookback  = input.int(4, "Look-back (15-min bars)", minval = 1, group = G2, tooltip = "4 × 15 min = 1 hour, like Conti's 0.1% move check")
+ltf       = input.timeframe("1", "Lower timeframe for the buy/sell split", group = G2)
+
+G3 = "Session"
+anchor  = input.string("09:30 New York", "CVD resets at", options = ["09:30 New York", "Midnight Chicago"], group = G3)
+aggMin  = input.int(15, "Check every (minutes)", minval = 1, group = G3)
+
+G4 = "VWAP drift (for the agreement shading)"
+vwMove  = input.float(0.1, "Min price move over the look-back (%)", step = 0.05, group = G4)
+
+if not timeframe.isminutes or timeframe.multiplier > aggMin or aggMin % timeframe.multiplier != 0
+    runtime.error("Use a minute chart whose bar size divides " + str.tostring(aggMin) + " minutes (1, 3 or 5 min).")
+
+// ---------------- Delta of each chart bar from 1-minute bars ----------------
+[lOpen, lClose, lVol] = request.security_lower_tf(syminfo.tickerid, ltf, [open, close, volume])
+var float lastDir = 1.0
+float barDelta = 0.0
+nL = array.size(lClose)
+if nL > 0
+    for i = 0 to nL - 1
+        c = array.get(lClose, i)
+        o = array.get(lOpen, i)
+        dir = c > o ? 1.0 : c < o ? -1.0 : lastDir
+        lastDir := dir
+        barDelta += dir * nz(array.get(lVol, i))
+else
+    dir = close > open ? 1.0 : close < open ? -1.0 : lastDir
+    lastDir := dir
+    barDelta := dir * nz(volume)
+
+// ---------------- Sessions ----------------
+tzNY = "America/New_York"
+tzCT = "America/Chicago"
+cmNY = hour(time_close, tzNY) * 60 + minute(time_close, tzNY)
+cmCT = hour(time_close, tzCT) * 60 + minute(time_close, tzCT)
+isCT = anchor == "Midnight Chicago"
+inCvd  = isCT ? cmCT <= 960 : cmNY > 570 and cmNY <= 960
+cvdDay = isCT ? year(time_close, tzCT) * 10000 + month(time_close, tzCT) * 100 + dayofmonth(time_close, tzCT) : year(time_close, tzNY) * 10000 + month(time_close, tzNY) * 100 + dayofmonth(time_close, tzNY)
+inRth  = cmNY > 570 and cmNY <= 960                                   // VWAP drift session (Conti: 09:30 NY)
+nyDay  = year(time_close, tzNY) * 10000 + month(time_close, tzNY) * 100 + dayofmonth(time_close, tzNY)
+
+bucketMs     = aggMin * 60 * 1000
+bucketClosed = time_close % bucketMs == 0 and barstate.isconfirmed
+
+// ---------------- CVD + its 15-minute checks ----------------
+var float cvd     = 0.0
+var float sessVol = 0.0
+var int   cKey    = 0
+var float cvd15   = na
+var float cvdPrev = na
+var int   cvdSlope = 0
+var int   cvdAll   = 0
+var float imbNow   = na
+var cvdHist = array.new<float>()
+var volHist = array.new<float>()
+
+if inCvd and cvdDay != cKey
+    cKey     := cvdDay
+    cvd      := 0.0
+    sessVol  := 0.0
+    cvd15    := na
+    cvdPrev  := na
+    cvdSlope := 0
+    cvdAll   := 0
+    imbNow   := na
+    array.clear(cvdHist)
+    array.clear(volHist)
+
+if inCvd
+    cvd     += barDelta
+    sessVol += nz(volume)
+
+if bucketClosed and inCvd
+    cvdPrev := cvd15
+    cvd15   := cvd
+    array.push(cvdHist, cvd)
+    array.push(volHist, sessVol)
+    n = array.size(cvdHist)
+    imbNow := n > lookback and sessVol - array.get(volHist, n - 1 - lookback) > 0 ? (cvd - array.get(cvdHist, n - 1 - lookback)) / (sessVol - array.get(volHist, n - 1 - lookback)) * 100 : na
+    cvdSlope := na(cvdPrev) ? 0 : cvd15 > cvdPrev ? 1 : cvd15 < cvdPrev ? -1 : cvdSlope
+    longC  = not na(cvdPrev) and not na(imbNow) and cvd15 > 0 and cvd15 > cvdPrev and imbNow >= minImbPct
+    shortC = not na(cvdPrev) and not na(imbNow) and cvd15 < 0 and cvd15 < cvdPrev and imbNow <= -minImbPct
+    cvdAll := longC ? 1 : shortC ? -1 : 0
+if not inCvd
+    cvdSlope := 0
+    cvdAll   := 0
+
+// ---------------- Conti's 15-minute VWAP drift (same rules as the Drift VWAP indicator) ----------------
+var float bHigh = na
+var float bLow  = na
+var float bVol  = 0.0
+bucketKey = math.floor((time_close - 1) / bucketMs)
+if bucketKey != nz(bucketKey[1], -1)
+    bHigh := high
+    bLow  := low
+    bVol  := nz(volume)
+else
+    bHigh := math.max(bHigh, high)
+    bLow  := math.min(bLow, low)
+    bVol  += nz(volume)
+
+var float cumPV  = 0.0
+var float cumV   = 0.0
+var float vw15   = na
+var float vwPrev = na
+var int   vwDrift = 0
+var int   vKey    = 0
+var closes15 = array.new<float>()
+if inRth and nyDay != vKey
+    vKey    := nyDay
+    cumPV   := 0.0
+    cumV    := 0.0
+    vw15    := na
+    vwPrev  := na
+    vwDrift := 0
+if bucketClosed
+    array.push(closes15, close)
+    if array.size(closes15) > 200
+        array.shift(closes15)
+    if inRth
+        cumPV  += (bHigh + bLow + close) / 3 * bVol
+        cumV   += bVol
+        vwPrev := vw15
+        vw15   := cumV > 0 ? cumPV / cumV : na
+        m = array.size(closes15)
+        mv = m > lookback ? close / array.get(closes15, m - 1 - lookback) - 1 : na
+        lD = not na(vwPrev) and not na(mv) and close > vw15 and vw15 > vwPrev and mv >=  vwMove / 100
+        sD = not na(vwPrev) and not na(mv) and close < vw15 and vw15 < vwPrev and mv <= -vwMove / 100
+        vwDrift := lD ? 1 : sD ? -1 : 0
+if not inRth
+    vwDrift := 0
+
+agree = cvdAll != 0 and cvdAll == vwDrift ? cvdAll : 0
+
+// ---------------- Plots ----------------
+hline(0, "Zero", color = color.new(color.gray, 50), linestyle = hline.style_dashed)
+plot(showLine and inCvd ? cvd : na, "CVD (running)", color = color.new(color.silver, 40), style = plot.style_linebr)
+state = all3 ? cvdAll : cvdSlope
+plot(inCvd ? cvd15 : na, "CVD 15m", color = state == 1 ? color.lime : state == -1 ? color.red : color.gray, style = plot.style_cross, linewidth = 2)
+bgcolor(showBg and agree == 1 ? color.new(color.lime, 85) : showBg and agree == -1 ? color.new(color.red, 85) : na, title = "CVD + VWAP agree")
+plotshape(showMark and agree == 1 and agree[1] != 1, "Agreement starts (long)", shape.triangleup, location.bottom, color.lime, size = size.tiny)
+plotshape(showMark and agree == -1 and agree[1] != -1, "Agreement starts (short)", shape.triangledown, location.top, color.red, size = size.tiny)
+
+alertcondition(agree == 1 and agree[1] != 1, "CVD + VWAP long agreement", "CVD15: CVD and VWAP drift agree LONG on {{ticker}}")
+alertcondition(agree == -1 and agree[1] != -1, "CVD + VWAP short agreement", "CVD15: CVD and VWAP drift agree SHORT on {{ticker}}")
+
+var table box = table.new(position.top_right, 2, 6, bgcolor = color.new(color.black, 20), border_width = 1)
+if showTbl and barstate.islast
+    table.cell(box, 0, 0, "CVD 15m", text_color = color.white)
+    table.cell(box, 1, 0, isCT ? "from 00:00 CT" : "from 09:30 NY", text_color = color.white)
+    table.cell(box, 0, 1, "Level (CVD)", text_color = color.white)
+    table.cell(box, 1, 1, str.tostring(cvd15, format.volume), text_color = nz(cvd15) > 0 ? color.lime : nz(cvd15) < 0 ? color.red : color.gray)
+    table.cell(box, 0, 2, "Direction (vs 15m ago)", text_color = color.white)
+    table.cell(box, 1, 2, cvdSlope == 1 ? "rising" : cvdSlope == -1 ? "falling" : "flat / n/a", text_color = cvdSlope == 1 ? color.lime : cvdSlope == -1 ? color.red : color.gray)
+    table.cell(box, 0, 3, "Speed (" + str.tostring(lookback * aggMin) + "m imbalance)", text_color = color.white)
+    table.cell(box, 1, 3, na(imbNow) ? "n/a" : str.tostring(imbNow, "+#.#;-#.#") + "%", text_color = nz(imbNow) >= minImbPct ? color.lime : nz(imbNow) <= -minImbPct ? color.red : color.gray)
+    table.cell(box, 0, 4, "VWAP drift", text_color = color.white)
+    table.cell(box, 1, 4, vwDrift == 1 ? "LONG" : vwDrift == -1 ? "SHORT" : "off", text_color = vwDrift == 1 ? color.lime : vwDrift == -1 ? color.red : color.gray)
+    table.cell(box, 0, 5, "CVD + VWAP", text_color = color.white)
+    table.cell(box, 1, 5, agree == 1 ? "AGREE LONG" : agree == -1 ? "AGREE SHORT" : "no", text_color = agree == 1 ? color.lime : agree == -1 ? color.red : color.gray)
