@@ -107,3 +107,54 @@
   note: >-
     The authors' earlier ORB paper, cited as the companion study. It is the same family as the ORB strategy
     in the Conti method and could be combined with the VWAP filter.
+- title: Hedging demand and market intraday momentum
+  authors:
+  - G. Baltussen
+  - Z. Da
+  - S. Lammers
+  - M. Martens
+  venue: Journal of Financial Economics 142(1)
+  year: 2021
+  note: >-
+    Ties intraday momentum to dealer gamma hedging flow. This is the best-supported WHY for the effect
+    and suggests a regime filter.
+- title: Understanding intraday momentum strategies
+  authors:
+  - C. Rosa
+  venue: Journal of Futures Markets 42(12)
+  year: 2022
+  note: >-
+    Shows predictability weakened after 2013 and depends on volatile regimes. This is directly relevant
+    to decay risk and regime filtering.
+- title: The Adjustment of Stock Prices to New Information
+  authors:
+  - Eugene F. Fama
+  - Lawrence Fisher
+  - Michael C. Jensen
+  - Richard Roll
+  venue: International Economic Review
+  year: 1969
+  note: Cited as a 1967 working paper. The method and the efficiency framing behind the event study.
+- title: The Information Content of Annual Earnings Announcements
+  authors:
+  - William H. Beaver
+  venue: Journal of Accounting Research (Supplement)
+  year: 1968
+  note: >-
+    Companion paper showing price and volume reactions around the announcement. It also supports the finding
+    that information is concentrated in the announcement month.
+- title: The Predictive Content of Quarterly Earnings
+  authors:
+  - Philip Brown
+  - Victor Niederhoffer
+  venue: Journal of Business
+  year: 1968
+  note: >-
+    Cited as forthcoming. Quarterly earnings as a predictor, relevant to building a higher-frequency surprise.
+- title: 'Post-Earnings Announcement Drift: The Role of Revenue Surprises'
+  authors:
+  - Narasimhan Jegadeesh
+  - Joshua Livnat
+  venue: Financial Analysts Journal
+  year: 2006
+  note: Adds revenue surprises as another PEAD signal.

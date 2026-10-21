@@ -1,0 +1,242 @@
+id: pead_benchmark_disagreement
+name: 'PEAD benchmark disagreement: analyst beat while EPS is below last year (long small/mid caps)'
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/comparing_the_post_earnings_announcement_drift_for_surprises.md
+  papers:
+  - title: >-
+      Comparing the Post-Earnings Announcement Drift for Surprises Calculated from Analyst and Time Series
+      Forecasts
+    authors:
+    - Joshua Livnat
+    - Richard R. Mendenhall
+    venue: Journal of Accounting Research
+    year: 2006
+    url: https://doi.org/10.1111/j.1475-679X.2006.00196.x
+    note: >-
+      Analyst-based surprise gives more drift than the time-series surprise. Small traders react to the
+      time-series surprise, large traders to the analyst one. Summary written from the abstract only.
+  - title: 'Post-Earnings-Announcement Drift: Delayed Price Response or Risk Premium?'
+    authors:
+    - Victor Bernard
+    - Jacob Thomas
+    venue: Journal of Accounting Research
+    year: 1989
+    note: Time-series SUE and the 60-day horizon.
+finding: >-
+  US quarterly earnings, about 1987-2003: drift after surprises measured against the I/B/E/S consensus
+  is larger than drift after seasonal random-walk surprises (same quarter last year). The analyst surprise
+  adds information beyond the time-series surprise and beyond the announcement-window return. Small traders
+  react more to the naive time-series surprise and large traders to the analyst surprise. The drift is
+  biggest in costly-to-trade stocks (low price, low volume, small size).
+why: >-
+  Slow information diffusion plus investors of different sophistication. Naive (small) traders anchor
+  on last year's EPS. Informed institutions anchor on consensus and must work orders slowly in illiquid
+  names. When the two benchmarks DISAGREE (beat consensus but EPS down year on year), naive selling pushes
+  the announcement-window price below what the consensus news justifies. Institutions then buy over the
+  following weeks, which is the drift. This is a new angle compared with pead_long: instead of stacking
+  agreeing signals, we target the case where the naive signal is wrong. The mispricing should be largest
+  exactly there, and the crowd of standard SUE-decile PEAD funds may not be in it.
+market:
+  instruments:
+  - US single stocks
+  bar_size: daily
+  session: RTH 09:30-16:00 America/New_York; trade at the close of announcement day +1 (or the next open)
+  universe: >-
+    US common stocks, market cap roughly $300M-$10B, price > $5, 20-day median dollar volume > $2M, analyst
+    coverage 1-5 estimates
+direction: long_only
+entry:
+  long: >-
+    On day +1 after an earnings release (day 0 = announcement, or the next trading day if released after
+    the close), buy if ALL hold: (1) analyst surprise SUE_a = (actual EPS - consensus median) / price
+    is in the top quintile of announcements from the trailing 90 days; (2) time-series surprise SUE_ts
+    = (EPS - EPS same quarter last year) / price <= 0, the disagreement condition; (3) the 2-day announcement
+    return (day 0 to day +1) minus the market (IWM/SPY) is <= +2%, so the naive reaction has held the
+    price back.
+  short: null
+  filters:
+  - Exclude stocks with a price below $5
+  - Exclude announcements with no consensus or fewer than 1 estimate
+  - 'Optional: require the 20-day median dollar volume to be within the tradable band (costs control)'
+  - No new entry if the stock is already held
+exit:
+  stop_loss: Close below the entry price minus 2.5 x 20-day ATR (wide, catastrophe-only stop)
+  take_profit: null
+  time_exit: >-
+    Sell at the close of trading day 60 after entry, or the day before the next earnings announcement,
+    whichever comes first
+  other:
+  - Exit if the company is delisted or acquired (use the deal price)
+position_sizing:
+  development: >-
+    Equal weight per position (e.g. $10,000 notional each), no leverage, unlimited concurrent names, to
+    measure the raw signal
+  live: >-
+    Volatility-targeted per name: dollar risk per name fixed (e.g. 0.5% of equity) / (2.5 x ATR20); cap
+    at 2% of portfolio per name and 5% of the name's 20-day average daily dollar volume across the whole
+    build
+parameters:
+- name: analyst_surprise_quantile
+  default: top 20%
+  source: paper (decile hedge portfolios); quintile is our assumption to get enough trades
+  test_range: top 10% / 20% / 30%
+- name: ts_surprise_max
+  default: 0
+  source: assumption (disagreement condition)
+  test_range: 0, or compare against the agreeing case SUE_ts > 0 as a control
+- name: max_announcement_excess_return
+  default: 2%
+  source: assumption
+  test_range: 0% to 5%, or no filter
+- name: holding_days
+  default: 60
+  source: paper / Bernard-Thomas 1989
+  test_range: 20, 40, 60
+- name: market_cap_band
+  default: $300M-$10B
+  source: paper (drift biggest in small/costly names)
+  test_range: micro <$300M; small $300M-$2B; mid $2B-$10B
+- name: stop_atr_mult
+  default: 2.5
+  source: assumption
+  test_range: 2 to 4, or no stop
+open_questions:
+- >-
+  The summary is from memory and the abstract only. We have not verified that the disagreement subgroup
+  actually shows the larger drift. The trade-size finding implies it, but the paper may not test it directly.
+- >-
+  Is the drift in the disagreement subgroup bigger than in the plain top-SUE_a group used by pead_long?
+  This is the main hypothesis test; run both on the same data.
+- 'Surprise scaling: by price, by the standard deviation of past surprises, or by analyst dispersion?'
+- >-
+  Street EPS (I/B/E/S actual) or GAAP EPS for the time-series surprise? Naive investors probably see the
+  headline number.
+- How to handle the announcement timing (before the open vs after the close) without look-ahead.
+- >-
+  Do costs (spread plus impact) in small caps wipe out the extra drift? Model at least 20-50 bps round
+  trip by size bucket.
+- >-
+  Since 2003, have retail news apps that headline 'beat/miss vs estimates' moved small traders onto the
+  analyst benchmark? That would kill the disagreement angle.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th-percentile drawdown from the bootstrap for the same number
+    of trades
+  extra_checks:
+  - Chronological split by announcement date (e.g. 2005-2020 IS, 2021+ OOS)
+  - >-
+    Benchmark against (a) the plain top-quintile SUE_a group, (b) the agreeing group (SUE_ts > 0), and
+    (c) the size-matched market (IWM). The edge must beat all three.
+  - 'Long-only beta check: performance in 2008, 2018 Q4, 2022'
+  - Results by size bucket and net of costs
+  - Year-by-year results to see decay after 2006
+data_available: 'no'
+data_requirements:
+- Daily OHLCV for US stocks, including delisted names (survivorship-free)
+- Earnings calendar with announcement timestamps (BMO/AMC)
+- Actual EPS (I/B/E/S street) and historical EPS for the same quarter last year
+- Point-in-time analyst consensus (median) and number of estimates
+- Market cap / shares outstanding, point in time
+- IWM/SPY daily for excess returns
+expectations:
+- >-
+  Positive 60-day excess return for the disagreement group, larger than for the agreeing top-SUE_a group
+- Larger effect in small/low-volume names, shrinking in mid caps
+- Drift accrues gradually over 60 days, not just in the first week
+- Smaller effect after 2006 than in the 1987-2003 sample
+what_would_kill_it: >-
+  If small/retail investors now anchor on the consensus 'beat/miss' headline (no benchmark disagreement
+  in reactions), if the announcement-window price already fully reflects the analyst surprise, or if costs
+  in the eligible small caps exceed the extra drift. Also crowding by quant PEAD funds that use consensus
+  SUE.
+notes:
+- >-
+  This is an angle on the existing PEAD specs, not a duplicate: pead_long buys when signals agree; this
+  buys when the naive signal disagrees and holds the price back.
+- Not testable with the NinjaTrader inventory (futures only).
+related_strategies:
+- pead_long
+- pead_next_announcement
+variants:
+- Same rule with 20-day holding, for faster capital turnover
+- Europe small caps with thin coverage
+- 'Control: drop the announcement-return filter (3)'
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 3
+    testability: 2
+    overfit_resistance: 3
+  verdict: park
+  copies_the_paper: false
+  reasons:
+  - >-
+    The spec does not copy the paper. It builds its own angle on the WHY: naive traders anchor on last
+    year's EPS while institutions anchor on consensus, so the case where the two disagree should be mispriced.
+    The authors don't trade this case themselves.
+  - >-
+    The WHY can't be checked yet. The source summary was written from memory and the abstract only, and
+    every finding is marked 'not verified'. The key link, that small-trader selling holds the price down
+    when EPS is below last year, is inferred from a trade-size result the paper may never have tested
+    for the disagreement subgroup. This is a hypothesis built on another hypothesis.
+  - >-
+    Persistence is weak. The paper's sample ends in 2003. Since then, retail apps, broker notifications
+    and headlines frame results as 'beat/miss vs estimates', which plausibly moved naive traders onto
+    the consensus benchmark. That would remove the disagreement mechanism. Decay risk for PEAD in general
+    is already high, and the remaining edge lives in the costliest names.
+  - >-
+    The trade count may be too small. Top-quintile analyst beat, AND EPS at or below last year, AND an
+    announcement excess return of +2% or less, in a $300M-$10B universe with 1-5 estimates, is a narrow
+    intersection. Splitting 80/20, then by size bucket and by year, could leave too few trades for any
+    test to mean anything.
+  - >-
+    There are six parameters (quintile, time-series threshold, announcement-return cap, holding period,
+    market-cap band, ATR stop multiple), and two of them are pure assumptions (the +2% cap and the 2.5
+    ATR stop). Filter (3) is a free threshold that could easily be fitted in-sample.
+  - >-
+    Scaling surprise by price makes the top quintile lean toward low-priced stocks, which mixes up the
+    disagreement effect with the low-price/high-cost effect the paper already documents.
+  - >-
+    Testability: none of the data is in the inventory. We would need point-in-time I/B/E/S consensus and
+    actuals, BMO/AMC timestamps, and survivorship-free daily prices. The data can be bought, but it is
+    expensive. More importantly, the same dataset is needed for pead_long, so this costs almost nothing
+    extra once pead_long is funded.
+  - >-
+    Good points: there is a clear control design (plain top-quintile analyst surprise, the agreeing group,
+    IWM), a long-only beta check, cost modelling by size bucket, and an honest kill condition.
+  - >-
+    It is parked rather than rejected: the idea is cheap to test as a conditional split inside the pead_long
+    backtest, but it shouldn't get its own backtest budget until the paper is verified and pead_long's
+    data exists.
+  required_changes:
+  - >-
+    Get the full Livnat-Mendenhall paper (and, if possible, other work on conflicting earnings signals,
+    e.g. sign disagreement between analyst and time-series surprise). Confirm whether drift is actually
+    larger when the two surprises disagree. If the evidence points the other way, drop the spec.
+  - >-
+    Recast the spec as a conditional split of pead_long on the same data, not a standalone strategy. First
+    test: inside the top-quintile analyst-surprise group, compare the 60-day excess return for time-series
+    surprise <= 0 against > 0, with filter (3) turned off.
+  - >-
+    Before any rule tuning, report how many trades per year the full three-condition intersection gives.
+    If there are fewer than about 100 in-sample trades, or fewer than about 30 out-of-sample, simplify
+    (e.g. drop filter 3) rather than widen the parameters.
+  - >-
+    Fix the surprise scaling up front: scale by the standard deviation of past surprises or by analyst
+    dispersion, not by price, so price doesn't drive the ranking. Do not tune it.
+  - >-
+    Fix the EPS definition up front, before seeing results (headline/street EPS on both sides, to match
+    what naive traders see).
+  - >-
+    Drop the 2.5x ATR stop during development (time exit only), so the exit can't flatter the entry. Add
+    a stop only if the out-of-sample drawdown calls for it.
+  - >-
+    Add a decay test aimed at the mechanism: compare the disagreement-group excess return before and after
+    roughly 2012, when retail beat/miss headlines became widespread. If the post-2012 effect is not above
+    the agreeing group, treat the edge as dead.

@@ -1,0 +1,275 @@
+id: pead_next_announcement
+name: 'Repeat Surprise: trade the next earnings announcement after an extreme surprise (single stocks)'
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/a_review_of_the_post_earnings_announcement_drift.md
+  papers:
+  - title: A Review of the Post-Earnings-Announcement Drift
+    authors:
+    - Josef Fink
+    year: 2020
+    venue: University of Graz Working Paper 2020-04
+    url: https://static.uni-graz.at/fileadmin/sowi/Working_Paper/2020-04_Fink.pdf
+    pdf_url: https://static.uni-graz.at/fileadmin/sowi/Working_Paper/2020-04_Fink.pdf
+    note: >-
+      Review. Its key point for this angle: much of the drift is concentrated in the 3-day window around
+      the NEXT announcement, because investors underestimate how persistent earnings surprises are (positive
+      autocorrelation at lags 1-3, negative at lag 4).
+  - title: >-
+      Evidence that stock prices do not fully reflect the implications of current earnings for future
+      earnings
+    authors:
+    - Victor Bernard
+    - Jacob Thomas
+    year: 1990
+    venue: Journal of Accounting and Economics
+    note: >-
+      Original evidence that returns around announcements q+1..q+3 are predictable from the SUE at q,
+      with a reversal at q+4.
+  - title: How naive is the stock market's use of earnings information?
+    authors:
+    - Ray Ball
+    - Eli Bartov
+    year: 1996
+    venue: Journal of Accounting and Economics
+    note: Market underestimates the autocorrelation by about 50%.
+finding: >-
+  After an extreme quarterly earnings surprise (top or bottom SUE decile), the stock tends to be surprised
+  again in the same direction at the next one to three announcements. A large share of the 60-day PEAD
+  return shows up in the roughly 3-day window around the next announcement. At the fourth announcement
+  (same quarter next year) the sign flips, because seasonally differenced earnings are negatively autocorrelated
+  at lag 4. US evidence from Bernard & Thomas (1990), with Ball & Bartov (1996) and Rendleman et al. (1987)
+  finding the same thing.
+why: >-
+  Naive expectations plus inattention. Many investors, mostly small ones, and partly analysts, forecast
+  earnings as a seasonal random walk. That way of forecasting ignores how persistent surprises are, so
+  it predictably misses again in the same direction next quarter. The repeat surprise is priced only when
+  it is announced. It is a scheduled information event, so the edge is packed into a few days and you
+  do not have to hold through 60 days of idiosyncratic risk. Limits to arbitrage (costs, short-sale constraints,
+  idiosyncratic volatility in small and mid caps) keep the gap from being fully closed beforehand. This
+  differs from pead_long, which buys right after the announcement and holds about 60 days. This strategy
+  enters only just before the NEXT announcement and holds about 3-4 days, so it ties up less capital,
+  has fewer days of exposure, and gives a separate, less correlated return stream.
+market:
+  instruments:
+  - US single stocks
+  bar_size: 1day
+  session: RTH 09:30-16:00 America/New_York (enter at close, exit at close)
+  universe: >-
+    US common stocks, small and mid caps (market cap roughly $300M-$10B), price > $5, 20-day average dollar
+    volume > $5M. Mega caps excluded because their coverage is heavy.
+direction: long_short
+entry:
+  long: >-
+    At the close 2 trading days before the scheduled announcement for quarter q+1, buy stocks whose SUE
+    at quarter q was in the top decile of the cross-section. SUE = (EPS_q - EPS_q-4) / std of that difference
+    over the last 8 quarters. Variant: analyst surprise = (actual - consensus) / price.
+  short: >-
+    Same timing for stocks whose SUE at q was in the bottom decile. Run the short side as a separate book:
+    the review says analyst-based drift comes mostly from the long side, and firms pre-announce bad news.
+  filters:
+  - >-
+    The next announcement date must be confirmed or known before entry (no look-ahead from realized dates)
+  - >-
+    The announcement at q must have had a same-sign 3-day abnormal return (price reaction confirms the
+    surprise)
+  - >-
+    Optional attention filter (test in-sample only): the q announcement fell on a Friday or a busy earnings
+    day (top quintile of same-day announcement count)
+  - >-
+    Skip stocks with active listed options in the base test (the review says heavily arbitraged names
+    can overreact and reverse); test them separately as a variant
+exit:
+  stop_loss: >-
+    None in the base test (event trade with a fixed horizon, so the exit cannot flatter the entry). Variant:
+    -3x the stock's 20-day ATR, close basis.
+  take_profit: null
+  time_exit: >-
+    Close at the close of trading day +1 after the announcement (window -2..+1, about 4 sessions). Test
+    holding to +3 and +5.
+  other:
+  - >-
+    If the announcement date moves, exit at the close of the original day +1, or hold to the new date
+    + 1 (decide in-sample)
+position_sizing:
+  development: 'Equal weight: fixed $10,000 per name, long and short books reported separately and combined.'
+  live: >-
+    Volatility target: dollars per name = risk budget (e.g. 0.5% of equity) / (20-day daily volatility
+    x sqrt(holding days)). Cap any name at 2% of portfolio and the gross event book at 30%.
+parameters:
+- name: sue_decile_threshold
+  default: top/bottom 10%
+  source: paper
+  test_range: 5%, 10%, 20%
+- name: entry_days_before
+  default: 2
+  source: paper (3-day window around announcement)
+  test_range: 1-5
+- name: exit_days_after
+  default: 1
+  source: paper
+  test_range: 0, 1, 3, 5
+- name: lag_quarter
+  default: q+1
+  source: paper (positive autocorrelation lags 1-3)
+  test_range: q+1, q+2, q+3; q+4 traded in the reverse direction as a separate variant
+- name: market_cap_max
+  default: $10B
+  source: assumption (size proxies for limits to arbitrage)
+  test_range: $2B, $5B, $10B, no cap
+- name: surprise_measure
+  default: seasonal random walk SUE
+  source: paper
+  test_range: SRW SUE, analyst SUE, two-way sort on both
+open_questions:
+- >-
+  Does the edge survive realistic small-cap costs over a 4-day hold? Round-trip cost could be 20-60 bps,
+  and the review notes that Chordia 2009 and Ng 2008 find about zero after costs.
+- >-
+  Has the repeat-surprise effect decayed since about 2010, as the 60-day drift has (Chordia 2014, Martineau
+  2019)?
+- Are point-in-time expected announcement dates available, or only realized dates (look-ahead risk)?
+- Should the q+2/q+3 trades be stacked with q+1 or taken only when the newest SUE agrees?
+- Is the q+4 reversal large enough to trade on its own after costs?
+- >-
+  Should the long book be beta-hedged with ES (we have ES data), given that earnings windows cluster in
+  calendar time?
+- How much overlap and correlation is there with pead_long if both run?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop and review if the live drawdown of the event book exceeds the 95th-percentile simulated drawdown
+    for the same number of trades.
+  extra_checks:
+  - Chronological split by announcement date; tune only in-sample
+  - Report long, short and combined books separately, gross and net of costs
+  - >-
+    Beat a baseline: all stocks held over the same -2..+1 window (the earnings-announcement premium),
+    and a random-SUE placebo
+  - Size buckets and pre/post-2010 sub-samples
+  - Down-year check (2008, 2022) for the long book, with and without an ES hedge
+data_available: 'no'
+data_requirements:
+- >-
+  Point-in-time quarterly EPS history (at least 12 quarters per firm) to compute SUE, e.g. Compustat/I/B/E/S
+  or a vendor
+- Expected and realized earnings announcement dates with timestamps (before or after market)
+- Analyst consensus estimates for the analyst-SUE variant
+- Daily OHLCV, market cap and options-listing flags for US stocks, survivorship-free
+- 'Optional: ES futures (we have them) for the beta hedge'
+expectations:
+- >-
+  Top-SUE names show a positive abnormal return in the -2..+1 window of q+1, bottom-SUE names a negative
+  one
+- The effect fades from q+1 to q+3 and flips sign at q+4
+- Larger in small caps and in names without options; weaker after 2010
+- Most of the long-short return comes from the long side when the analyst-based surprise is used
+what_would_kill_it: >-
+  Investors and analysts pricing earnings persistence correctly: NLP/algorithmic processing of earnings,
+  more guidance, wider analyst coverage of small caps. Also crowding by event-driven funds that bid up
+  prior winners before the announcement, which moves the return before our entry or turns it into a reversal.
+  If the window return net of costs is no better than the all-stock announcement premium, the edge is
+  gone.
+notes:
+- >-
+  The paper is a review. It gives no tested rules, costs or recent performance. The values here are starting
+  points.
+- >-
+  This is a new angle on pead_long (timing at the NEXT announcement and short holding), not a copy of
+  it.
+- >-
+  Can't be backtested with our NinjaTrader inventory: single stocks and earnings data aren't available.
+variants:
+- >-
+  q+4 reversal: short the prior top-SUE names and buy the prior bottom-SUE names around the announcement
+  four quarters later
+- 'Attention-filtered: only q surprises announced on Fridays or busy earnings days'
+- >-
+  52-week-high anchor: long top-SUE names trading within 10% of their 52-week high; short bottom-SUE names
+  far below it
+- European small and mid caps (lower coverage)
+related_strategies:
+- pead_long
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 3
+    testability: 2
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    The WHY holds up: people forecast earnings as a seasonal random walk, so they underestimate how persistent
+    surprises are, and the repeat surprise is priced only on a scheduled announcement date. Limits to
+    arbitrage in small caps keep the gap open. But it is mostly a behavioural claim about who misprices,
+    not someone being forced to trade, which is the stronger kind of WHY in the playbook (§4). So 3, not
+    higher.
+  - >-
+    Persistence is the main worry. Bernard & Thomas (1990) is one of the best-known anomaly papers in
+    accounting. Analysts and quant event funds have modelled earnings autocorrelation for 30 years, NLP
+    processing has made it cheaper, and the review itself cites the US drift weakening (Chordia 2014,
+    Martineau 2019). The spec raises this as an open question, but its own expectations already concede
+    'weaker after 2010'.
+  - >-
+    This is a real angle on pead_long, not just the paper's rules copied: entry only before the next announcement,
+    a fixed short hold, a separate return stream. The base rules are still close to B&T's own test design
+    (SUE deciles, a 3-day window around q+1), so the 'our framing' claim is only modest.
+  - >-
+    Rule conflict: the universe needs $5M+ average daily dollar volume and $300M-$10B market cap, but
+    the base test excludes stocks with listed options. Almost every stock that passes the liquidity screen
+    has listed options, so the base test would be nearly empty or biased toward odd names.
+  - >-
+    Too much tuning room: about 6 parameters with 3-5 values each (roughly 3,000 combinations), plus two
+    optional filters, q+1..q+3 stacking choices, a date-change rule and 4 variants. That is a lot of in-sample
+    search for an effect that may be small after costs. The data-mining risk is high.
+  - >-
+    Ambiguities that block clean code: (1) The SUE decile breakpoints are not defined. Which cross-section,
+    and are they built only from announcements already public at that date? (2) Exit 'day +1' is undefined
+    for before-open vs after-close announcements. (3) 'Same-sign 3-day abnormal return' has no benchmark
+    (market, size-matched?). (4) The q+1/q+2/q+3 overlap rule is left open.
+  - >-
+    Costs are the deciding factor. On a 4-day hold, 20-60 bps round trip in small caps may cancel a window
+    return that was historically about 1-2%. Several studies find PEAD is about zero after costs.
+  - >-
+    Data: none of the required data (point-in-time EPS, expected announcement dates, analyst consensus,
+    survivorship-free stocks) is in our NinjaTrader inventory. It can be bought (Compustat/I/B/E/S or
+    a vendor), so this is not a reason to reject, but point-in-time expected dates are essential and expensive.
+    Without them there is look-ahead risk.
+  - >-
+    Good points: a fixed-horizon event trade with no stop, a placebo test, a baseline against the earnings-announcement
+    premium, pre/post-2010 sub-samples, a down-year check and a stated kill condition.
+  required_changes:
+  - >-
+    Resolve the options-filter conflict. Either drop the 'no listed options' base filter and make options
+    a variant, or loosen the liquidity screen and accept higher costs. State the expected universe size
+    per quarter.
+  - >-
+    Define SUE deciles point-in-time: breakpoints built only from announcements already public at the
+    q announcement date, from a trailing window of announcements (e.g. the prior calendar quarter). Require
+    at least 8 quarters of history.
+  - >-
+    Define the event-day convention. Day 0 = the first session that can react: the announcement day for
+    before-open releases, the next day for after-close releases. Set entry and exit relative to that day.
+  - >-
+    Specify the benchmark for the 3-day price-confirmation filter (e.g. return minus the matched-size
+    market return), or drop the filter from the base test.
+  - >-
+    Fix the base test to one configuration: q+1 only, top/bottom 10%, enter -2, exit +1, SRW SUE, $10B
+    cap. Allow at most 2 parameters to be tuned in-sample. Move the attention filter, q+2/q+3 stacking,
+    the q+4 reversal and the 52-week-high anchor into a separate later phase.
+  - >-
+    Make costs a gate before anything else. Require the net window return (with a realistic round-trip
+    cost by size bucket, plus borrow cost on the short side) to beat the all-stock earnings-announcement-premium
+    baseline in the post-2010 sub-sample. If not, park.
+  - >-
+    Make point-in-time expected announcement dates a hard data requirement (e.g. Wall Street Horizon or
+    I/B/E/S expected dates). If only realized dates are available, quantify the look-ahead bias or don't
+    run the test.
+  - >-
+    Run the post-2010 sub-sample as the deciding test, not just a robustness check, because the WHY's
+    persistence is the main doubt.
+  copies_the_paper: false
