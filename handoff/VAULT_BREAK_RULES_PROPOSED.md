@@ -78,3 +78,6 @@ unseen for these parameters. Cleanest test of his rules as given: 2023 onward + 
   drawdown, pass-in-N attempts; position-size sweep in MNQ.
 - He runs it together with VWAP Pullback + ADX and Overnight Bias at ~5 MNQ each (daily P&L correlation < 0.25,
   each alone ≈ 40% pass rate) — combined sim once all three exist.
+
+## Volatility sizing (sizing view, not a variant)
+Apply `VOLATILITY_SIZING.md`: contracts (MES) = floor(Risk$ / (0.30 × 15-session AvgRange × $5 + 2 ticks)), capped, skip if 0. Headline stays 1 contract.

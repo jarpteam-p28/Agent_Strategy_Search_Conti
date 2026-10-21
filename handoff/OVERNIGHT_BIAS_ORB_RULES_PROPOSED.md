@@ -31,3 +31,6 @@ In-sample 01-01-2006 → 31-12-2019: n = 1,112, PF 1.35, net $50,445, max DD $6,
 Out-of-sample 01-01-2020 → 31-08-2026: n = 599, PF 1.66, net $257,615, max DD $20,195.
 In the talk: ~53% winners, avg win / avg loss ≈ 1.4. **Our NQ data only covers Jul 2021 → Sep 2026**, so we can
 only check part of his out-of-sample period.
+
+## Volatility sizing (sizing view, not a variant)
+Apply `VOLATILITY_SIZING.md`: contracts (MES) = floor(Risk$ / (0.30 × 15-session AvgRange × $5 + 2 ticks)), capped, skip if 0. Headline stays 1 contract.

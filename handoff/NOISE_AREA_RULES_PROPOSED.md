@@ -101,3 +101,6 @@ Regime splits (VIX proxy, NR4/NR7, weekday, after a down day) are C8 reporting o
 Low win rate + uneven years = long losing streaks; expect EOD-drawdown failures on a 50K / −$2,500 account at 1 ES
 (an average ES day range of 40–90 points). Run the P4 size sweep in MES (1–10). Daily-P&L correlation with Vault Break
 (E7 / P5) — likely high on trend days, both are momentum.
+
+## Volatility sizing (sizing view, not a variant)
+Apply `VOLATILITY_SIZING.md`: contracts (MES) = floor(Risk$ / (0.30 × 15-session AvgRange × $5 + 2 ticks)), capped, skip if 0. Headline stays 1 contract.

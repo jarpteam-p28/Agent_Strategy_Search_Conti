@@ -65,3 +65,6 @@ Base; 2-loss rule "in a row" vs "any"; VWAP on 5-min bars instead of 15-min; min
 (pool of all weekdays incl. zero-trade days), 20,000 runs. His result: pass 49.8% (95% CI 49.1–50.5%), drawdown
 fail 50.2%, time fail 0%, 3.4 days to pass, avg max DD $2,078, P95 max DD $4,661, pass ≥ 1 in 2/3/4 attempts =
 74.8% / 87.3% / 93.6%. Also run a position-size sweep in MNQ.
+
+## Volatility sizing (sizing view, not a variant)
+Apply `VOLATILITY_SIZING.md`: contracts (MES) = floor(Risk$ / (0.30 × 15-session AvgRange × $5 + 2 ticks)), capped, skip if 0. Headline stays 1 contract.
