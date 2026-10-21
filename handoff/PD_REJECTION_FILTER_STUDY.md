@@ -82,3 +82,23 @@ holds on BOTH windows, beats the placebo and survives costs counts.
    reading "above the session open / band midline" is not in this set.)
 2. Filters checked at the trigger bar's close (proposed) rather than at the fill.
 3. VETO mode only (above).
+
+## EXPANDED GRID (Pablo, 2026-10-21 12:57 — written before any result; replaces "N = 10")
+Pablo is away: run everything end to end without waiting, using the A1 answers below. Never touch 2024+.
+- **A1 answers (approved):** "above the noise" = above the UPPER line for longs / below the LOWER line for shorts;
+  filters checked at the trigger bar's close; VETO mode.
+- **Instruments:** ES 2014-01 → 2023-12 and NQ (`clean_NQ/continuous_1min.parquet`) 2021-07 → 2023-12, complete
+  months only (list any gaps). NQ translation of Joshua's fixed-point inputs (ratio 4.7, ES_ADAPTATION.md):
+  base stop 10 → 47 NQ pts, proximity 50 → 235 NQ pts. Volatility stops need no translation.
+- **Stops (6):** base 10 pts (Joshua) + volatility stops k × AvgRange with k = **0.20, 0.22, 0.27, 0.28, 0.33**
+  (AvgRange = Conti 15-session average range, skip most recent; known before the session).
+- **Targets (5):** **1R, 1.5R, 2R, 2.5R, 3R**, where R = that row's stop distance.
+- **Filters (10):** the table above (#0–#9).
+- **Grid:** 10 × 6 × 5 = **300 configurations per instrument**. Run and report it as a SENSITIVITY GRID (C3) — no
+  "pick the best cell". DSR / PBO use N = 300 per instrument (600 if any cell is chosen by comparing both).
+- **Output:** one summary table per instrument (rows = filter × stop, columns = target: trades, win rate, avg R, net $,
+  PF, max DD, net without top 10% winners), heat maps, and the removed-trades report for each filter at Joshua's base
+  (10 pts / 1R and 2R). Then run the full robustness set (placebo, 2x slippage, concentration, year by year, prop pass rate)
+  ONLY on: Joshua's base, plus at most 3 cells that hold up on BOTH windows (2014–2020 and 2021–2023) and on BOTH
+  instruments, from a plateau (neighbouring stops/targets also positive), not single peaks.
+- Finish with E2 scorecard + E2b adversarial review, and a plain-English summary for Pablo at the top.
