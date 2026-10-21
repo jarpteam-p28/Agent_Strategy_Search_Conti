@@ -78,7 +78,23 @@ skew +1.29, ~1.8 trades/day. Base version with stop at the opposite band: Sharpe
 ## Variants to log (A2)
 Base; stop checked every minute; stop at the opposite band only (paper's base version); VWAP-only stop; long only;
 short only; volatility-targeted sizing; no gap widening (bands from O only); first signal of the day only + lockout after
-the first stop-out; NQ second instrument (C11, 2021-07+ months that exist). **Total: 1 base + 9 variants = 10.**
+the first stop-out; NQ second instrument (C11, 2021-07+ months that exist); **DOUBLE-NOISE ENTRY** (Pablo, 2026-10-20,
+see below). **Total: 1 base + 10 variants = 11** (C9 uses 11).
+
+### Variant: DOUBLE-NOISE ENTRY (Pablo, added 2026-10-20, written before any results)
+Entry needs the half-hour close to be outside BOTH noise zones; everything else = base.
+- **Conti level (Vault Break):** session = bars from midnight CT to 16:00 CT (MultiCharts close-time dating, so the
+  23:30 CT 30-min bar opens it). SessOpen = open of that first 30-min bar. AvgRange = average session high − low
+  of the last 15 completed sessions, skipping the most recent one. NoiseUp = SessOpen + 0.30 × AvgRange,
+  NoiseDown = SessOpen − 0.30 × AvgRange. Fixed for the whole session; known at its start (no look-ahead).
+  Reuse the Vault Break engine's code for this; do not rebuild it.
+- **Long:** at a half-hour decision close (10:00 … 15:30 ET), close > Upper(t) (Zarattini) **AND** close > NoiseUp (Conti).
+- **Short:** close < Lower(t) **AND** close < NoiseDown.
+- **Reversal:** a reverse only when the opposite side meets BOTH conditions; otherwise the base exits apply.
+- **Exits, time exit, sizing, costs:** identical to the base (band + VWAP trailing stop checked at half hours, flat at 16:00, 1 ES).
+- Report it next to the base on every slice, plus how many base trades the extra filter removed and what those
+  removed trades made (so we see whether the filter removes losers or winners).
+- It is a filter on the base, so expect fewer trades; check the trade count against C1 / C9c.
 Regime splits (VIX proxy, NR4/NR7, weekday, after a down day) are C8 reporting only, not variants.
 
 ## Part P — Prop notes
