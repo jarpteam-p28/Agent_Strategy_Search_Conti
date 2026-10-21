@@ -1,0 +1,113 @@
+{
+  "title": "An Empirical Evaluation of Accounting Income Numbers",
+  "authors": [
+    "Ray Ball",
+    "Philip Brown"
+  ],
+  "year": 1968,
+  "source_url": "https://doi.org/10.2307/2490232",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "Stocks of firms with good (bad) annual earnings surprises drift up (down) abnormally for the 12 months before the report and keep drifting for 1-2 months after. Most of the information (85-90%) is priced in before the announcement.",
+  "findings": [
+    {
+      "statement": "The sign of the annual earnings surprise matches the sign of the stock's abnormal return. Firms whose EPS or net income beat the expected change drift up, and firms that missed drift down. The surprise is actual income change minus the change predicted from the market-wide income change.",
+      "evidence": "261 NYSE firms with December fiscal year-ends, fiscal years 1957-1965, monthly CRSP returns 1946-June 1966. Abnormal Performance Index at announcement month 0: about 1.071 for positive surprises and 0.907 for negative (net income). Chi-square tests are significant in most months up to the announcement."
+    },
+    {
+      "statement": "The market anticipates most of the earnings news well before the report. The drift starts at least 12 months before the announcement and grows steadily. The announcement month shows no unusual jump.",
+      "evidence": "The authors estimate 85-90% of the value of the income information is already in the price by the announcement month. The income number carries only about 19% of all information arriving in its own month. About 50% of the net information in the 12 months before the report is associated with income."
+    },
+    {
+      "statement": "A small post-announcement drift persists, mainly for bad news. The authors attribute it to transaction costs and do not claim it is exploitable.",
+      "evidence": "The APIs keep drifting for about 2 months after month 0. Marginal return over those 2 months is about -1.0% for negative surprises and +0.3% for positive. The authors say transaction costs would need to be within about 1% for any profit, and they note a computational downward bias in the API."
+    },
+    {
+      "statement": "The simple naive model (income this year equals last year) works about as well as the regression model, and is best for identifying the negative surprises.",
+      "evidence": "Variables 1 and 2 (regression on market income, for net income and EPS) and variable 3 (naive EPS) are compared in Table 5 and Figure 1. Signs of forecast errors agree about 93% of the time across variables 1 and 2."
+    },
+    {
+      "statement": "Buying the positive-surprise firms and shorting the negative ones would have earned abnormal returns mostly before the announcement. This means the earnings-based edge comes from anticipation, not from reacting to the release.",
+      "evidence": "The average abnormal monthly return for the long-short portfolio, months -11 to -1, was about 0.60-0.66%. In month 0 it was about 0.89-0.94%. The portfolio is formed with hindsight on the sign of the surprise, so it is not tradable as stated."
+    }
+  ],
+  "why": {
+    "pattern": "Slow information diffusion (plus market efficiency read in the opposite direction). The market learns about earnings through other channels before the report. A residual under-reaction remains after the announcement.",
+    "mechanism": "Firm-specific information (interim reports, dividends, news, analyst and insider activity) leaks into prices over the year. The annual report is a late, confirmatory medium. The small post-announcement drift is consistent with investors with limited capital or information trading slowly, so prices do not adjust fully at once. This is the seed of the PEAD literature. The paper itself calls the effect a response to information and does not explain the drift.",
+    "who_is_forced": "Investors who cannot build positions at once: funds that need several days or weeks to size up in small and mid caps, and retail investors who learn of the surprise late. Low analyst coverage slows diffusion. The authors name transaction costs of about 1% as the reason the post-announcement drift is not arbitraged away.",
+    "why_it_persists": "Limits to arbitrage persist: transaction costs, capacity limits, and low coverage of small caps. Large orders are split over time. The anticipation effect itself is just efficient pricing and gives no trigger to trade on. The drift only matters for the post-announcement leg.",
+    "what_would_kill_it": "Faster and more continuous disclosure (earnings pre-announcements, 8-K filings, real-time analyst estimates). Lower transaction costs and wider arbitrage capital in small caps. A drift that is already captured by crowded PEAD funds. For index futures: no earnings surprise signal exists at the index level, so the paper gives no direct trigger."
+  },
+  "tradable_edge": "The paper alone is not a strategy, because it sorts firms by an earnings surprise known only after the fact. What it supports is the base of the PEAD idea. Earnings surprises are priced slowly and partly after the release, mostly for bad news in small and mid caps, and a simple year-over-year change vs expected is enough to define a surprise. The tradable version is a post-announcement long-only (or long-short) basket in under-covered stocks. It enters the day after the report for those with a large positive surprise versus a simple expected change and holds about 1-3 months. The sizing must be small because costs are about the size of the effect. Do not copy the pre-announcement drift, since it is a hindsight artefact.",
+  "decay_risk": {
+    "level": "high",
+    "reason": "Published in 1968 and the most cited paper behind the earnings-drift literature. The pre-announcement run-up is not tradable. The post-announcement drift has been heavily studied and has shrunk in large caps. The short side has weakened as companies pre-announce bad news."
+  },
+  "data_fit": "Poor. The test needs single stocks, earnings dates, EPS and analyst consensus, and none of these are in the inventory (only ES and NQ futures). It cannot be tested on ES/NQ directly. An indirect and weak use is possible: an index-level earnings-season calendar feature on ES/NQ 1-minute bars, but the paper gives no support for it. Missing: CRSP/Compustat-type stock data, announcement dates and consensus estimates.",
+  "angles": [
+    "Universe: small and mid caps or Europe, where coverage and liquidity are lower and drift should be larger. Skip mega caps, which are heavily covered.",
+    "One side only: test long-only after a positive surprise. The short side is weaker now because bad news is pre-announced.",
+    "Combine with the later papers on PEAD: price reaction, a 60-day horizon, and analyst-consensus surprise. This paper is the 1968 first leg and its surprise measure is crude.",
+    "Use the naive surprise (change versus last year) as a baseline. Test whether a consensus-based surprise adds anything over it.",
+    "Index-futures angle (speculative): earnings-season aggregate surprise as a regime filter for ES/NQ trend or continuation strategies. This is our own idea, not in the paper.",
+    "Event timing: enter at the open after an after-hours release and hold N days. The WHY (information arriving while the market is closed and being digested slowly) matches the playbook."
+  ],
+  "caveats": [
+    "This is a descriptive 1968 event study with no trading rules, no costs, and no out-of-sample test. The portfolios are formed using hindsight on the surprise sign.",
+    "Sample: 261 NYSE firms with December year-ends and survivorship screens (complete data 1946-1966), fiscal years 1957-1965 only. Annual earnings only, no quarterly data, monthly returns only, so the daily reaction is not seen.",
+    "The paper reads only the sign of the surprise, not its magnitude.",
+    "The paper gives a computational downward bias in the API from compounding. Its own estimate of the post-announcement opportunity is about 1% or less, near transaction costs.",
+    "The paper does not itself describe a drift anomaly. The PEAD interpretation comes from later work.",
+    "Read from the Academia.edu full-text transcription, with OCR errors in the text. The DOI page was not accessible."
+  ],
+  "reported_results": {
+    "headline": "No trading performance is reported. The paper reports abnormal performance indexes by earnings-surprise sign: about +7% for good news and -9% for bad news from 12 months before to the announcement month.",
+    "key_stats": [
+      "API at month 0: about 1.071 (positive surprise) vs 0.907 (negative), net income regression model",
+      "85-90% of income information is anticipated by announcement month",
+      "Income information about 0.081 vs net information 0.165 vs total information 0.731 (absolute residuals)",
+      "Long-short abnormal return about 0.6-0.66% per month in months -11 to -1; 0.89-0.94% in month 0",
+      "Post-announcement 2-month marginal returns: about -1.0% (bad news) and +0.3% (good news), less than about 1% transaction costs"
+    ],
+    "costs_included": "None in the results. The authors argue that a roughly 1% cost would remove any post-announcement opportunity."
+  },
+  "referenced_papers_worth_reading": [
+    {
+      "title": "The Adjustment of Stock Prices to New Information",
+      "authors": [
+        "Eugene F. Fama",
+        "Lawrence Fisher",
+        "Michael C. Jensen",
+        "Richard Roll"
+      ],
+      "venue": "International Economic Review",
+      "year": 1969,
+      "note": "Cited as a 1967 working paper. The method and the efficiency framing behind the event study.",
+      "url": null,
+      "pdf_url": null
+    },
+    {
+      "title": "The Information Content of Annual Earnings Announcements",
+      "authors": [
+        "William H. Beaver"
+      ],
+      "venue": "Journal of Accounting Research (Supplement)",
+      "year": 1968,
+      "note": "Companion paper showing price and volume reactions around the announcement. It also supports the finding that information is concentrated in the announcement month.",
+      "url": null,
+      "pdf_url": null
+    },
+    {
+      "title": "The Predictive Content of Quarterly Earnings",
+      "authors": [
+        "Philip Brown",
+        "Victor Niederhoffer"
+      ],
+      "venue": "Journal of Business",
+      "year": 1968,
+      "note": "Cited as forthcoming. Quarterly earnings as a predictor, relevant to building a higher-frequency surprise.",
+      "url": null,
+      "pdf_url": null
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+id: noise_area_momentum_es
+name: Noise Area Intraday Momentum (ES/NQ, long/short, band+VWAP trailing stop)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/1987_paper_on_the_intraday_noise_area_around_the_session_ope.md
+  papers:
+  - title: 'Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)'
+    authors:
+    - Carlo Zarattini
+    - Andrew Aziz
+    - Andrea Barbon
+    venue: SSRN
+    year: 2024
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4824172
+    note: Source of the time-of-day noise band and the band+VWAP trailing stop
+  - title: Hedging demand and market intraday momentum
+    authors:
+    - G. Baltussen
+    - Z. Da
+    - S. Lammers
+    - M. Martens
+    venue: Journal of Financial Economics
+    year: 2021
+    note: Dealer gamma-hedging WHY
+  - title: Understanding intraday momentum strategies
+    authors:
+    - C. Rosa
+    venue: Journal of Futures Markets
+    year: 2022
+    note: Says predictability weakened after 2013, which is when our ES data starts. Key decay check
+finding: >-
+  On SPY 1-min data from 2007 to 2024, a move away from the open that is larger than the 14-day average
+  absolute move at the same clock time tends to keep going into the close. Trading both directions, with
+  a trailing stop at the nearer of the current band or VWAP, gave a Sharpe of 1.24 unlevered (positive
+  skew, 43% hit rate). The authors' FAQ reports Sharpe of about 1.3 on S&P futures and 1.2 on Nasdaq futures.
+why: >-
+  Execution mechanics of big players plus dealer hedging. A move that leaves the normal time-of-day range
+  means there is a buy/sell imbalance too big for liquidity providers to absorb. Institutions work large
+  orders through VWAP/participation algos over the rest of the day, and short-gamma dealers hedge in the
+  direction of the move, so the move keeps going. VWAP is the level those algos benchmark against, so
+  losing VWAP means the imbalance is gone, which makes it a natural trailing stop. This explains why the
+  edge is stronger at high volatility and after market falls (more negative gamma). What is new versus
+  vault_break (NQ, long only): both legs, the VWAP trailing stop, and the ES history back to 2013. The
+  paper says the short leg works at every VIX level.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York (data in UTC, convert with DST)
+  universe: ES continuous front month 2013-12 to 2026-09 as primary; NQ 2021-07 to 2026-09 as secondary
+direction: long_short
+entry:
+  long: >-
+    At each decision time (HH:00 and HH:30 ET from 10:00 to 15:30), if the 1-min close is above UpperBand(t),
+    go long at the next bar's open. UpperBand(t) = max(RTH open at 09:30, prior RTH close at 16:00) *
+    (1 + VM * sigma(t)). sigma(t) = mean over the last LOOKBACK sessions of |close at minute t / RTH open
+    - 1|, computed separately for each minute of the day, using prior sessions only.
+  short: >-
+    At a decision time, if the close is below LowerBand(t) = min(RTH open, prior RTH close) * (1 - VM
+    * sigma(t)), go short at the next bar's open.
+  filters:
+  - One position at a time; a signal in the opposite direction reverses the position
+  - Need LOOKBACK complete prior sessions before trading (warm-up)
+  - Skip half-day sessions (early closes) or handle them separately
+exit:
+  stop_loss: >-
+    Trailing stop, checked at each decision time. Long: exit if close < max(UpperBand(t), session VWAP).
+    Short: exit if close > min(LowerBand(t), session VWAP). After a stop-out, re-entry is allowed at a
+    later decision time if the signal is valid again.
+  take_profit: null
+  time_exit: Flatten at 15:59 ET (RTH close), even though ES keeps trading after 16:00
+  other:
+  - Reverse on the opposite band signal
+  - Session VWAP is anchored at 09:30 ET using RTH volume only
+position_sizing:
+  development: 1 ES contract fixed (1 NQ for the secondary test), $13 round turn cost plus 1 tick slippage
+    per side
+  live: >-
+    Volatility targeting. Contracts = (equity * daily vol target 2%) / (14-day realised daily vol of ES
+    * price * multiplier), capped at 4x notional leverage. Simpler option: fixed dollar risk / (VM * sigma(t)
+    * price * multiplier) at entry.
+parameters:
+- name: LOOKBACK
+  default: 14
+  source: paper
+  test_range: 10, 14, 20, 30, 60, 90 sessions
+- name: VM (band multiplier)
+  default: 1.0
+  source: paper
+  test_range: 0.8 to 1.6 in steps of 0.2
+- name: decision_interval_min
+  default: 30
+  source: paper
+  test_range: 15, 30, 60
+- name: first_decision_time
+  default: 10:00 ET
+  source: paper
+  test_range: 10:00, 10:30
+- name: daily_vol_target
+  default: 0.02
+  source: paper
+  test_range: live only, not tuned
+- name: max_leverage
+  default: 4
+  source: paper
+  test_range: live only
+open_questions:
+- >-
+  Does the paper check stops only at half-hour marks or on every minute? The spec uses half-hour marks;
+  test checking every minute in-sample as a variant
+- >-
+  For futures, should 'prior close' be the 16:00 ET RTH close or the 17:00 ET settlement/last Globex print?
+  Default is the 16:00 RTH close
+- >-
+  How to handle the gap: the max/min of open and prior close follows the paper, but futures trade overnight,
+  so the 'gap' differs from SPY's
+- >-
+  Should rolls be handled with back-adjusted continuous data? sigma uses returns relative to the open,
+  so it is roll-safe within a day, but the prior close across a roll day needs adjustment
+- >-
+  Rosa (2022) says intraday momentum weakened after 2013. Our ES sample starts in 2013, so expect weaker
+  results than the paper
+- VIX is not available; a realised-vol proxy for regime analysis is needed
+- 'Overlap and correlation with vault_break on NQ: are they the same trades on the long side?'
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - >-
+    Report net profit, win rate, average trade, max drawdown, skew; confirm the convex shape (hit rate
+    around 40%, positive skew)
+  - 'Beat the zero-intelligence baseline: always long ES 10:00-15:59'
+  - Long leg and short leg separately; check the result in 2022 and in 2016-2017
+  - >-
+    Compare exits: band+VWAP vs VWAP only vs opposite band (opposite band should show negative skew per
+    the paper)
+  - 'Cost drag: rerun at 2x costs'
+  - Daily P&L correlation with vault_break, orb_long_only, overnight_drift_long
+  - Split results by tercile of realised vol at the open
+data_requirements:
+- ES 1-min OHLCV RTH 2013-2026 (have)
+- NQ 1-min 2021-2026 (have)
+- Exchange calendar for early closes
+data_available: 'yes'
+expectations:
+- Hit rate about 37-43%, positive skew, roughly 1.5-2 trades a day
+- Unlevered Sharpe below the paper's 1.24, because 2008 is missing and the effect weakened after 2013
+- Strong years in high-vol periods (2018, 2020, 2022), weak or negative years in calm periods
+- Close to zero beta to ES
+what_would_kill_it: >-
+  A persistent long-gamma dealer regime (heavy 0DTE option selling) that dampens moves; crowding of the
+  published band/VWAP signal causing fake-outs at the bands; a lasting low-vol, mean-reverting intraday
+  regime; per-trade edge falling below costs.
+variants:
+- Short-only leg
+- 'Event version: first band cross of the day only, with a lockout after a stop-out'
+- >-
+  Size up when realised vol at the open is high or after the prior 5-day decline (RSI5 low), as a sizing
+  tilt only
+- Scale size on NR4/NR7 days (in-sample check only, high data-mining risk)
+related_strategies:
+- vault_break
+- vwap_trend
+- orb_long_only
+- gamma_flip_cross
+notes:
+- The paper's headline 19.6% a year needs up to 4x leverage; judge development results unlevered
+- The authors' code is public, so crowding is a real decay risk
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 3
+    testability: 5
+    overfit_resistance: 2
+  verdict: refine
+  copies_the_paper: true
+  reasons: |2-
+
+    <parameter name="reasons">["The WHY is real and fits the playbook. An imbalance that institutional VWAP or participation algos are working through the day, plus short-gamma dealer hedging, is a structural forced-flow story. Using VWAP as the stop follows from it: losing VWAP means the algo flow has stopped pushing. Baltussen et al. (JFE 2021) give independent support.", "The rules copy the paper. The 14-day lookback, VM=1, max/min of open and prior close, HH:00/HH:30 checks, band+VWAP stop, and the 2% vol target with a 4x cap are all Zarattini et al. as published. The authors' code and TradingView indicator are free, which is exactly the setup where the playbook warns that results look good until publication and decay after. Most of our own framing sits in the 'variants' list, not the main rules.", "Persistence is medium at best. Rosa (2022) finds the effect weakened after 2013, which is exactly our ES sample. 0DTE option selling since 2022 may push dealers toward long gamma, which works against the WHY. The authors' 2016-2017 results were negative, and their post-publication results are self-reported.", "Overfit risk is high as written. The grid over LOOKBACK (6 values) x VM (5) x interval (3) x first decision time (2) is 180 combinations on a thin edge. The paper's own exit, vol target and half-hour timing were chosen after seeing results. NR4/NR7 sizing is openly data-mined.", "Testability is excellent. ES 1-min data covers 2013-2026, NQ covers 2021-2026, and everything is computed from OHLCV.", "Some futures details are unresolved and change which trades fire: the gap anchor (ES trades overnight, so the 16:00 close vs the 09:30 open 'gap' is not SPY's gap), the prior close across roll days, and what happens when a stop and an opposite signal arrive on the same bar.", "The validation plan is good: zero-intelligence baseline, legs tested separately, exit comparison, 2x costs, correlation with other strategies, and splits by vol tercile."]
+  required_changes:
+  - >-
+    Make our own WHY-based framing the main strategy and demote the paper's exact rules to a benchmark.
+    Suggested main version: an event-based entry (the first close outside the band in each direction,
+    with a lockout after a stop-out, as in transcript 04), the VWAP-based trailing stop as the WHY-driven
+    exit, and the time exit. Run the paper replica only as a comparison.
+  - >-
+    Cut the tuning to at most 2 parameters in-sample (VM and LOOKBACK). Fix the decision interval at 30
+    min and the first decision at 10:00. Pick from a stable plateau, not the single best value. Write
+    down the chosen values before running out-of-sample.
+  - >-
+    Settle the futures anchor before testing. Choose one rule (for example, the band anchored on the 09:30
+    RTH open only, or open/prior 16:00 RTH close from back-adjusted data) and justify it from the WHY.
+    Do not try both and keep the winner.
+  - >-
+    Define the order of events at a decision bar: check the stop first, then the opposite-band reversal,
+    then a new entry. Fills at the next bar's open, with a 1-min bar magnifier only if stops are checked
+    every minute.
+  - >-
+    Add a direct test of the mechanism. Edge by tercile of realised vol at the open and by prior 5-day
+    return should be monotonic if the gamma/imbalance WHY holds. A flat profile means the WHY is not confirmed.
+    Also report results before and after 2022 (the 0DTE era) separately, as a decay check.
+  - >-
+    Drop NR4/NR7 sizing and weekday conditioning from the variants (data mining). Keep one regime tilt
+    at most, and fix it in advance.
+  - >-
+    Before allocating more time, measure trade overlap and daily P&L correlation with vault_break on NQ.
+    If the long leg is above about 0.6 correlated, the only new value is the short leg plus ES history,
+    so judge it on that.
+  - >-
+    Add an explicit kill criterion: if the 2013-2026 out-of-sample Sharpe after costs is below the always-long
+    baseline, or the out-of-sample average trade is below 2x round-trip costs, park it.

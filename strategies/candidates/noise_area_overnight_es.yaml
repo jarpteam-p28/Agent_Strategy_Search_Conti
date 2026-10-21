@@ -1,0 +1,181 @@
+id: noise_area_overnight_es
+name: Noise Area Momentum on the Globex Overnight Session (ES)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/1987_paper_on_the_intraday_noise_area_around_the_session_ope.md
+  papers:
+  - title: 'Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)'
+    authors:
+    - Carlo Zarattini
+    - Andrew Aziz
+    - Andrea Barbon
+    venue: SSRN
+    year: 2024
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4824172
+    note: Band construction moved to the overnight session (Conti 'different session' angle)
+finding: >-
+  The paper finds momentum once price leaves the time-of-day noise band around the RTH open. Our untested
+  angle: index returns are concentrated overnight, and Asia and Europe digest news in sequence, so a band
+  anchored to the 18:00 ET Globex open may catch overnight trend moves.
+why: >-
+  Information arrives while US cash markets are closed, and liquidity overnight is thin. A move larger
+  than usual for that time of night means real repositioning (European cash open, macro releases) that
+  thin books can't absorb, so it keeps going until the US open. This is the information-while-closed WHY
+  plus liquidity constraints. It is speculative because dealer hedging flow is weaker overnight.
+market:
+  instruments:
+  - ES
+  bar_size: 1min
+  session: ETH 18:00-09:29 America/New_York (data in UTC, DST-aware)
+  universe: ES continuous 2013-12 to 2026-09
+direction: long_short
+entry:
+  long: >-
+    At each decision time (every 30 min from 19:00 to 08:30 ET), if close > GlobexOpen * (1 + VM * sigmaN(t)),
+    go long at the next bar's open. sigmaN(t) = mean over the last LOOKBACK sessions of |close at session-minute
+    t / Globex open - 1|, computed separately for each minute of the overnight session.
+  short: At a decision time, if close < GlobexOpen * (1 - VM * sigmaN(t)), go short at the next bar's
+    open.
+  filters:
+  - One position at a time; reverse on the opposite signal
+  - Skip Sunday-evening sessions after holidays, and sessions with an abnormal start time
+exit:
+  stop_loss: >-
+    At each decision time, exit the long if close < max(upper band, overnight VWAP anchored at 18:00).
+    Mirror rule for shorts.
+  take_profit: null
+  time_exit: Flatten at 09:29 ET, before the RTH open
+  other:
+  - 'Variant: hold through the RTH open and exit at 10:00 ET'
+position_sizing:
+  development: 1 ES contract fixed, $13 round turn plus 1 tick slippage per side
+  live: Fixed dollar risk / (VM * sigmaN(t) * price * multiplier), capped at 4x notional
+parameters:
+- name: LOOKBACK
+  default: 14
+  source: paper
+  test_range: 10-60 sessions
+- name: VM
+  default: 1.0
+  source: paper
+  test_range: 0.8-1.6
+- name: decision_interval_min
+  default: 30
+  source: paper
+  test_range: 30, 60
+- name: session_anchor
+  default: 18:00 ET
+  source: assumption
+  test_range: 18:00 ET, 03:00 ET (European open)
+open_questions:
+- Overnight volume is thin, so the overnight VWAP may be noisy; does a band-only stop work better?
+- Should the anchor be the Globex open or the European open (03:00 ET), where real volume starts?
+- How should the 17:00-18:00 maintenance break and Sunday sessions be handled?
+- Is it just overnight_drift_long beta? Compare with always long 18:00-09:29
+- Slippage overnight is likely higher than in RTH; how much?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - Beat the always-long overnight baseline
+  - Long and short legs separately
+  - Daily P&L correlation with noise_area_momentum_es and overnight_drift_long
+  - Rerun with 2x slippage
+data_requirements:
+- ES 1-min ETH 2013-2026 (have)
+data_available: 'yes'
+expectations:
+- Fewer trades than the RTH version; the long side may just reflect overnight drift beta
+- If the idea is real, positive skew and a low hit rate similar to the RTH version
+what_would_kill_it: >-
+  Overnight moves are mostly noise that reverses at the US open; thin liquidity costs more than the edge;
+  or the result is just overnight long beta.
+variants:
+- Anchor at the 03:00 ET European open
+- Long-only
+related_strategies:
+- orb_overnight_session
+- overnight_drift_long
+- overnight_bias_orb
+- noise_area_momentum_es
+notes:
+- Speculative angle, not tested in the paper
+review:
+  scores:
+    why_strength: 2
+    persistence: 3
+    simplicity: 3
+    testability: 4
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    Moving the strategy to another session is an angle the playbook allows (§7). But the paper's WHY does
+    not come along with it. The paper's mechanism is large orders worked through VWAP or participation
+    algos, plus dealers hedging short-gamma books, during regular trading hours (RTH). The playbook's
+    own §4 says many institutions can only trade after 9:30 ET. So the flows that are supposed to push
+    the move along are mostly absent overnight. The spec admits this ('speculative').
+  - >-
+    The stated WHY conflicts with another WHY in the playbook: 'overnight overreaction then corrects intraday'.
+    The spec has no reason why an outsized overnight move should continue rather than reverse at the US
+    open. That is the main risk, and the rules hard-flatten at 09:29, which avoids the test that would
+    answer it.
+  - >-
+    No forced trader is named. 'Thin books can't absorb repositioning' is a statement about the data,
+    not about who has to keep buying. The real overnight liquidity events are the European cash open (03:00
+    ET) and the 08:30 ET macro releases. If there is an edge, it is probably tied to those events, not
+    to a band anchored at 18:00 that is checked every 30 min through the dead Asian hours.
+  - >-
+    An 18:00 anchor with a per-minute sigma means the band has to absorb hours of near-zero-volume drift.
+    VWAP anchored at 18:00 then gets most of its weight at 03:00 and 08:30, so the trailing stop is close
+    to arbitrary for most of the night.
+  - >-
+    There are too many knobs for a speculative idea: LOOKBACK, VM, decision interval, anchor (18:00 vs
+    03:00), the exit variant (09:29 vs 10:00), and long-only vs two-sided. Searching the anchor and exit
+    variants together with the paper's two parameters is a data-mining risk, and only about 11 years of
+    in-sample/out-of-sample data are available.
+  - >-
+    Testability is good. ES 1-min ETH data from 2013-2026 covers it, and everything can be computed from
+    OHLCV. Rolls, DST and Sunday or holiday sessions need explicit handling.
+  - >-
+    The rules are the paper's mechanics moved to a new session unchanged (14-day lookback, VM 1.0, half-hour
+    checks, band+VWAP stop). I don't count this as pure copying because the session angle is ours, but
+    no rule comes from the new WHY.
+  - >-
+    The checks already listed are good: beat the always-long baseline, test each side separately, rerun
+    with 2x slippage, and check correlation with the overnight_drift_long and noise_area_momentum_es strategies.
+    Keep them.
+  required_changes:
+  - >-
+    Rewrite the WHY to name who is forced to trade overnight and when. Examples: European and Asian institutions
+    hedging or repositioning US exposure through ES at their cash opens, or the reaction to 08:30 ET macro
+    releases. Explain why that flow continues rather than reversing at the RTH open, and address the playbook's
+    overnight-overreaction-corrects-intraday finding head on.
+  - >-
+    Fix one anchor before testing, chosen from the WHY. The 03:00 ET European open is the better candidate.
+    Do not tune the anchor in-sample alongside LOOKBACK and VM. If 18:00 is kept, limit decision times
+    to periods with real liquidity (e.g. 03:00-08:30 ET) rather than every 30 min from 19:00.
+  - >-
+    Run a master-signal test first, before any stop logic (method note 04). Enter on the first band cross
+    of the session and hold to a fixed time. Plot the average return path to 09:29, 10:00 and 11:00 ET
+    to see whether the move continues or reverses through the RTH open. This replaces having a 09:29 and
+    a 10:00 exit as variants to tune.
+  - >-
+    Treat the event (the first cross) as the signal, not the state. Take only the first cross per session,
+    with a lockout after a stop-out, instead of re-checking and reversing every 30 min.
+  - >-
+    Define the stop without depending on VWAP while overnight volume is thin. Use a band-only stop as
+    the base case; test VWAP+band once, in-sample only.
+  - Limit tuned parameters to LOOKBACK and VM, in-sample only. Fix the decision interval at 30 min.
+  - >-
+    Set the overnight cost assumption explicitly up front (e.g. 1-2 ticks per side) rather than leaving
+    it as an open question. Specify continuous-contract roll handling for overnight sessions.
+  - >-
+    Add a falsification criterion. If the long leg's daily P&L correlation with overnight_drift_long is
+    above about 0.6, or the strategy does not beat that baseline per trade, drop it as redundant. Also
+    state how this differs from orb_overnight_session.
+  copies_the_paper: false
