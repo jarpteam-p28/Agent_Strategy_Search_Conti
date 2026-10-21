@@ -1,0 +1,109 @@
+//@version=6
+// Noise Area Bands — Zarattini, Aziz & Barbon (2024), "Beat the Market: An Effective Intraday Momentum Strategy for SPY".
+// Summary: papers/summaries/beat_the_market_intraday_momentum_spy_zarattini.md · spec: strategies/candidates/noise_area_momentum_es.yaml
+//
+// The "noise area" is how far price normally wanders from the 09:30 open BY THIS TIME OF DAY.
+//   sigma(t)   = average over the last 14 sessions of |close at time t / that day's 09:30 open − 1|,
+//                computed separately for every bar time (10:00, 10:05, ...), prior sessions only.
+//   Upper band = max(today's open, yesterday's 16:00 close) × (1 + 1.0 × sigma(t))
+//   Lower band = min(today's open, yesterday's 16:00 close) × (1 − 1.0 × sigma(t))
+//   Signals    = checked only at the half hours 10:00 … 15:30 ET: close above the upper band → long,
+//                close below the lower band → short.
+//   Exit (paper) long: price back below the higher of the upper band and VWAP; short: above the lower of the lower band
+//                and VWAP. Flat at 16:00.
+// Use a 1- or 5-minute chart (any timeframe that divides 30 minutes). Bands need 14 sessions of history to appear.
+// Nothing repaints: sigma uses only earlier sessions, and markers appear only on closed bars.
+
+indicator("Noise Area Bands (Zarattini)", shorttitle = "Noise Area", overlay = true)
+
+lookback = input.int(14, "Lookback (sessions)", minval = 2, maxval = 120)
+vm       = input.float(1.0, "Band multiplier", step = 0.1, tooltip = "Paper default 1.0; they also show 1.5")
+useGap   = input.bool(true, "Widen the band with yesterday's close (overnight gap)", tooltip = "Paper: the band starts from whichever of the open and prior close is further out")
+showVWAP = input.bool(true, "Show session VWAP")
+showFill = input.bool(true, "Shade the noise area")
+showSig  = input.bool(true, "Mark half-hour closes outside the bands")
+showStop = input.bool(true, "Show the paper's trailing-stop level (higher of band and VWAP for longs)")
+showTbl  = input.bool(true, "Info box")
+
+tz    = "America/New_York"
+tfMin = timeframe.in_seconds() / 60.0
+okTF  = timeframe.isintraday and tfMin <= 30 and 30 % tfMin == 0
+nCols = math.max(1, int(390 / tfMin))
+
+cm   = hour(time_close, tz) * 60 + minute(time_close, tz)   // bar CLOSE time, minutes after midnight ET
+rth  = okTF and cm > 570 and cm <= 960                      // bars closing 09:31 … 16:00 ET
+col  = int((cm - 570) / tfMin) - 1
+dkey = year(time_close, tz) * 10000 + month(time_close, tz) * 100 + dayofmonth(time_close, tz)
+
+var matrix<float> mv = matrix.new<float>(lookback + 1, nCols, na)   // one row per session (ring buffer)
+var int   row       = 0
+var int   dKey      = 0
+var int   days      = 0
+var float dOpen     = na
+var float prevClose = na
+var float lastClose = na
+var float cTPV      = 0.0
+var float cVol      = 0.0
+
+if rth and dkey != dKey                  // first RTH bar of a new session
+    dKey      := dkey
+    row       := (row + 1) % (lookback + 1)
+    for c = 0 to nCols - 1
+        mv.set(row, c, na)
+    prevClose := lastClose
+    dOpen     := open
+    cTPV      := 0.0
+    cVol      := 0.0
+    days      += 1
+
+float sigma = na
+if rth and col >= 0 and col < nCols
+    s = 0.0
+    n = 0
+    for r = 0 to lookback
+        if r != row
+            v = mv.get(r, col)
+            if not na(v)
+                s += v
+                n += 1
+    sigma := n >= math.ceil(lookback * 0.75) ? s / n : na     // tolerate a few half days
+    mv.set(row, col, math.abs(close / dOpen - 1))             // store today's value AFTER using the past ones
+if rth
+    lastClose := close
+    cTPV      += hlc3 * volume
+    cVol      += volume
+
+vwap   = rth and cVol > 0 ? cTPV / cVol : na
+upBase = useGap and not na(prevClose) ? math.max(dOpen, prevClose) : dOpen
+dnBase = useGap and not na(prevClose) ? math.min(dOpen, prevClose) : dOpen
+upper  = rth and not na(sigma) ? upBase * (1 + vm * sigma) : na
+lower  = rth and not na(sigma) ? dnBase * (1 - vm * sigma) : na
+
+pU = plot(upper, "Upper band", color = color.green, linewidth = 2, style = plot.style_linebr)
+pL = plot(lower, "Lower band", color = color.red,   linewidth = 2, style = plot.style_linebr)
+fill(pU, pL, color = showFill ? color.new(color.gray, 90) : na, title = "Noise area")
+plot(showVWAP ? vwap : na, "VWAP", color = color.aqua, style = plot.style_linebr)
+plot(rth ? dOpen : na, "Today's open", color = color.new(color.gray, 40), style = plot.style_linebr)
+
+check    = rth and barstate.isconfirmed and cm % 30 == 0 and cm >= 600 and cm <= 930   // 10:00 … 15:30 ET
+longSig  = showSig and check and not na(upper) and close > upper
+shortSig = showSig and check and not na(lower) and close < lower
+plotshape(longSig,  "Long: half-hour close above band",  shape.triangleup,   location.belowbar, color.lime, size = size.small)
+plotshape(shortSig, "Short: half-hour close below band", shape.triangledown, location.abovebar, color.red,  size = size.small)
+
+longStop  = not na(upper) and not na(vwap) ? math.max(upper, vwap) : na
+shortStop = not na(lower) and not na(vwap) ? math.min(lower, vwap) : na
+plot(showStop and rth and close > nz(upper, close + 1) ? longStop : na,  "Long trailing stop",  color = color.new(color.lime, 30), style = plot.style_circles)
+plot(showStop and rth and close < nz(lower, close - 1) ? shortStop : na, "Short trailing stop", color = color.new(color.red, 30),  style = plot.style_circles)
+
+var table box = table.new(position.top_right, 2, 4, bgcolor = color.new(color.black, 20), border_width = 1)
+if showTbl and barstate.islast
+    table.cell(box, 0, 0, "Noise Area", text_color = color.white)
+    table.cell(box, 1, 0, okTF ? timeframe.period + "-min ✓" : "use 1 or 5-min!", text_color = okTF ? color.lime : color.orange)
+    table.cell(box, 0, 1, "Sessions collected", text_color = color.white)
+    table.cell(box, 1, 1, str.tostring(math.min(days, lookback)) + " / " + str.tostring(lookback), text_color = color.white)
+    table.cell(box, 0, 2, "Noise now (±)", text_color = color.white)
+    table.cell(box, 1, 2, na(sigma) ? "n/a" : str.tostring(sigma * 100, "#.###") + "% = " + str.tostring(sigma * dOpen * vm, "#.##") + " pts", text_color = color.white)
+    state = na(upper) ? "outside RTH / warming up" : close > upper ? "ABOVE (long zone)" : close < lower ? "BELOW (short zone)" : "inside noise"
+    table.cell(box, 0, 3, "Price", text_color = color.white)
+    table.cell(box, 1, 3, state, text_color = close > nz(upper, close + 1) ? color.lime : close < nz(lower, close - 1) ? color.red : color.gray)
