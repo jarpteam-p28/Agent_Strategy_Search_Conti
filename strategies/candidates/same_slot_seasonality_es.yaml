@@ -1,0 +1,217 @@
+id: same_slot_seasonality_es
+name: Same-Slot Intraday Seasonality (ES/NQ 30-min slots, long/short, slot time exit)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/infrequent_rebalancing_return_autocorrelation_and_seasonalit.md
+  papers:
+  - title: Infrequent Rebalancing, Return Autocorrelation, and Seasonality
+    authors:
+    - Vincent Bogousslavsky
+    venue: Journal of Finance
+    year: 2016
+    url: https://www.ssrn.com/abstract=2308366
+    note: >-
+      Trigger paper. Read from the abstract and memory only, not verified. Model: investors who rebalance
+      on a schedule cause positive autocorrelation at lags equal to their rebalancing interval.
+  - title: Intraday Patterns in the Cross-Section of Stock Returns
+    authors:
+    - Steven L. Heston
+    - Robert A. Korajczyk
+    - Ronnie Sadka
+    venue: Journal of Finance
+    year: 2010
+    note: >-
+      Recalled from memory, not verified. Half-hour stock returns are said to persist at lags that are
+      multiples of one trading day, which would be the intraday form of the same mechanism. Re-read before
+      relying on it.
+finding: >-
+  The paper's model, recalled from memory and not verified: when some investors trade on a fixed schedule,
+  returns are positively autocorrelated at lags equal to that schedule and mean-revert at other lags.
+  In intraday terms, an investor who trades at the same clock time every day should make the return of
+  a 30-minute slot predict the same slot on later days (lags of 1, 2, ... days). Heston-Korajczyk-Sadka
+  reportedly found this on single stocks. We are testing it at index level on ES and NQ.
+why: >-
+  This combines execution mechanics with an institutional constraint. Large parent orders are worked over
+  several days by algos on fixed daily schedules (TWAP/VWAP slices, MOC programs, a desk's routine execution
+  windows, hedging at fixed times). The same buyer or seller therefore comes back at the same clock time
+  day after day until the order is done. That puts demand pressure on the same slot repeatedly, and it
+  is visible in the slot's recent history. Other slots get the reversal. Kill: execution spread randomly
+  across the day, or enough intraday stat-arb capital that the slot pattern is arbitraged within a day.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min bars aggregated into 30-min RTH slots
+  session: RTH 09:30-16:00 America/New_York (13 half-hour slots); data stored in UTC, convert with DST
+  universe: null
+direction: long_short
+entry:
+  long: >-
+    At the open of slot k (e.g. 10:30 ET), go long if the average return of slot k over the past N sessions
+    (excluding today) is > +threshold × (std of slot-k returns over the same N sessions / sqrt(N)). This
+    is a t-stat gate.
+  short: 'Mirror image: short when the same-slot average is below -threshold × its standard error.'
+  filters:
+  - Only one slot per position. Positions never overlap. Each slot is decided on its own.
+  - 'Variant A: trade only the slots with the strongest |t-stat| each day (top 1-2).'
+  - >-
+    Skip the session if there are fewer than N clean prior sessions (warm-up). No signals on half-days
+    or holiday-shortened sessions.
+exit:
+  stop_loss: 'None in the master test. Variant: 1× the slot''s N-day average absolute return.'
+  take_profit: None
+  time_exit: Close at the end of slot k (30 minutes after entry)
+  other:
+  - Flat at 16:00 ET always.
+position_sizing:
+  development: 1 contract fixed (ES; also run on NQ and MNQ)
+  live: >-
+    Volatility targeting: contracts = fixed dollar risk ÷ (slot-k average absolute 30-min move over N
+    days × point value)
+parameters:
+- name: lookback_sessions_N
+  default: 20
+  source: assumption (HKS used lags out to ~40 days)
+  test_range: 5, 10, 20, 40
+- name: tstat_threshold
+  default: 1.5
+  source: assumption
+  test_range: 0, 1.0, 1.5, 2.0
+- name: slot_length_min
+  default: 30
+  source: paper (half-hour, recalled)
+  test_range: 15, 30, 60
+- name: lag_set
+  default: all lags 1..N equally weighted
+  source: assumption
+  test_range: lags 1..N; lags 5,10,15,20 only (same weekday); lag 1 only
+expectations:
+- >-
+  Average trade beats the zero-intelligence baseline of always being long ES in the same 30-min slices.
+- >-
+  Sign agreement between the same-slot signal and the realised slot return is above 50%. It should be
+  stronger for the open (09:30) and close (15:30) slots, where scheduled flow is concentrated.
+- Weekly lags (5, 10, 20) may beat lag 1 if weekly schedules matter.
+- >-
+  The edge is small per trade. Cost drag (~$5-13 per ES round turn) will probably decide whether it is
+  viable.
+what_would_kill_it: >-
+  The average trade is no better than the always-long baseline, or it vanishes after realistic costs.
+  Sign accuracy at about 50% in out-of-sample. The edge exists only in 2013-2018 and not later.
+notes:
+- >-
+  Use the master-signal approach from transcript 04: fixed 30-min hold, no stop or target, so the entry
+  is judged on its own.
+- >-
+  Many trades (up to 13 per day), so there are plenty of observations. This avoids the small-sample problem
+  of monthly calendar tests.
+- >-
+  Could later serve as a filter for vwap_trend or noise_area_momentum_es (trade only when the slot seasonal
+  agrees).
+open_questions:
+- >-
+  The paper was not read. Is the daily-lag intraday persistence really in Bogousslavsky or only in Heston-Korajczyk-Sadka?
+  Verify both.
+- Does a single-stock effect survive at index-future level, where idiosyncratic flows net out?
+- Should overnight/ETH slots be included? (Separate test.)
+- Should the signal use equally weighted lags or exponentially decaying weights?
+- How should the slot be anchored around DST changes and early closes?
+- Should slots with signals in consecutive periods be merged into a single holding to cut costs?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - Compare with always-long ES 30-min slices on identical bars
+  - Report results by slot, by side and by year, including 2022
+  - Cost sensitivity at $0, $5 and $13 per round turn
+  - Check that the edge is not concentrated in a few outlier days (top 20 trades share)
+data_available: 'yes'
+data_requirements:
+- ES 1-min 2013-2026 (have)
+- NQ 1-min 2021-2026 (have)
+- Exchange holiday and early-close calendar
+related_strategies:
+- vwap_cross_volume_surprise
+- noise_area_momentum_es
+variants:
+- Lag-1-only versus weekly lags
+- Top-k slots per day only
+- Long only
+- Last-slot-only (15:30-16:00), where MOC rebalancing is concentrated
+review:
+  scores:
+    why_strength: 2
+    persistence: 2
+    simplicity: 3
+    testability: 4
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    Nobody has read the trigger paper. As recalled, Bogousslavsky is a monthly, cross-sectional model
+    about calendar rebalancing. The daily-lag intraday persistence comes from Heston-Korajczyk-Sadka,
+    which is also recalled from memory and unverified. So the spec's finding is a guess about a second
+    paper, not something taken from the trigger paper.
+  - >-
+    The WHY is weak at index level. HKS is a single-stock effect driven by name-specific parent orders.
+    In ES and NQ, those idiosyncratic flows net out across 500 or 100 names. The spec says a 'same buyer
+    returns at the same clock time', but VWAP algos follow the volume curve, not fixed half-hour slots,
+    and no single parent order is likely to set the sign of a 30-minute ES slot. The spec raises this
+    itself as an open question but does not answer it.
+  - >-
+    Persistence is doubtful. HKS has been public since 2010, and intraday stat-arb and HFT capital in
+    index futures is about the deepest there is. Even if the effect is real, the WHY gives no reason it
+    would survive there rather than in less-covered single names.
+  - >-
+    The test is confounded. A rolling N-day mean for each slot will mostly pick up the static time-of-day
+    pattern: the open and close effects, and the drift of the last half-hour. Beating 'always long' does
+    not show the lag-autocorrelation mechanism. It may only rediscover a known static seasonal.
+  - >-
+    Overfit risk is high. There are 4 tuned parameters (N, threshold, slot length, lag set), about 144
+    combinations, plus the top-k, stop, long-only and last-slot variants. Combined with 13 slots, 2 instruments
+    and 2 sides, that is a lot of forking paths for an effect that is probably tiny.
+  - >-
+    Cost viability is doubtful. Up to 13 round trips a day on an edge expected to be small per trade,
+    against $5-13 per round turn. The spec admits costs will probably decide it.
+  - >-
+    The good parts: our data fits well (ES 1-min since 2013), the master-signal design with a fixed hold
+    and no stop or target is correct, and the extra validation checks are sensible. A test is cheap once
+    the spec is tightened, so the right call is refine, not reject.
+  - >-
+    It does not copy the paper. It adapts the mechanism to a new market and session, which is the right
+    instinct.
+  required_changes:
+  - >-
+    Read and verify HKS (2010) and Bogousslavsky (2016) before any backtest. Confirm that the daily-lag
+    half-hour persistence exists, at which lags, and how big it is. Re-state the finding from the paper
+    text.
+  - >-
+    Add a static seasonal baseline: the full in-sample unconditional mean of each slot, applied as a fixed
+    long or short. The rolling-lag signal must beat both this baseline and always-long. Otherwise it is
+    time-of-day seasonality, not the rebalancing mechanism.
+  - >-
+    Run a parameter-free master test first: sign of the lag-1..20 same-slot mean, threshold 0, 30-min
+    slots, ES only. Look at sign accuracy and average return by slot. Open the parameter grid only if
+    this shows a signal, and then cut it to at most 2 parameters (e.g. N in {10, 20, 40} and lag set in
+    {all, weekly}). Drop slot length and threshold tuning from the first round.
+  - Drop N=5 from the t-stat gate, because a standard error from 5 observations is meaningless.
+  - >-
+    Strengthen the WHY at index level. Name a concrete scheduled index-level flow that repeats at the
+    same clock time across days (e.g. ETF creation/redemption hedging, the MOC imbalance window, leveraged-ETF
+    rebalancing near 15:30-16:00, daily vol-target fund rebalancing). Prefer slots where that flow sits.
+    State the kill condition specific to that flow.
+  - >-
+    Settle the overlap and cost rules up front. Define what happens when consecutive slots carry the same-direction
+    signal: either hold through as one trade, or count each slot as a separate round trip. Report results
+    at net $13 per round turn as the primary result.
+  - >-
+    Fix the session and DST handling now: anchor slots in America/New_York, exclude early-close days using
+    a stated calendar, and use 09:30-16:00 slots only for the main test.
+  - >-
+    Make NQ out-of-sample confirmation only: freeze the ES rules first, then run them on NQ 2021+ with
+    no retuning.
+  copies_the_paper: false

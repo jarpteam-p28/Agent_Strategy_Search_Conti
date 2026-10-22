@@ -1,0 +1,66 @@
+# Equilibrium Effects of Intraday Order-Splitting Benchmarks
+
+**Authors:** Jin Hyuk Choi, Kasper Larsen, Duane J. Seppi  
+**Year:** 2021  **Type:** academic  **Read:** full_pdf  
+**Source:** https://arxiv.org/abs/1803.08336
+
+> In a theoretical equilibrium model, institutions who split big orders along TWAP/VWAP-style schedules create a predictable opening price push that fades through the day, and the model says these benchmarks also make the market less liquid and more volatile.
+
+## Findings
+- Persistent aggregate latent buy (sell) demand from order-splitting investors pushes the opening price up (down) relative to fundamental value. The price pressure then decays predictably over the day, so the expected intraday drift runs against the opening imbalance. — *Closed-form equilibrium: price = D_t + g(t)·a_Σ + ζ(t)·ε·B_t; drift μ1(t) < 0 times the aggregate target, so E[S_t − D_t] = g(t)·a_Σ decays to the terminal condition (Thm 3.2, Remark 3.1, eq. 3.13). This is a theoretical result with no empirical data.*
+- Intraday trading-target penalties (TWAP, VWAP, Almgren-Chriss schedules) reduce liquidity and raise price volatility compared with having only an end-of-day target. — *ζ(t) is increasing in the penalty severity κ (Corollary 4.2). Numerics use M=10 targeted investors, 10 hedgers and a 1,000-step day (Figs 1-3).*
+- A VWAP benchmark makes the target path random. Price pressure then has a random component, and a positive shock to expected relative volume raises the magnitude of price pressure. — *Brownian-bridge and gamma-bridge target ratios (Thms 5.2, 5.4, Section 6). The mean path equals the deterministic TWAP-like path (eq. 5.11), plus extra variance.*
+- In the competitive equilibrium, rebalancers, liquidity providers and hedgers split the aggregate imbalance pro rata. Same-direction parent orders mean less trading and a bigger price effect. Opposite-direction parent orders cancel through reciprocal liquidity provision. Illiquidity and volatility are higher on days with fewer participants or higher execution costs. — *Eq. 4.8 and the Section 4 empirical predictions. The paper says these are consistent with van Kervel-Kwan-Westerholm (2018). It does not test them.*
+- The scale of the effect is large. VWAP execution is cited as roughly 50% of institutional trading. — *Financial Insights (2006) survey, cited in the introduction.*
+
+## The WHY
+**Pattern:** Execution mechanics of big players (VWAP/TWAP algos), plus liquidity constraints on large orders
+
+Asset managers hold large parent orders and work them as many small child orders along a schedule. Soft penalties for straying from that schedule mean they cannot fully absorb the imbalance. To clear the market, the opening price has to overshoot, leaving a predictably negative expected drift for a buy imbalance (and positive for a sell imbalance) through the rest of the day. Price pressure comes from latent demand, including demand that price deters from trading. It is not only the inventory cost of market makers. Because the schedules are persistent and shaped by deterministic or volume-based curves, the pressure follows a known time profile.
+
+- **Who is forced / predictable:** Institutional desks bound by TWAP/VWAP benchmarks and tracking-error limits trade on schedule whatever the price. HFT market makers aim for roughly zero intraday inventory and hold the opposite side only at a price discount. Hedgers add random demand.
+- **Why it persists:** Benchmarked execution is a structural feature of delegated asset management. Agency costs and mandates, as in Baldauf-Frei-Mollner, make VWAP benchmarking contractually optimal. As long as parent orders are large and spread over days, the schedules and the imbalances persist. Liquidity providers cannot fully arbitrage them because of inventory and risk limits.
+- **What would kill it:** A move away from schedule benchmarks to opportunistic, price-sensitive or fully randomised execution. Widespread detection and front-running of child orders, which would pull the pressure into the opening auction. Market makers with much larger balance sheets or inventory tolerance. Same-direction institutional flow becoming uncorrelated across days.
+- **Paper's view vs ours:** The authors only offer a stylised equilibrium model with no data, no sample and no trading test. They also assume the aggregate latent target a_Σ is perfectly revealed by the opening price. In the real world that imbalance is unobserved. So the model gives a sign (fade the open-imbalance push) but not a tested magnitude. It does not say whether the intraday pull-back is big enough to survive costs. We would treat it as a supporting WHY for intraday mean reversion after strongly imbalanced opens and as a caution about the opposite, momentum-style view (ORB, VWAP-cross). It is not a standalone edge.
+
+## Setting
+- Markets: 
+- Instruments: 
+- Period:   Frequency:   Holding: 
+
+## Reported results
+
+
+## Tradable edge (our framing)
+When overnight and open flow is strongly one-directional, the model says benchmarked institutions leave a predictable overshoot at the open. That overshoot should partly fade toward fundamental value over the day as child orders are worked. The edge idea is a conditional intraday fade: after a large opening gap or opening-range imbalance, take a position against the initial push with a time exit and a volatility-scaled stop. Conditioning matters. Only fade when the move looks like inventory or imbalance pressure, not news, for example on low-news days or when the move is large relative to recent ATR. Stay out when the opening move has the signature of information, such as a big gap with heavy volume that goes on to break the opening range. The model also says the pressure is strongest when liquidity is thin, so the same conditioning can be used to decide when to stand aside.
+
+## Angles to test
+- Different instrument: test the open-to-close fade on ES and NQ (we have both). Compare with MNQ at the same signal. Write the code once and run it on both.
+- Different session: split the day into overnight gap vs RTH open. Fade the RTH push after large gaps, versus continuation. Check which dominates by gap size and ATR bucket.
+- Time profile: use the g(t) shape, with strongest pressure early and decaying toward the close, to choose entry (after the first 30-60 min) and time exit (e.g. around 15:30 ET). Test whether the fade is concentrated in specific half-hours.
+- Conditioning by liquidity/volume: the model predicts bigger pressure when there are fewer participants or higher execution costs. Use low relative volume, wide spreads or holiday-adjacent days as filters.
+- One side only: test fading gap-ups (long-only is risky for beta) vs fading gap-downs, since dip buyers may absorb sells more readily. Check a down year such as 2022.
+- Combine with ORB or VWAP-pullback: use the imbalance size as a regime filter that switches between continuation (informational moves) and fade (inventory-driven moves). This is a combination angle, not a replacement.
+- VWAP/TWAP footprint: check whether price tends to revert toward session VWAP after large opening deviations. This is the same execution-mechanics WHY that the VWAP trend-pullback strategy already uses.
+- Event vs state: test the moment of the first strong opening-imbalance signal rather than the state of being above or below VWAP, and apply a cluster lockout after each trade.
+
+## Decay risk: medium
+VWAP/TWAP execution and market-maker inventory management are structural and widely known (around 50% of institutional volume per the paper). The specific trade, an intraday fade of the open imbalance, is a crowded form of intraday mean reversion that is easy for HFTs to arbitrage. The paper has no empirical evidence, so the size of any remaining edge is unknown. The WHY should persist, but the tradable edge is probably small.
+
+## Data fit
+Partly testable. We have ES 1-minute data from 2013 to 2026 (ETH and RTH) and NQ 1-minute from mid-2021, plus tick data. That covers the open-gap size, opening-range imbalance, relative volume, ATR and intraday fade or continuation, and a time exit. It is enough to test the open-to-close drift conditional on opening imbalance. Missing: actual parent-order or imbalance data (e.g. institutional order flow, TAQ-style signed volume), bid-ask spread history for the liquidity proxy (only the 2021-23 ES ticks have bid/ask), news and earnings flags to separate informational moves from imbalance moves, and pre-mid-2021 NQ. Volume-based proxies for the schedule shape and the VWAP curve can be built from the 1-minute bars.
+
+## Caveats
+- Pure theory. There is no empirical test, no backtest and no return estimate, so the paper provides a sign prediction, not a tradable magnitude.
+- The model assumes the opening price fully reveals the aggregate imbalance, that Brownian/Gaussian dynamics hold, and that investors have linear preferences. Those assumptions are strong.
+- It does not distinguish inventory-driven overshoot from informational moves. The fade can fail badly on news days.
+- The decay direction (fade) is the opposite of what the ORB and VWAP-trend strategies in our playbook exploit. Both effects can exist in different regimes, so a regime filter is needed.
+- The magnitude depends on unobservable parameters (κ, M, penalty shape).
+- Costs, slippage and the possibility that the effect is already in the opening auction are not addressed.
+
+## Cited papers worth reading
+- High-frequency trading around large institutional orders (2019)
+- High-frequency market making to large institutional trades (2019)
+- Information and trading targets in a dynamic market equilibrium (2018)
+- Re-appraising intraday trading patterns: What you didn't know you didn't know (2018)
+- Order splitting and searching for a counterparty (2018)

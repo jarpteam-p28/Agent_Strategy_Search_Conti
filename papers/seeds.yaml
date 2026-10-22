@@ -158,3 +158,89 @@
   venue: Financial Analysts Journal
   year: 2006
   note: Adds revenue surprises as another PEAD signal.
+- title: A Profitable Day Trading Strategy For The U.S. Equity Market
+  authors:
+  - C. Zarattini
+  - A. Barbon
+  - A. Aziz
+  venue: SSRN
+  year: 2024
+  note: >-
+    The follow-up from the same group. It applies ORB to 'Stocks in Play' (high relative volume and news
+    names). This is not in this paper's reference list as far as I know. Worth reading for the universe
+    angle.
+- title: High-frequency trading around large institutional orders
+  authors:
+  - Vincent van Kervel
+  - Albert Menkveld
+  venue: Journal of Finance
+  year: 2019
+  note: >-
+    Empirical evidence on how HFTs trade around institutional parent orders. It tests the order-splitting
+    footprint directly.
+- title: High-frequency market making to large institutional trades
+  authors:
+  - Robert A. Korajczyk
+  - Dermot Murphy
+  venue: Review of Financial Studies
+  year: 2019
+  note: >-
+    Empirical evidence on how liquidity providers behave when large orders are being split. This is useful
+    for judging how much overshoot can be traded.
+- title: Information and trading targets in a dynamic market equilibrium
+  authors:
+  - Jin Hyuk Choi
+  - Kasper Larsen
+  - Duane J. Seppi
+  venue: Journal of Financial Economics
+  year: 2018
+  note: >-
+    The companion paper on order-splitting by rebalancers in a Kyle-style market with an informed investor.
+    It shows how price impact interacts with information.
+- title: 'Trading Volume: Definition, Data Analysis, and Implications of Portfolio Theory'
+  authors:
+  - Andrew W. Lo
+  - Jiang Wang
+  venue: Review of Financial Studies
+  year: 2000
+  url: https://academic.oup.com/rfs/article-abstract/13/2/257/1578780
+  note: >-
+    Origin of the turnover/market-volume factor decomposition that this paper applies intraday; useful
+    for a relative-volume factor across ES/NQ.
+- title: Trading volume and arbitrage
+  authors:
+  - Serge Darolles
+  - Gaëlle Le Fol
+  venue: CREST working paper
+  year: 2003
+  note: >-
+    Theory behind the common vs specific volume split; interprets the specific part as arbitrage activity.
+- title: 'Return Volatility and Trading Volume: An Information Flow Interpretation of Stochastic Volatility'
+  authors:
+  - Torben G. Andersen
+  venue: Journal of Finance
+  year: 1996
+  url: https://doi.org/10.1111/j.1540-6261.1996.tb05206.x
+  note: >-
+    Links volume surprises to volatility and information flow; supports using volume surprise as a conditioning
+    variable for intraday strategies.
+- title: Seasonal Fluctuations in Aggregate Returns / Seasonality in the Cross-Section of Stock Returns
+  authors:
+  - Steven L. Heston
+  - Ronnie Sadka
+  venue: Journal of Financial Economics
+  year: 2008
+  note: >-
+    The core seasonality finding the model aims to explain: same-calendar-month past returns predict current
+    returns. Recalled from memory, not confirmed as a citation in the text I could not read.
+- title: 'Intraday Momentum: The First Half-Hour Return Predicts the Last Half-Hour Return'
+  authors:
+  - Lei Gao
+  - Yufeng Han
+  - Sophia Zhengzi Li
+  - Guofu Zhou
+  venue: Journal of Financial Economics
+  year: 2018
+  note: >-
+    Not necessarily cited in the paper. Listed because it is a testable intraday version of the same idea
+    on index futures, and our 1-minute ES/NQ data suits it.

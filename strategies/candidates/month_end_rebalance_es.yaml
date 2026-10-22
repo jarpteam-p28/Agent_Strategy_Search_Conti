@@ -1,0 +1,190 @@
+id: month_end_rebalance_es
+name: Turn-of-Month Rebalancing Window (ES/NQ, long only, time exit)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/infrequent_rebalancing_return_autocorrelation_and_seasonalit.md
+  papers:
+  - title: Infrequent Rebalancing, Return Autocorrelation, and Seasonality
+    authors:
+    - Vincent Bogousslavsky
+    venue: Journal of Finance
+    year: 2016
+    url: https://www.ssrn.com/abstract=2308366
+    note: 'Read from memory only. The WHY: investors who rebalance on a calendar trade together at fixed
+      dates.'
+finding: >-
+  Recalled from memory, not verified. Investors who rebalance on a calendar shift demand together at their
+  rebalancing dates. The monthly cycle is the most concentrated: pay-ins, pension contributions, fund
+  inflows and mandate rebalancing all hit at the turn of the month. Index-level calendar research (e.g.
+  the turn-of-month effect) says returns cluster from the last trading day through the first few days
+  of the new month. We test whether ES/NQ show a stable positive return in that window versus the rest
+  of the month.
+why: >-
+  This is an institutional constraint and mandate effect. Salaries, 401k/pension contributions and fund
+  inflows arrive at month start and are invested on schedule. Month-end and quarter-end reporting and
+  rebalancing force trades on known dates whatever the price. That buying pressure arrives every month
+  at the same calendar point. Kill: contributions and rebalancing spread evenly across the month, or arbitrageurs
+  front-running the window until the return moves earlier and disappears.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min (decisions made at the daily RTH close)
+  session: Entry and exit at the RTH close 16:00 America/New_York; held through ETH
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    Buy at the RTH close (15:59-16:00 ET) of trading day T-D before month-end (default D=1, i.e. the close
+    two trading days before the last trading day, so the last day is captured).
+  short: null
+  filters:
+  - 'Variant: quarter-end months only (Mar, Jun, Sep, Dec)'
+  - >-
+    Variant: skip if the month-to-date ES return is above +X%. Pension rebalancing would then be selling
+    equities into month-end, so the entry moves to the close of the last trading day.
+exit:
+  stop_loss: Catastrophic stop at 2× 15-session average daily ATR below entry (master test also run with
+    no stop)
+  take_profit: None
+  time_exit: Exit at the RTH close of trading day +K of the new month (default K=3)
+  other:
+  - >-
+    Roll handling: if the window spans a contract roll, use the continuous back-adjusted series and charge
+    one extra round turn
+position_sizing:
+  development: 1 contract fixed
+  live: 'Volatility targeting: contracts = fixed dollar risk ÷ (15-session average daily ATR × point value)'
+parameters:
+- name: days_before_month_end_D
+  default: 1
+  source: assumption (classic turn-of-month window starts at the last trading day)
+  test_range: 0, 1, 2, 3
+- name: days_into_new_month_K
+  default: 3
+  source: assumption (classic window ends ~day 3)
+  test_range: 1, 2, 3, 4, 5
+- name: mtd_rebalance_threshold_X
+  default: 'off'
+  source: assumption
+  test_range: off, 3%, 5%
+expectations:
+- >-
+  Average return per window day beats the average ES return per day over all other days (beta baseline:
+  random 5-day long windows).
+- Positive in most years, including 2022, even if smaller.
+- Quarter-end windows should be stronger if the rebalancing WHY holds.
+what_would_kill_it: >-
+  Window returns per day are no better than random equal-length long windows. The out-of-sample period
+  (last ~20%, about 2024-2026) shows no premium. The effect exists only in strong bull years.
+notes:
+- >-
+  Only about 12 trades per year on ES since 2013, about 150 in total. That is barely enough. Keep the
+  parameters to two (D and K) to limit data mining.
+- It is uncorrelated in timing with the intraday strategies, which helps the portfolio.
+- >-
+  Overlaps in holding time with overnight_drift_long (ETH exposure). Compare with that strategy restricted
+  to the same days to separate the effects.
+open_questions:
+- The paper was not read, and its link to the turn-of-month effect is our inference, not its claim.
+- >-
+  Is the sign of month-end rebalancing pressure on equities positive (inflows) or negative (pension selling
+  after a rally)? This needs bond-return data to proxy properly, and we don't have it.
+- Should entry be at the RTH close or the Globex settle?
+- Should holiday-shortened weeks be treated differently?
+- How much of the effect falls overnight versus intraday? Split it.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - 'Permutation test: compare against 10,000 random same-length long windows per year'
+  - Results by year (including 2022) and by quarter-end versus other months
+  - Costs at $13 per ES round turn plus roll costs
+data_available: 'yes'
+data_requirements:
+- ES 1-min 2013-2026 (have)
+- NQ 1-min 2021-2026 (have, short)
+- Exchange trading calendar for month-end trading days
+related_strategies:
+- overnight_drift_long
+variants:
+- Quarter-end only
+- Month-end only (D days before to the last day) versus new-month only (days 1-K)
+- NQ instead of ES
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 4
+    testability: 4
+    overfit_resistance: 3
+  verdict: refine
+  reasons:
+  - >-
+    The rules do not copy the paper. Bogousslavsky's paper is cross-sectional and about lagged autocorrelation.
+    The spec uses only its WHY (calendar rebalancers trade together) and frames its own index-level turn-of-month
+    window. That is correct use of the method. But it also means the cited paper is the wrong anchor.
+    The turn-of-month literature fits better: Ariel 1987, Lakonishok & Smidt 1988, McConnell & Xu 2008.
+    So does Etula et al. 2020, 'Dash for Cash', which describes month-end cash-need selling followed by
+    a rebound. That paper gives a sharper and testable mechanism, and it predicts weakness before the
+    window and strength inside it.
+  - >-
+    The WHY is structural and plausible: payroll and 401k flows on a schedule, and mandate or reporting
+    rebalancing. But the spec itself says the sign of the rebalancing part is ambiguous. Pension rebalancing
+    after a rally is selling, not buying. So the 'quarter-end should be stronger' expectation is not a
+    clean prediction of the WHY.
+  - >-
+    Persistence is medium. The effect has been public since 1987 and is widely traded. Front-running could
+    pull it earlier, which the spec correctly names as a kill condition. The flows behind it are still
+    real.
+  - >-
+    The entry is ambiguous as written. 'T-D before month-end (default D=1, i.e. the close two trading
+    days before the last trading day)' contradicts itself. D=1 reads like the day before the last day,
+    yet the text says two days before. A coder cannot implement it without guessing.
+  - >-
+    There are too many knobs for about 150 trades. The D×K×X grid has 60 combinations, plus quarter-only,
+    side-split and NQ variants. The out-of-sample period holds only about 30 windows, so statistical power
+    is low. The classic window has to be fixed in advance, or the grid becomes data mining.
+  - >-
+    The MTD-return filter does not fit a long-only spec. It uses an ES-only proxy for a rebalancing signal
+    that needs bond-vs-equity returns, and it 'moves the entry', which is a different strategy. It adds
+    fragility.
+  - >-
+    Roll handling is probably moot. ES/NQ roll about 8 days before the third-Friday expiry in Mar/Jun/Sep/Dec,
+    which is mid-month, so the turn-of-month window should almost never cross a roll. Verify this rather
+    than charging an extra round turn by default.
+  - >-
+    Testability is good. ES 1-min data from 2013 covers it, and an exchange calendar is trivial to get.
+    The baseline (random equal-length long windows) and the 2022 check are the right controls. The planned
+    overlap check against overnight_drift_long is good practice.
+  required_changes:
+  - >-
+    Rewrite the entry so it can be coded. Define trading-day offsets relative to the last trading day
+    of the month (L). For example: 'Enter at the 16:00 ET RTH close of day L-1. Exit at the 16:00 ET RTH
+    close of new-month trading day K (default 3).' State the holding length in trading days explicitly.
+  - >-
+    Fix the master test in advance to the classic window (enter at the close of L-1, exit at the close
+    of day 3, no stop, 1 contract). Report the D/K grid only as an in-sample sensitivity heatmap. Pick
+    only if there is a broad plateau, never the single best cell.
+  - >-
+    Drop the MTD-return filter from this spec, or move it to a separate follow-up spec that uses a proper
+    equity-minus-bond rebalancing proxy. Long-only strategies should not have an entry-shifting variant.
+  - >-
+    Re-anchor the source to the turn-of-month literature and Etula et al. (2020, Dash for Cash). Add the
+    test that mechanism implies: returns from L-4 to L-1 should be weak or negative compared with the
+    window. Treat the quarter-end-stronger expectation as exploratory, not as confirmation of the WHY.
+  - >-
+    Make the permutation baseline match the window length exactly: random windows of the same number of
+    trading days, with the same close-to-close timing. Report the window's percentile against that baseline,
+    both in-sample and out-of-sample.
+  - >-
+    Check whether any window actually spans a roll date, and only apply roll costs where one does. State
+    whether the back-adjusted series is ratio- or difference-adjusted.
+  - >-
+    Treat NQ (2021+) as a confirmation check only, since it has too few windows for any parameter choice.
+    Report ES results by year and the overnight/intraday split as the main diagnostics.
+  copies_the_paper: false

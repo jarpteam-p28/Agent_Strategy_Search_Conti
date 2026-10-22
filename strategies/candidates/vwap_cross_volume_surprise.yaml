@@ -1,0 +1,268 @@
+id: vwap_cross_volume_surprise
+name: VWAP Cross Continuation gated by Volume Surprise vs Time-of-Day Curve (ES/NQ 1-min, long/short)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/improving_vwap_strategies_a_dynamic_volume_approach.md
+  papers:
+  - title: 'Improving VWAP strategies: A dynamic volume approach'
+    authors:
+    - Jędrzej Białkowski
+    - Serge Darolles
+    - Gaëlle Le Fol
+    year: 2008
+    venue: SSRN working paper (EPEE 06-08, 2006)
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=932699
+    note: >-
+      Execution paper. It supplies the WHY (VWAP algos trade on a predictable seasonal volume clock) and
+      the common vs specific volume split. It shows no return edge.
+  - title: 'Return Volatility and Trading Volume: An Information Flow Interpretation of Stochastic Volatility'
+    authors:
+    - Torben G. Andersen
+    year: 1996
+    venue: Journal of Finance
+    url: https://doi.org/10.1111/j.1540-6261.1996.tb05206.x
+    note: >-
+      Volume surprises go with information flow and volatility. Supports using the surprise as a conditioning
+      variable.
+finding: >-
+  On 39 CAC40 stocks (20-min bars, Sep 2003 - Aug 2004), intraday volume splits into two parts. The first
+  is a common, highly predictable seasonal U-shape. The second is a short-memory, mean-reverting stock-specific
+  deviation, and that deviation lines up with news and price surprises. VWAP-type orders are claimed to
+  be about 50% of institutional flow, so this flow is scheduled by the volume clock. The paper reports
+  no return or PnL evidence; the authors say their model does not beat VWAP. Any directional edge here
+  is our hypothesis and has to be proved in-sample.
+why: >-
+  Execution mechanics of big players. VWAP/POV algos trade in proportion to realised market volume whatever
+  the price. When volume runs well above its normal level for that time of day (a positive specific component),
+  two things are true. First, information is arriving: the paper and Andersen 1996 both link volume surprises
+  to price surprises. Second, every participation algo is forced to trade more in that window, so the
+  flow on the side of the move is amplified. A VWAP cross made on above-curve volume should therefore
+  carry information and continue. A cross made on below-curve volume is noise in a thin market and should
+  be absorbed or reverse. This is the 'events beat states' idea from transcript 04, with a liquidity-clock
+  gate added.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC; convert with DST)
+  universe: ES continuous front month 2013-12 to 2026-09; NQ continuous front month 2021-07 to 2026-09
+direction: long_short
+entry:
+  long: >-
+    After 10:30 ET, on the first 1-min bar whose close crosses from at/below session VWAP to above it,
+    while volume surprise VS20 >= vs_threshold. Enter at the next bar's open.
+  short: >-
+    Mirror rule: the first 1-min bar whose close crosses from at/below... to below session VWAP, i.e.
+    close moves from at/above VWAP to below it, while VS20 >= vs_threshold. Enter at the next bar's open.
+  filters:
+  - >-
+    Expected volume curve: for each 1-min time-of-day slot, the mean volume of that slot over the previous
+    N_curve RTH sessions (prior days only, no look-ahead). Use the median as a variant.
+  - >-
+    VS20 = actual volume of the last 20 one-minute bars / expected volume of the same 20 slots. This is
+    the short-memory 'specific' component the paper models.
+  - 'Optional slower gate: cumulative RTH volume to now / expected cumulative volume >= 1.0.'
+  - No new entries after 15:30 ET. Max max_trades trades per day, one position at a time.
+  - After each exit, lock out new entries for lockout_min minutes (cluster filter from transcript 04).
+  - >-
+    Skip roll week (the 5 sessions before front-month expiry switch) or check that the continuous series
+    uses the front-month volume that day. Otherwise the volume curve is distorted.
+  - Skip half-days (early close), since the curve does not apply.
+exit:
+  stop_loss: >-
+    stop_atr_frac x the 15-session average daily ATR, measured from entry. Alternative: exit on a 1-min
+    close back across VWAP.
+  take_profit: 'None in the base version. Variant: tp = 2 x stop.'
+  time_exit: Close after hold_min minutes, or at 15:55 ET, whichever comes first.
+  other:
+  - >-
+    Master-signal test first: hold exactly hold_min minutes with no stop and no target, so the gate is
+    judged on the entry alone.
+  - Flatten before the close; nothing held overnight.
+position_sizing:
+  development: 1 contract fixed (ES or NQ; MES/MNQ for the prop variant)
+  live: >-
+    Volatility targeting: contracts = fixed dollar risk / (stop distance in points x point value), where
+    stop distance = stop_atr_frac x ATR15. Variant from the paper's angle: cut size when VS20 is extreme
+    (above the 95th percentile), because execution error and noise are largest there.
+parameters:
+- name: N_curve
+  default: 20
+  source: paper (20-day rolling window)
+  test_range: 10, 20, 40, 60
+- name: vs_window_min
+  default: 20
+  source: paper (20-min bars)
+  test_range: 10, 20, 30, 60
+- name: vs_threshold
+  default: 1.3
+  source: assumption
+  test_range: 1.0, 1.2, 1.3, 1.5, 2.0
+- name: start_time_et
+  default: '10:30'
+  source: transcript 02 (let VWAP form)
+  test_range: 10:00, 10:30, 11:00
+- name: hold_min
+  default: 30
+  source: assumption / transcript 04 return-profile method
+  test_range: 15, 30, 50, 90
+- name: stop_atr_frac
+  default: 0.3
+  source: transcript 03
+  test_range: 0.2, 0.3, 0.5
+- name: lockout_min
+  default: 35
+  source: transcript 04
+  test_range: 0, 20, 35, 60
+- name: max_trades
+  default: 3
+  source: assumption
+  test_range: 1, 2, 3, 5
+open_questions:
+- >-
+  The paper gives no return evidence. Is the volume-gated cross actually better than the ungated cross
+  and the always-long baseline? Required comparisons: (a) all VWAP crosses, (b) crosses with VS20 >= threshold,
+  (c) crosses with VS20 < 1, (d) always long NQ/ES in slices of the same length.
+- 'Low-volume crosses: do they revert (giving a fade variant) or are they just flat?'
+- >-
+  Should the curve be per weekday, and should FOMC/CPI/NFP days be excluded from the curve or kept? Event
+  days inflate the mean, so median vs mean matters.
+- >-
+  How does the continuous ES/NQ series handle volume at rolls? The NQ tick files are missing contracts
+  12-21, 03-22, 03-25, 06-25 and 09-25; check how clean_NQ fills them.
+- >-
+  Should ETH volume be included in session VWAP, or only RTH? Base version: RTH-only VWAP and an RTH-only
+  curve.
+- >-
+  Does a PCA common factor across ES and NQ (the paper's common/specific split) beat a simple time-of-day
+  mean? It needs the overlapping period 2021-2026 only.
+- >-
+  Overlap with vwap_trend and drift_vwap_pullback: should this ship as a stand-alone strategy or only
+  as a gate on them? Test both and check daily-P&L correlation (target < 0.25).
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th-percentile drawdown from the bootstrap simulation over
+    the same number of trades. Bench if the drawdown is above the 75th percentile and the strategy is
+    not near its equity high.
+  extra_checks:
+  - >-
+    Chronological split: ES in-sample 2013-12 to ~2023-12, out-of-sample to 2026-09. NQ in-sample 2021-07
+    to ~2025-07.
+  - Gated vs ungated vs low-volume crosses vs always-long baseline, on identical holding rules.
+  - Return profile at 5 to 120 min after the cross, split by VS20 quintile.
+  - Long vs short side separately; results by year, including 2022.
+  - 'Costs: ~$13 round turn on NQ, ~$5-6 on ES plus 1 tick slippage.'
+  - 'Outlier dependence: share of profit from the top 20 trades.'
+  - Check the expected-volume curve and VS20 visually with a custom indicator.
+data_requirements:
+- ES 1-min OHLCV continuous front month (have)
+- NQ 1-min OHLCV continuous (have, 2021-07+)
+- Roll calendar / expiry dates for ES and NQ
+- Exchange holiday and half-day calendar
+data_available: 'yes'
+expectations:
+- >-
+  The expected-volume curve is clearly U-shaped in RTH, and VS20 mean-reverts within about an hour (the
+  paper's short memory).
+- >-
+  If the WHY holds, average trade and win rate for crosses with VS20 >= threshold beat the ungated crosses
+  and the always-long baseline.
+- The source gives no performance numbers, so a null result is quite possible.
+what_would_kill_it: >-
+  Gated crosses do no better than ungated crosses or the always-long baseline in-sample. Or the edge vanishes
+  out-of-sample. Structurally: institutions moving from VWAP/POV to arrival-price or close-auction execution,
+  or the intraday volume curve flattening.
+why_it_could_fail_notes: []
+notes:
+- >-
+  The paper itself is a broker cost-reduction model. We take only the WHY (VWAP and participation flow
+  follow a predictable volume clock, and volume surprises mark information) and test our own simple gate.
+- >-
+  Status is 'idea' because the source has no return evidence; it moves to spec once the master-signal
+  test shows separation between the volume quintiles.
+- Simple time-of-day averages replace ARMA/SETAR on purpose, to keep it simple.
+variants:
+- Use as a gate on drift_vwap_pullback in place of its 'minimum % move in last hour' speed condition.
+- 'Fade variant: cross with VS20 < 0.8, fade back to VWAP with a short hold.'
+- >-
+  Late-day: crosses after 15:00 ET only, when the right arm of the U-curve concentrates algo completion
+  flow.
+- ETH variant with its own overnight curve, for overnight sessions.
+related_strategies:
+- vwap_trend
+- drift_vwap_pullback
+- vwap_pullback_adx
+- gamma_flip_cross
+review:
+  scores:
+    why_strength: 2
+    persistence: 3
+    simplicity: 2
+    testability: 4
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    The source is an execution paper with no return evidence; the authors say their model does not beat
+    VWAP. The directional edge is entirely our hypothesis, which the spec admits honestly.
+  - >-
+    The WHY is weaker than claimed. VWAP/participation algos trade in proportion to volume, but their
+    direction comes from the parent order, not the price move, so high volume means more algo trading
+    on both sides, not flow forced onto the side of the cross. Andersen 1996 links volume surprises to
+    volatility and information arrival, not to direction. The defensible part is only 'high-volume crosses
+    are more likely informed, and informed moves continue', a weaker version of the 'forced to trade'
+    pattern.
+  - >-
+    VWAP execution matters less in ES/NQ futures than in equities. The '~50% of institutional flow' claim
+    was untested even for CAC40 stocks, so the execution-mechanics link has to be argued for futures.
+  - >-
+    Testable with our ES and NQ 1-minute data with volume, and the comparison design (all crosses, high-volume
+    crosses, low-volume crosses, always-long baseline) is exactly right.
+  - >-
+    Too many knobs: 8 parameters with ranges (about 27,600 combinations), plus an optional cumulative
+    gate, a weekday curve, mean vs median, a stop alternative and a take-profit variant. Big overfit risk
+    on an idea with no prior evidence.
+  - >-
+    The short entry text is garbled and contradictory, and it is ambiguous whether 'first cross' means
+    first of the day or first after each lockout.
+  - >-
+    Heavy overlap with vwap_trend, drift_vwap_pullback and vwap_pullback_adx. The source summary itself
+    says this is a filter, not a stand-alone strategy.
+  - >-
+    Does not copy the paper: it takes only the WHY and builds a simple gate in place of the paper's ARMA/SETAR
+    models.
+  required_changes:
+  - >-
+    Fix the short entry text to an exact mirror: the previous bar closed at or above VWAP, this bar closes
+    below VWAP, and VS20 is at or above the threshold. Say whether VS20 includes the cross bar, and whether
+    'first cross' resets after each lockout or is once per day.
+  - >-
+    Rewrite the WHY. Drop the claim that volume-proportional algos are forced onto the side of the move.
+    Argue instead that a volume surprise marks informed, information-driven trading that continues. Add
+    a short paragraph on how big a share VWAP/participation execution actually has in ES/NQ futures.
+  - >-
+    Stage 1 is a pre-registered master-signal test only. Fix the curve window at 20 days, the volume window
+    at 20 minutes, start time 10:30 ET, a 30-minute hold, and no stop, target, lockout or trade cap. Report
+    results by VS20 quintile against the ungated crosses and the always-long baseline. Stage 1 passes
+    only if the top quintile beats both baselines in average trade net of costs and the ordering across
+    quintiles is roughly monotonic.
+  - >-
+    Only after Stage 1 passes, tune at most 2-3 parameters in-sample (threshold, hold, lockout). Freeze
+    everything else. Drop the optional cumulative gate, the weekday curve and the take-profit variant
+    from the base spec.
+  - >-
+    Decide up front, before any results: if the gate adds value, test it first as a gate on drift_vwap_pullback
+    (in place of its speed condition), and ship it as a stand-alone strategy only if daily-P&L correlation
+    with the existing VWAP strategies is below 0.25.
+  - >-
+    Define how roll days are found (explicit roll calendar, or the volume-switch date in the continuous
+    series), and settle the missing NQ contract months before building the volume curve.
+  - >-
+    Report the long and short sides separately. If the short side underperforms the inverse of the always-long
+    baseline, drop it.
+  copies_the_paper: false
