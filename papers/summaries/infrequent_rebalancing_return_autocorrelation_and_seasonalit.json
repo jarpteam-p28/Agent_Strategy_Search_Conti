@@ -1,0 +1,102 @@
+{
+  "title": "Infrequent Rebalancing, Return Autocorrelation, and Seasonality",
+  "authors": [
+    "Vincent Bogousslavsky"
+  ],
+  "year": 2016,
+  "source_url": "https://www.ssrn.com/abstract=2308366",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "If some investors only rebalance at fixed intervals, returns get a predictable pull at those intervals: reversal at short lags and positive autocorrelation at lags equal to those intervals, which shows up as return seasonality (for example, same-month returns a year ago predicting this month's).",
+  "findings": [
+    {
+      "statement": "Neither SSRN nor the journal page could be fetched, so none of the following was read in the paper. It comes from background memory of the Journal of Finance 2016 article and should be checked against the PDF. The paper builds an equilibrium model in which a fraction of investors rebalance only infrequently, for example every h periods, and the rest trade continuously.",
+      "evidence": "Not verified. Recalled from memory of the paper."
+    },
+    {
+      "statement": "The model says infrequent rebalancers shift their demand together at their rebalancing dates. That produces positive return autocorrelation at lags equal to multiples of the rebalancing interval, and mean reversion at other lags. Because investors are spread across different intervals, the autocorrelation pattern is a mix of these.",
+      "evidence": "Not verified. Recalled from memory."
+    },
+    {
+      "statement": "The model links this to known seasonality in stock returns. Past returns in the same calendar month (lags of 12, 24, ... months) predict current returns in the cross-section, as in Heston and Sadka (2008). It also links to momentum and reversal patterns at other horizons.",
+      "evidence": "Not verified. Recalled from memory. I do not remember the exact sample or the coefficients."
+    },
+    {
+      "statement": "The paper reports that the pattern can be tested through its link to trading activity. Autocorrelation should be stronger where rebalancing is more concentrated, for example in the stocks and periods where institutional trading is heavy. I am not sure of the details.",
+      "evidence": "Not verified. Treat as a hypothesis, not a finding."
+    }
+  ],
+  "why": {
+    "pattern": "Institutional constraint / mandate, combined with execution mechanics of big players. Investors who rebalance on a fixed calendar are forced to trade at predictable times.",
+    "mechanism": "Many investors do not adjust their portfolios continuously. They rebalance monthly, quarterly or annually, or at fixed horizons because of mandates, fees, attention limits and operating costs. When a group trades together at the same calendar point, its demand moves price. That temporary demand pressure then reverses or repeats on the schedule. The result is a price pattern tied to calendar lags, such as seasonality at 12-month multiples and reversal at lags in between.",
+    "who_is_forced": "Funds and individuals on calendar-based rebalancing schedules, such as annual, quarterly or month-end allocators and mandate-driven flows. They have to trade at those dates whatever the price.",
+    "why_it_persists": "Rebalancing schedules are set by institutional structure (reporting cycles, fee calendars, mandates), not by tastes that arbitrage quickly erases. Arbitrageurs also face risk and capital limits, so they do not fully offset the flow.",
+    "what_would_kill_it": "Rebalancing becoming continuous or spread across many different dates. Calendar-based mandates fading, or enough arbitrage capital trading against the flows. Any of these would flatten the autocorrelation at specific lags.",
+    "authors_explanation_vs_ours": "The author's explanation is the infrequent-rebalancing model itself, which is close to our WHY. I cannot confirm how well the paper separates it from rival explanations for the same-month seasonality, such as risk premia that vary by season (Keloharju et al.), or earnings-announcement timing. Treat the mechanism as plausible but contested."
+  },
+  "tradable_edge": "Traders who rebalance on a calendar create price pressure on predictable dates, so returns have a lag structure tied to those dates. The idea is to trade with the pressure around the known rebalancing points, and to fade moves that fall between them. The paper's own setup is cross-sectional (long stocks that did well in the same calendar month in past years). For our futures data the realistic version is a calendar-timed index strategy. It would test whether ES/NQ returns in particular windows (month-end, quarter-end, turn of the month, same weekday or month as past years) carry a stable sign and size. The rule would be simple: a long-only time window with a time exit, and nothing else.",
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Return seasonality has been public since Heston and Sadka (2008), and this paper came out in 2016. Calendar effects in liquid index futures are widely known and often weak after costs. The WHY is structural and may last, but the size of the effect probably shrank."
+  },
+  "data_fit": "Partial. The original test is cross-sectional on single stocks (CRSP) and needs a stock universe, which we do not have. We could only test the index-level version on ES 1-minute data (2013 to 2026) and NQ (2021 on). That means calendar-window returns, such as the 12-month lag of same-month returns, turn-of-month or quarter-end, plus intraday or half-hour seasonality. With only about 12 years of ES, long-lag tests (12, 24, 36 months) have very few independent observations. NQ is too short for them.",
+  "angles": [
+    "Different instrument: test calendar-lag autocorrelation on ES, and on NQ with its shorter history. Compare the sign and size of the effect.",
+    "Different session: apply the same logic intraday. Check whether returns in a given half-hour slot predict the same slot on later days (same-time-of-day lags of 1, 5 and 20 days). This is well suited to our 1-minute data and gives many observations.",
+    "One side only: take long-only calendar windows, since selling pressure may be absorbed differently from buying pressure.",
+    "Month-end, quarter-end and year-end: rebalancing flows should be largest at these dates. Test the last days of the month or quarter, then the first days of the next.",
+    "Combine with other findings: use a seasonal-lag signal as a filter on an existing trend or VWAP strategy, and trade only when both agree.",
+    "Different universe: if stock data becomes available, run the original cross-sectional same-month seasonality sort in smaller, less-covered names, where arbitrage is weaker.",
+    "Check the baseline: any calendar-window rule must beat simply being long the index over the same bars, and must still work in a down year such as 2022."
+  ],
+  "caveats": [
+    "I could not access the paper. SSRN and the journal page were unreachable, so every finding is from memory and unverified. Re-read the PDF before building on any number or claim.",
+    "I do not know the sample period, the key coefficients or the robustness tests.",
+    "The explanation competes with other accounts of return seasonality, so the WHY is not settled.",
+    "Calendar effects on a single index future give few independent observations, and are prone to data mining."
+  ],
+  "reported_results": {
+    "headline": "Not read. The paper is theoretical with empirical support on stock return autocorrelation and seasonality. No tradable backtest was reviewed.",
+    "key_stats": [],
+    "costs_included": "Unknown"
+  },
+  "setting": {
+    "data_frequency": "Likely monthly for stocks (CRSP). Unverified.",
+    "holding_period": "Unknown. Probably monthly, based on the lag structure.",
+    "instruments": [
+      "US equities (likely CRSP stocks)"
+    ],
+    "markets": [
+      "US"
+    ],
+    "sample_period": "Unknown (not read)"
+  },
+  "referenced_papers_worth_reading": [
+    {
+      "title": "Seasonal Fluctuations in Aggregate Returns / Seasonality in the Cross-Section of Stock Returns",
+      "authors": [
+        "Steven L. Heston",
+        "Ronnie Sadka"
+      ],
+      "venue": "Journal of Financial Economics",
+      "year": 2008,
+      "url": null,
+      "pdf_url": null,
+      "note": "The core seasonality finding the model aims to explain: same-calendar-month past returns predict current returns. Recalled from memory, not confirmed as a citation in the text I could not read."
+    },
+    {
+      "title": "Intraday Momentum: The First Half-Hour Return Predicts the Last Half-Hour Return",
+      "authors": [
+        "Lei Gao",
+        "Yufeng Han",
+        "Sophia Zhengzi Li",
+        "Guofu Zhou"
+      ],
+      "venue": "Journal of Financial Economics",
+      "year": 2018,
+      "url": null,
+      "pdf_url": null,
+      "note": "Not necessarily cited in the paper. Listed because it is a testable intraday version of the same idea on index futures, and our 1-minute ES/NQ data suits it."
+    }
+  ]
+}

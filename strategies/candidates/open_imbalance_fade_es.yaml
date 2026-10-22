@@ -1,0 +1,285 @@
+id: open_imbalance_fade_es
+name: Open-Imbalance Fade on quiet-volume days (ES/NQ, long/short, time exit)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/equilibrium_effects_of_intraday_order_splitting_benchmarks.md
+  papers:
+  - title: Equilibrium Effects of Intraday Order-Splitting Benchmarks
+    authors:
+    - Jin Hyuk Choi
+    - Kasper Larsen
+    - Duane J. Seppi
+    year: 2021
+    venue: arXiv working paper
+    url: https://arxiv.org/abs/1803.08336
+    note: >-
+      Theory only. In the model, the opening price overshoots when aggregate latent demand from TWAP/VWAP
+      order-splitters is one-directional, and the overshoot decays predictably through the day. The pressure
+      is larger when fewer participants are present.
+  - title: Order splitting and searching for a counterparty
+    authors:
+    - Vincent van Kervel
+    - Amy Kwan
+    - Johan Westerholm
+    year: 2018
+    venue: Working paper
+    note: The closest empirical support the paper cites. Read it before moving this spec past 'idea'.
+finding: >-
+  This is a theoretical equilibrium result, with no data and no sample. Suppose institutions work large
+  parent orders along TWAP/VWAP schedules and their aggregate demand points one way. Then the opening
+  price has to overshoot fundamental value so the market can clear. The price pressure g(t)·a_Σ then decays
+  over the session, so the expected intraday drift runs against the opening imbalance. The model also
+  says the overshoot is bigger when fewer participants are trading, i.e. when liquidity is thin. The paper
+  gives only the sign of the effect, not its size.
+why: >-
+  The WHY is the execution mechanics of big players plus the liquidity limits on large orders. Benchmarked
+  desks must follow their schedule whatever the price. HFT market makers want roughly zero inventory and
+  will only take the other side at a discount. So a one-sided schedule pushes price too far early in the
+  day. The push fades once child orders spread across the session and liquidity providers rebuild capacity.
+  Our existing momentum strategies (ORB, noise area, VWAP trend) assume an opening move carries information
+  and continues. This strategy targets the other regime: large opening pushes on light volume, which look
+  like inventory or imbalance pressure rather than news. The model's own liquidity prediction gives the
+  regime filter: low participation means a bigger overshoot and a fade is more likely. A heavy-volume
+  push is more likely to be information, so we stand aside.
+market:
+  instruments:
+  - ES
+  - NQ
+  - MES
+  - MNQ
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC, so convert with DST handling)
+  universe: null
+direction: long_short
+entry:
+  long: >-
+    At 10:00 ET (after the first 30 RTH minutes), compute push = close(10:00 bar) − prior RTH close (16:00
+    ET settlement-proxy bar). If push ≤ −k × ATR14, where ATR14 is the 14-session average RTH daily range,
+    and the filters pass, buy at the open of the next bar.
+  short: 'Mirror image: if push ≥ +k × ATR14 and the filters pass, sell short at the open of the next
+    bar.'
+  filters:
+  - >-
+    Relative opening volume: volume from 09:30 to 10:00 divided by the 20-session average of the same
+    window must be below rv_max (default 1.0). Light participation suggests inventory pressure; heavy
+    volume suggests news, so no trade.
+  - >-
+    No-breakout-continuation check: at 10:00, price must not be at the extreme of the 09:30-10:00 range
+    in the push direction. Specifically, the 10:00 close must have pulled back at least pb_min (default
+    10%) of the 30-minute range from the extreme. This filters out moves that are still accelerating.
+  - Maximum one trade per session. No trade if ATR14 is not yet warm (first 20 sessions of data).
+  - >-
+    Skip scheduled high-impact 08:30/10:00 ET macro days (CPI, NFP, FOMC day), if we have a calendar.
+    Otherwise run without this filter and flag it.
+exit:
+  stop_loss: >-
+    sl_mult × ATR14 beyond the entry price (default 0.35 × ATR14). Optional variant: stop just beyond
+    the 09:30-10:00 extreme in the push direction.
+  take_profit: Price retraces tp_frac (default 50%) of the push, measured back toward the prior RTH close.
+  time_exit: Flat at 15:50 ET if neither stop nor target has been hit.
+  other:
+  - >-
+    Use a 1-minute bar magnifier for intrabar fills. If stop and target fall in the same bar, assume the
+    stop is hit first.
+  - >-
+    Costs: about $13 round turn per NQ contract and about $5-6 per ES contract (commission plus 1 tick
+    slippage), as a starting assumption.
+position_sizing:
+  development: Fixed 1 contract (ES, and NQ separately).
+  live: >-
+    Volatility targeting: contracts = fixed dollar risk per trade ÷ (sl_mult × ATR14 × point value), rounded
+    down, with a minimum of 0 (skip the trade if under 1 micro).
+parameters:
+- name: entry_time_et
+  default: '10:00'
+  source: 'assumption (summary angle: enter after the first 30-60 min)'
+  test_range: 09:45, 10:00, 10:30
+- name: k_push_atr
+  default: 0.5
+  source: assumption
+  test_range: 0.3-0.9 step 0.1
+- name: rv_max
+  default: 1.0
+  source: assumption based on the paper's few-participants prediction
+  test_range: 0.7, 0.85, 1.0, 1.2, off
+- name: pb_min
+  default: 0.1
+  source: assumption
+  test_range: 0, 0.1, 0.25
+- name: sl_mult
+  default: 0.35
+  source: assumption (Conti's 30% of ATR noise-barrier convention)
+  test_range: 0.25-0.6
+- name: tp_frac
+  default: 0.5
+  source: assumption (the model implies decay toward fundamental value; full decay = 1.0)
+  test_range: 0.3, 0.5, 0.75, 1.0
+- name: time_exit_et
+  default: '15:50'
+  source: summary angle (around 15:30)
+  test_range: 12:00, 13:30, 15:30, 15:50
+- name: atr_lookback
+  default: 14
+  source: assumption
+  test_range: 10, 14, 20
+expectations:
+- >-
+  The paper predicts only a sign: on qualifying days, the mean return from 10:00 to the close should be
+  opposite in sign to the push.
+- >-
+  The fade should be stronger on low-relative-volume days than on high-volume days. If the relationship
+  is flat or reversed, the paper's mechanism is not what we are seeing.
+- >-
+  The return profile after entry should look like a decay: most of the reversion early (10:00-12:00) and
+  flattening toward the close.
+- >-
+  Daily P&L should be negatively or weakly correlated with first_bar_direction_orb, noise_area_momentum_es
+  and orb_long_only. That would make it a portfolio diversifier.
+- >-
+  Master-signal test first: hold every signal to 15:50 with no stop and no target, and compare with a
+  zero-intelligence baseline (always long ES from 10:00 to 15:50, and always fade any push regardless
+  of filters).
+variants:
+- Fade gap-downs only (long side). Check whether it survives 2022.
+- Fade gap-ups only (short side). This avoids long beta.
+- Target session VWAP instead of a fraction of the push (the VWAP footprint angle).
+- Measure the push from the RTH open only (09:30-10:00 range), with no overnight gap.
+- >-
+  Regime switch combined with ORB: high-volume pushes go to ORB continuation, low-volume pushes go to
+  this fade.
+what_would_kill_it: >-
+  Institutions moving away from schedule benchmarks to opportunistic or price-sensitive execution. HFTs
+  detecting the schedules and pricing the overshoot into the opening auction, so no pull-back is left
+  after 10:00. Market makers with much bigger inventory tolerance. In backtest, a kill is: no sign reversal
+  on low-volume days in-sample, or an edge below costs and the baseline.
+data_requirements:
+- ES 1-min ETH/RTH 2013-2026 (available)
+- NQ 1-min 2021-07 to 2026-09 (available)
+- 'Optional: macro event calendar (CPI/NFP/FOMC dates), not in our inventory'
+- 'Optional: bid/ask spreads as a liquidity proxy (only ES ticks 2021-23)'
+data_available: 'yes'
+related_strategies:
+- first_bar_direction_orb
+- orb_long_only
+- noise_area_momentum_es
+- vwap_trend
+- overnight_bias_orb
+open_questions:
+- >-
+  The paper has no empirical magnitude. The edge may be entirely absorbed by the opening auction or the
+  first minutes, and every parameter here is an assumption.
+- >-
+  Is relative volume the right proxy for 'fewer participants'? Low volume could also mean a quiet consensus
+  day with a small push anyway, so the k and rv filters may rarely trigger together. Count trades per
+  year in-sample before tuning.
+- >-
+  Should the push include the overnight gap (prior RTH close) or be measured from the 09:30 open? The
+  model's 'opening price' maps poorly onto 24h futures.
+- >-
+  Our momentum specs (noise_area_momentum_es, ORB) find continuation after large moves. We need to check
+  whether the fade survives conditioning, or whether it is just the losing side of those strategies.
+- 'Roll days: the prior RTH close must come from the same contract, or be back-adjusted.'
+- >-
+  Which is the better target: tp_frac of the push, session VWAP, or the prior close? Decide in-sample
+  only.
+- >-
+  Half-days and holiday-adjacent sessions: the model predicts bigger pressure on them. Should we include
+  them, give them their own bucket, or exclude them?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if live drawdown exceeds the 95th-percentile simulated max drawdown for the same number of trades.
+    Bench if the current drawdown passes the 75th percentile and the strategy is not near its equity high.
+  extra_checks:
+  - >-
+    Chronological split: ES in-sample 2013-12 to about 2023-12, out-of-sample after that. Run NQ (2021+)
+    frozen as a cross-instrument check.
+  - >-
+    Report net profit, win rate, average trade, max drawdown, and results by year (including 2020 and
+    2022), by side, and by relative-volume bucket.
+  - 'Compare against two baselines: unconditional 10:00-15:50 long, and the unfiltered fade.'
+  - Daily P&L correlation with the existing ORB and noise-area strategies.
+  - 'Outlier dependence: share of profit coming from the top 20 trades.'
+notes:
+- >-
+  Status is 'idea' because the source is pure theory. Promote to 'spec' only if the master-signal test
+  shows the predicted sign and the volume-bucket dependence in-sample.
+- >-
+  Keep the rules simple. The only conditioning that comes from the WHY is push size relative to ATR and
+  light opening participation.
+review:
+  scores:
+    why_strength: 2
+    persistence: 3
+    simplicity: 2
+    testability: 4
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    The rules are our own framing and not a copy of the paper. The paper is pure theory and gives only
+    a sign, so there are no rules to copy. The spec states the finding honestly as theory with no sample.
+  - >-
+    The WHY is weak for this instrument. The model describes a single asset with one opening auction,
+    where VWAP/TWAP parent orders are worked from the open. ES and NQ trade about 23 hours a day, so most
+    of the institutional imbalance is already absorbed overnight. Index exposure is also largely worked
+    in cash equities and ETFs. The spec admits that the model's 'opening price' maps poorly onto 24-hour
+    futures. That mismatch is the core of the WHY, and it is unresolved.
+  - >-
+    The WHY competes with a documented opposite effect. Intraday momentum in index futures and ETFs (the
+    first half-hour return predicts the last half-hour), plus our own ORB, noise-area and VWAP-trend specs,
+    all find continuation after large opening moves. A theory paper that untested-ly predicts reversion
+    is not enough to override that. The low-volume filter is the only thing that could separate the two
+    regimes, and it is unproven.
+  - >-
+    The low-volume filter may contradict itself in practice. Pushes of 0.5×ATR or more usually come with
+    above-average volume, so k and rv_max may rarely trigger together. The trade count could be too small
+    to validate. The spec raises this in its open questions but does not make it a gate.
+  - >-
+    There are too many knobs: 8 tuned parameters, 3 filters, a macro-calendar filter we don't have, an
+    alternative stop and 5 variants. The grid is in the thousands of combinations on roughly 10 years
+    of daily signals, which makes overfitting very likely. pb_min and the macro filter do not come from
+    the WHY.
+  - >-
+    The time exit at 15:50 runs straight into the last-half-hour momentum window. If that effect exists,
+    it works against the fade at the end of every held trade.
+  - >-
+    Testability is good. ES 1-minute data from 2013 to 2026 and NQ from 2021 cover everything except the
+    optional macro calendar. Volume, ATR and push size can all be built from 1-minute bars. The planned
+    master-signal test against a baseline is the right first step.
+  required_changes:
+  - >-
+    Make the master-signal test a hard gate before any parameter work. Hold every push to a fixed exit
+    with no stop and no target. Do it in-sample only, and report results by relative-volume tercile. Proceed
+    only if the mean return after the push is opposite in sign on low-volume days and the effect rises
+    steadily from high-volume to low-volume terciles. Otherwise kill the strategy.
+  - >-
+    Pick one push definition before testing and justify it from the WHY. The RTH open to 10:00 matches
+    the model's 'opening' better for 24-hour futures. Do not tune between overnight-gap and RTH-only pushes;
+    that choice is a free parameter.
+  - >-
+    Cut the tunable parameters to at most 2–3: k_push_atr plus one exit parameter. Fix rv_max at a median
+    split (below 1.0) rather than tuning it. Fix the entry at 10:00 and ATR at 14. Drop pb_min. Drop the
+    macro filter, or run it only as a robustness check once we have a calendar.
+  - >-
+    Test a time exit before the last half-hour (for example 15:00 or 15:30), so the fade is not exposed
+    to the documented last-half-hour momentum. Report the 10:00-to-close return profile in 30-minute steps
+    to choose the exit.
+  - >-
+    Count qualifying trades per year in-sample before anything else. If there are fewer than about 30
+    per year on ES, say so explicitly and widen k, or treat the strategy as a regime filter for ORB rather
+    than a standalone strategy.
+  - >-
+    Add a conditioning check against the existing momentum specs. On days when ORB or noise-area would
+    fire, is the fade simply their losing side? Report the fade's results with and without those days.
+  - >-
+    Define the prior-close reference precisely: the last RTH bar at 15:59 ET from the same contract. Handle
+    roll days, and treat half-days as their own bucket rather than mixing them in.
+  - >-
+    Read van Kervel–Kwan–Westerholm (2018), and ideally van Kervel–Menkveld (2019) and the intraday momentum
+    literature, before backtesting. Record whether any empirical evidence supports reversion rather than
+    continuation in index futures.
+  copies_the_paper: false

@@ -1,0 +1,272 @@
+id: first_bar_direction_orb
+name: First 5-Minute Bar Direction (ES/NQ, long/short, flat at close)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/can_day_trading_really_be_profitable_evidence_of_sustainable.md
+  papers:
+  - title: >-
+      Can Day Trading Really Be Profitable? Evidence of sustainable long-term profits from opening range
+      breakout (ORB) day trading strategy vs. benchmark in the US stock market
+    authors:
+    - Carlo Zarattini
+    - Andrew Aziz
+    year: 2023
+    venue: SSRN
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4416622
+    note: Trigger paper. Only the abstract was read; the rule details are from memory and not verified.
+  - title: Market Intraday Momentum
+    authors:
+    - L. Gao
+    - Y. Han
+    - S. Z. Li
+    - G. Zhou
+    year: 2018
+    venue: Journal of Financial Economics
+    note: Academic support for the open-to-close momentum WHY.
+  - title: Volatility-Managed Portfolios
+    authors:
+    - A. Moreira
+    - T. Muir
+    year: 2017
+    venue: Journal of Finance
+    note: Backs live volatility-targeted sizing.
+finding: >-
+  On QQQ from 2016 to 2023, which includes two bear markets, a day-trading opening range breakout that
+  is flat every night beat buy-and-hold. The abstract reports about 33% annualised alpha net of commissions.
+  As we remember the rules (not verified): take the direction of the first 5-minute bar of the cash session,
+  enter in that direction at the next bar, put the stop at the far side of that first bar, and exit at
+  the close. Size each trade by risk.
+why: >-
+  Information arrives while the market is closed and is digested slowly once it opens. News, earnings
+  and global positioning build up overnight. At 09:30 ET the cash-session mandated money (funds and pensions
+  that trade only in regular hours) arrives all at once, and the imbalance is too large to absorb in the
+  first minutes. The direction of the first 5-minute bar shows which side is overwhelmed. Because large
+  orders get worked over hours, and market makers and leveraged-ETF rebalancing hedge into the move late
+  in the day, that flow carries on toward the close. This differs from our existing ORB strategies. Those
+  wait for a break of a 30-minute range or a noise band. This one trades the earliest read of the imbalance,
+  with a tight stop set by that read, so a few big trend days pay for many small losses.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min (build 5-min opening bar from 1-min)
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC; convert with DST)
+  universe: null
+direction: long_short
+entry:
+  long: >-
+    The first RTH 5-minute bar (09:30-09:35 ET) closes above its open → buy at the open of the 09:35 bar.
+  short: The first RTH 5-minute bar closes below its open → sell short at the open of the 09:35 bar.
+  filters:
+  - >-
+    Doji filter: no trade if |close-open| of the first bar < doji_frac × that bar's range, or if the bar
+    is exactly flat
+  - One trade per day; no re-entry after the stop is hit
+  - Skip holiday half-days and sessions with no 09:30 bar
+  - 'Warm-up: skip the first 14 sessions so ATR (used for sizing and the stop variant) is defined'
+exit:
+  stop_loss: >-
+    Default: the far extreme of the first 5-minute bar (its low for longs, its high for shorts). Variant:
+    entry ∓ atr_stop_frac × the 14-day daily ATR.
+  take_profit: >-
+    Default: none (let the trend day run). Variant: profit target = target_R × initial risk (10R is our
+    recollection of the paper).
+  time_exit: Flatten at 15:59 ET (the RTH close) if neither stop nor target has been hit. Never hold overnight.
+  other:
+  - >-
+    Use 1-min bars for intrabar fills; if the stop and target are both touched in the same 1-min bar,
+    assume the stop was hit first
+position_sizing:
+  development: 1 ES (or 1 NQ) contract per trade, fixed.
+  live: >-
+    Volatility targeting: contracts = floor(fixed dollar risk ÷ (stop distance in points × point value)),
+    capped at a maximum notional leverage (for example 4× account equity, the cap mentioned in the paper).
+    Tight first-bar days get more contracts, wide days fewer. This leverage cap is our substitute for
+    the paper's TQQQ result.
+parameters:
+- name: opening_bar_minutes
+  default: 5
+  source: paper (unverified recollection)
+  test_range: 1, 3, 5, 10, 15
+- name: stop_type
+  default: first_bar_extreme
+  source: paper (unverified)
+  test_range: first_bar_extreme, atr_fraction
+- name: atr_stop_frac
+  default: 0.1
+  source: assumption (the ATR stop used in the same authors' follow-up paper)
+  test_range: 0.05-0.25
+- name: atr_lookback_days
+  default: 14
+  source: assumption
+  test_range: 10, 14, 20
+- name: target_R
+  default: none
+  source: paper recollection is 10R
+  test_range: none, 3, 5, 10
+- name: doji_frac
+  default: 0.0
+  source: assumption
+  test_range: 0, 0.1, 0.2
+- name: exit_time_et
+  default: '15:59'
+  source: paper
+  test_range: 15:00, 15:45, 15:59
+open_questions:
+- >-
+  We have not seen the paper's exact rules (only the abstract was read). Is the stop the first bar's extreme
+  or an ATR fraction? Is there a 10R target?
+- Does the paper skip doji first bars, and how does it define one?
+- >-
+  Futures trade the overnight session, so the 09:30 'open' is not a true open for ES/NQ the way it is
+  for QQQ. Does the first-bar signal still hold when ES has traded all night? Compare against the open-auction
+  effect in QQQ.
+- Should the stop be checked on 1-min closes or on intrabar touches? We default to intrabar touches.
+- >-
+  Which roll convention does the continuous ES series use? Check that roll days don't create a fake first
+  bar.
+- NQ data only starts in 2021-07, so a long NQ test is impossible. ES 2014-2026 is the main test.
+- >-
+  Is the edge concentrated in high-volatility regimes (2020, 2022)? If so, should a gap or prior-range
+  regime filter be part of the core rules, or stay a variant?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop and review if live drawdown exceeds the 95th-percentile max drawdown from the bootstrap at the
+    same number of trades.
+  extra_checks:
+  - >-
+    Chronological split: ES in-sample 2014-01 to about 2023-08, out-of-sample after that. This also roughly
+    covers the period after publication (April 2023), which tests alpha decay.
+  - >-
+    Zero-intelligence baseline: always long from 09:35 to 15:59 with the same stop rule. The signal must
+    beat it per trade.
+  - >-
+    Report the long and short sides separately, plus a long-only variant. Check 2022 (down year) separately.
+  - >-
+    Report results year by year, and the share of profit from the top 20 trades (outlier dependence →
+    must be automated).
+  - >-
+    Costs: about $5 round trip plus 1 tick of slippage per side on ES and NQ; report results gross and
+    net.
+  - >-
+    Daily P&L correlation with orb_long_only, vault_break and overnight_bias_orb. Target below 0.25 for
+    portfolio use.
+  - >-
+    Compare fixed 1-contract results with vol-targeted sizing on risk-adjusted terms (Sharpe, MAR), not
+    total return.
+variants:
+- Long only (equity-index dips get absorbed by buyers)
+- ATR-fraction stop instead of the first bar's extreme
+- 10R profit target vs close-only exit
+- >-
+  Regime filter: trade only when |overnight gap| or the prior-day range is above its 20-day median (high-information
+  days)
+- Opening bar length 1/3/10/15 minutes
+- Run on NQ 2021-2026 as a robustness check
+expectations:
+- >-
+  Low win rate (roughly 20-35% if the stop is the first bar's extreme), with a long right tail of trend
+  days that hold to the close
+- >-
+  Positive expectancy per contract before leverage. If the edge only shows up after leverage, there is
+  no edge
+- Stronger results on high-volatility days and in 2020/2022
+- Possibly weaker after 2023 (crowding after publication)
+what_would_kill_it: >-
+  Large funds moving to pre-market or 24-hour trading so overnight information is digested before 09:30;
+  ORB capital crowding the first bar so its direction gets faded; a long low-volatility regime with few
+  trend days. In the backtest: per-trade expectancy no better than the always-long baseline, or out-of-sample
+  collapse after 2023.
+data_requirements:
+- ES 1-min RTH 2014-2026 (UTC, converted to ET)
+- NQ 1-min 2021-2026
+- Daily ATR computed from the 1-min data
+data_available: 'yes'
+related_strategies:
+- orb_long_only
+- vault_break
+- overnight_bias_orb
+- noise_area_momentum_es
+- orb_overnight_session
+notes:
+- >-
+  New angle versus orb_long_only: this one trades the direction of the very first bar instead of a break
+  of a 30-minute range, uses a tight stop at the first bar's extreme, trades both sides, and sizes by
+  risk.
+- >-
+  The 1,484% TQQQ figure is a leverage effect, not edge. Judge the strategy on unlevered expectancy and
+  risk-adjusted metrics.
+why_it_persists: null
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 3
+    testability: 4
+    overfit_resistance: 2
+  verdict: refine
+  copies_the_paper: true
+  reasons:
+  - >-
+    The core rules are the paper's rules as remembered: first 5-minute bar direction, stop at the bar's
+    extreme, optional 10R target, flat at the close. Even the parameter defaults point back to the paper.
+    This is copying the paper, and from an abstract read plus memory, so we would be copying rules we
+    haven't even checked. That is the post-publication decay trap the playbook warns about.
+  - >-
+    The WHY is borrowed whole from the generic ORB story and does not fit futures. ES and NQ have traded
+    all night, so overnight information is already partly in the price before 09:30. What is left at 09:30
+    is the cash-session mandated flow and the stock open auction. The spec raises this as an open question,
+    but it should drive the rules.
+  - >-
+    The academic support does not match the signal. Gao et al. show that the first half-hour return predicts
+    the last half-hour return. They do not show that a 5-minute bar's direction predicts the whole 09:35-16:00
+    path. The holding period and signal window are copied, not taken from the mechanism.
+  - >-
+    The first bar's direction is a near coin-flip state read on a 5-minute bar. With a stop at the bar's
+    extreme, much of the result will come from stop placement and right-tail outliers rather than from
+    the entry.
+  - >-
+    Too many knobs: bar length (5 values), stop type, ATR fraction, ATR lookback, target_R (4 values),
+    doji_frac, exit time, plus a regime filter. That is hundreds of combinations on about 2,400 ES sessions
+    in-sample. The overfit risk is high for a strategy whose edge sits in a few trend days.
+  - >-
+    Overlap with orb_long_only and noise_area_momentum_es is likely high, because the same trend days
+    pay all of them. The low-correlation claim needs evidence before it gets portfolio value.
+  - >-
+    Positives: the data is available (ES 2014-2026 at 1-minute), the rules are unambiguous and easy to
+    code, the validation plan is strong (always-long baseline, side split, 2022 check, outlier share,
+    split at the April 2023 publication date), and the spec correctly says the leveraged TQQQ figure is
+    not evidence of edge.
+  required_changes:
+  - >-
+    Reframe around the futures WHY, not the QQQ paper. State what new information the 09:30 cash open
+    adds to ES/NQ after a full overnight session (cash-only mandates, the stock open auction, ETF creations).
+    Make the signal measure that, for example the 09:30-09:35 move relative to the overnight (ETH) range
+    or gap: does the cash open confirm or reject the overnight direction? Write down which version the
+    WHY predicts before testing.
+  - >-
+    Before any stop or target work, run a master-signal test: enter at 09:35 in the first-bar direction,
+    no stop, no target, exit at fixed horizons (10:00, 12:00, 15:30, 15:59). Plot the return profile and
+    compare it against the always-long baseline over the same windows. If the first-bar direction doesn't
+    beat the baseline without a stop, the 'edge' is stop geometry and the idea should be rejected.
+  - >-
+    Explicitly test the Gao et al. version (first 30 minutes → last 30 minutes) as the WHY-consistent
+    alternative. Keep the 5-minute rule only if it adds something on top of it.
+  - >-
+    Freeze the parameter set: opening bar = 5 minutes, stop = bar extreme, no target, exit at 15:59, no
+    doji filter. Allow at most one sweep in-sample, either bar length or stop type, not both. Move target_R,
+    doji_frac, ATR lookback and exit time to a documented 'not tuned' list.
+  - >-
+    Drop the unverified paper parameters as 'source: paper', or get the full PDF and record the actual
+    rules, so we know exactly what we are deliberately not copying.
+  - >-
+    Check the roll convention of the continuous ES series and exclude roll days (or check them) so a contract
+    switch can't create a fake first bar.
+  - >-
+    Before backtesting, set a pass bar: positive per-contract net expectancy after $5 round trip plus
+    1 tick per side, beating the baseline in both IS and OOS (post-2023), and daily P&L correlation with
+    orb_long_only below 0.25. Otherwise park it as redundant.
