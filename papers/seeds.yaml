@@ -244,3 +244,32 @@
   note: >-
     Not necessarily cited in the paper. Listed because it is a testable intraday version of the same idea
     on index futures, and our 1-minute ES/NQ data suits it.
+- title: >-
+    The Post-Earnings-Announcement Drift and Liquidity Risk / Trading frictions and PEAD (e.g., Sadka
+    2006; Chordia et al. 2009)
+  authors:
+  - Ronnie Sadka
+  - Tarun Chordia
+  venue: Various
+  year: 2009
+  note: >-
+    Tests whether liquidity and trading costs explain drift. This is related to the liquidity-constraint
+    WHY. Exact titles not verified.
+- title: The Information Content of Revenue Surprises / Revenue surprises and stock returns
+  authors:
+  - Narasimhan Jegadeesh
+  - Joshua Livnat
+  year: 2006
+  venue: Journal of Accounting and Economics
+  note: The companion journal version of this paper. Check it for the full tests.
+- title: >-
+    Market Underreaction to Open Market Share Repurchases / Post-earnings drift literature by Ball and
+    Brown
+  authors:
+  - Ray Ball
+  - Philip Brown
+  year: 1968
+  venue: Journal of Accounting Research
+  note: >-
+    The original 1968 finding of drift after earnings news. It is the first of the three building blocks
+    in the playbook. Cited from memory.

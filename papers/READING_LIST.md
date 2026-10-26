@@ -1,6 +1,6 @@
 # Reading list — papers to download
 
-Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the file name shown** (or attach it in chat). The next run reads the full paper and replaces the partial summary.
+Updated 2026-10-26. Download each PDF and save it in `papers/inbox/` **using the file name shown** (or attach it in chat). The next run reads the full paper and replaces the partial summary.
 
 ## 1. Couldn't get the full text — please download
 
@@ -10,6 +10,9 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 | Comparing the Post-Earnings Announcement Drift for Surprises Calculated from Analyst and Time Series Forecasts (2006) — *abstract only* | transcript 01 - PEAD | https://doi.org/10.1111/j.1475-679X.2006.00196.x | `comparing_the_post_earnings_announcement_drift_for_surprises.pdf` |
 | Infrequent Rebalancing, Return Autocorrelation, and Seasonality (2016) — *abstract only* | Theory the paper cites for the intraday momentum mechanism (infrequent rebalancing). Named in the abstract. | https://www.ssrn.com/abstract=2308366 | `infrequent_rebalancing_return_autocorrelation_and_seasonalit.pdf` |
 | Market Intraday Momentum (2018) — *abstract only* | transcript 01 - opening range breakout (open preprint may exist on author pages) | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2440866 | `market_intraday_momentum.pdf` |
+| Post-Earnings-Announcement Drift: Delayed Price Response or Risk Premium? (1989) — *abstract only* | transcript 01 - PEAD (likely not on SSRN; may need the PDF dropped in papers/inbox) | https://ideas.repec.org/a/bla/joares/v27y1989ip1-36.html | `post_earnings_announcement_drift_delayed_price_response_or_r.pdf` |
+| Post-Earnings Announcement Drift: The Role of Revenue Surprises (2006) — *abstract only* | Adds revenue surprises as another PEAD signal. | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=903767 | `post_earnings_announcement_drift_the_role_of_revenue_surpris.pdf` |
+| Return Differences between Trading and Non-trading Hours: Like Night and Day (2008) — *failed* | transcript 01 - overnight drift | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1004081 | `return_differences_between_trading_and_non_trading_hours_lik.pdf` |
 | Volume Weighted Average Price (VWAP): The Holy Grail for Day Trading Systems (2023) — *partial* | transcript 01 - VWAP trend | https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4631351 | `volume_weighted_average_price_vwap_the_holy_grail_for_day_tr.pdf` |
 
 ## 2. Recommended research — ES / NQ / index futures
@@ -86,6 +89,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Get it:** SSRN abstract page https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4562800 -> click 'Download This Paper'. Free alternatives: AFA conference copy at https://afajof.org/management/viewp.php?n=98196, or the paper link on Julian Terstegge's site (julianterstegge.com). Use the newest SSRN version (the 'Third Friday Price Spike' revision) if listed. Search results show earlier (Sep 2023) and later versions with different headline numbers (about 10 bps open-to-open vs 14-18 bps), so check which version you have. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4562800
 - **Save as:** `papers/inbox/the_derivative_payoff_bias_later_retitled_the_third_friday_p.pdf`
 
+### P1 · The Disappearing Overnight Drift (2026)
+*Nina Boyarchenko, Lars Christian Larsen, Paul Whelan* · instruments: ES, S&P 500 E-mini futures · access: open_pdf · testable on our data: yes
+
+- **Why:** FINDING: in the original 1998-2019 sample, the 2-3 a.m. ET hour (European open) earned a large positive return in S&P futures. The 2026 update says it has averaged close to zero since 2021. WHY (liquidity/inventory premium): liquidity providers absorb the closing-hour order imbalance at a discount and carry it through the thin overnight market. They earn it back when European buyers arrive. The post explains expected overnight return as closing dollar imbalance x return variance / risk-bearing capacity. The authors blame the fade mainly on a compression in the dispersion of closing imbalances. WHAT WOULD KILL THE EDGE: smaller closing imbalances, or more risk capacity in overnight liquidity provision. That is what the update reports. ANGLE: the effect may now sit only on days with a large closing order imbalance, so test it conditional on a closing-hour signed-volume proxy (last-hour buy-minus-sell volume or return) instead of unconditionally.
+- **Should contain:** Hour-by-hour average annualized log returns for ES futures, Jan 2021-Dec 2025 (1,245 days), compared with the original 1998-2019 pattern. A decomposition of the decline into three channels: dispersion of closing order imbalances, return variance, and risk-bearing capacity. Binned charts of end-of-day signed volume against overnight returns, split into 2007-20 and the later sample.
+- **Get it:** Free. Open the Liberty Street Economics page (link in pdf_url) and read it online or print to PDF. The SSRN abstract page (abstract_id=7035838) links to the same post. For the full model, also fetch the parent paper The Overnight Drift (already on the known list; NY Fed Staff Report 917, free PDF). https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7035838
+- **Save as:** `papers/inbox/the_disappearing_overnight_drift.pdf`
+
 ### P1 · The Overnight Drift (2023)
 *Nina Boyarchenko, Lars C. Larsen, Paul Whelan* · instruments: ES, NQ, YM · access: open_pdf · testable on our data: yes
 
@@ -109,6 +120,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Should contain:** Daily return pattern around turn of month, size of the effect in S&P 500 futures, which days to be long/short
 - **Get it:** Free working-paper PDF on orbilu.uni.lu or aalto.fi https://academic.oup.com/rfs/article/33/1/75/5494694
 - **Save as:** `papers/inbox/dash_for_cash_monthly_market_impact_of_institutional_liquidi.pdf`
+
+### P2 · Intraday Price Reversals in the US Stock Index Futures Market: A 15-Year Study (2005)
+*James L. Grant, Avner Wolf, Susana Yu* · instruments: ES, S&P 500 futures, stock index futures · access: paywalled · testable on our data: yes
+
+- **Why:** FINDING: large price changes at the open of US index futures (versus the prior close) are followed by significant intraday reversals. This held over the 15-year sample and by year and weekday, and was stronger after large positive opens. WHY (overnight information is digested imperfectly at the open): the opening print absorbs the overnight order imbalance and overreacts, then liquidity providers pull it back. That is the mirror image of the ORB WHY. Continuation after the open would be the alternative regime, so the paper helps pick between them by gap size and context. WHAT WOULD KILL THE EDGE: the paper's own warning that profit mostly disappears after realistic trading costs, plus HFT and 24h trading absorbing overnight information before the cash open. DECAY RISK: high, because it is old. ANGLE: condition on gap size relative to ATR, on whether the overnight move was news-driven (e.g. a macro release at 08:30 ET) or drift, and on a one-sided long-only fade of down-gaps. Test on ES 2013-2026 and NQ 2021-2026.
+- **Should contain:** Definitions of large opening price changes versus the previous close, the return path in the minutes and hours after the open, and t-stats by year and by day of week. Gross versus bid-ask-adjusted profits. Data needed: futures opening prints and prior closes, which our ES/NQ 1-min RTH and ETH data cover (RTH open 09:30 ET vs 16:00 or 16:15 close).
+- **Get it:** Paywalled at ScienceDirect (DOI link). The Montclair State digital-commons record is at digitalcommons.montclair.edu/acctg-finance-facpubs/70/. Check whether it offers a full-text download, and try institutional access or an author preprint (not confirmed in search). https://doi.org/10.1016/j.jbankfin.2004.04.006
+- **Save as:** `papers/inbox/intraday_price_reversals_in_the_us_stock_index_futures_marke.pdf`
 
 ### P2 · Nasdaq-100 Index Futures: Intraday Momentum or Reversal? (2005)
 *Susana Yu, Joel Rentzler, Avner Wolf* · instruments: NQ, Nasdaq-100 futures · access: unknown · testable on our data: partial
@@ -158,6 +177,22 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Get it:** Free ECB working paper PDF: https://www.ecb.europa.eu/pub/pdf/scpwps/ecbwp1901.en.pdf . SSRN abstract page https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2637528 -> 'Download This Paper'. Journal DOI 10.1017/S0022109018000625. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2637528
 - **Save as:** `papers/inbox/price_drift_before_u_s_macroeconomic_news_private_informatio.pdf`
 
+### P2 · Structural Limits of OHLCV-Based Intraday Signals in MNQ Futures: A Systematic Falsification Study (2026)
+*Mathias Mesfin* · instruments: MNQ, NQ · access: open_pdf · testable on our data: yes
+
+- **Why:** FINDING: eleven of the 14 families have a maximum gross edge of 0.07-1.50 points per trade, below a 2-point friction floor; three clear the friction gate but fail other criteria. A gap-continuation short shows T=3.23 and +14.52 points but on only 22 trades. Two validated 'positive control' signals (RTH confluence, London-session signal B) are given with their stats. WHY IT MATTERS: it sets a realistic cost hurdle for NQ/MNQ and warns that simple OHLCV signals (opening range, gap, VWAP-type levels) can be too thin after costs. Any rule we frame around a structural WHY must clear this cost wall. WHAT WOULD KILL THE EDGE: friction exceeding gross edge. ANGLE: use the same five pass criteria (OOS t-stat >= 2, >= 30 trades per fold, positive net return, consistent direction across years, permutation p < 0.05) as the validation checklist for any NQ strategy. Use the 22-trade gap-continuation short as a sanity check on a larger sample; we can run it on ES 2013-2026 and NQ 2021-2026 and see whether it holds up.
+- **Should contain:** Fourteen signal families with trade counts, mean gross and net points, t-stats, and OOS results for 2023/2024/2025. Friction assumptions (2 points per round trip on MNQ). Sections on gap fill and gap continuation, Asia-session liquidity grabs and opening-range-type signals, and the two positive controls. Data needed: 5-min or 1-min NQ/MNQ bars for RTH (our NQ 1-min covers this).
+- **Get it:** Free. Download the PDF from arXiv (arxiv.org/abs/2605.04004, 'Download PDF'). A version is also on the SSRN abstract page (abstract_id=6709401). https://arxiv.org/abs/2605.04004
+- **Save as:** `papers/inbox/structural_limits_of_ohlcv_based_intraday_signals_in_mnq_fut.pdf`
+
+### P2 · The Disappearing Pre-FOMC Announcement Drift (2021)
+*Alexander Kurov, Marketa Halova Wolfe, Thomas Gilbert* · instruments: ES, S&P 500 index futures · access: paywalled · testable on our data: partial
+
+- **Why:** FINDING: the 1994-2011 pre-FOMC run-up in S&P 500 returns (Lucca & Moench) first showed up before announcements with press conferences and essentially disappeared after 2015. WHY (risk premium for uncertainty resolution): holders are paid for carrying macro-event risk. The authors suggest the fade reflects reduced uncertainty. WHAT WOULD KILL THE EDGE: markets pricing the Fed path better (CME FedWatch, forward guidance), so there is less uncertainty to be paid for. DECAY RISK: high, since it is published and widely known. ANGLE: test only on high-uncertainty meetings (high pre-meeting VIX, surprise-prone periods), which Kurov and co-authors link to the drift. Test ES from the prior close to just before 14:00 ET on FOMC days for 2014-2026. Compare 2014-2019 with 2020 onward to see whether it returned in the higher-uncertainty rate-hike era.
+- **Should contain:** Average cumulative ES/SPX returns in the pre-announcement window by sub-period (before/after 2015), split by meetings with and without press conferences. Regressions against pre-announcement VIX. Data needed: FOMC meeting dates and times (public Fed calendar). The ES 1-min series from 2013-12 covers the 2014+ test.
+- **Get it:** Paywalled at Elsevier/ScienceDirect (Finance Research Letters). Open the IDEAS/RePEc page, click the publisher link, and try institutional access. Check the authors' SSRN/university pages for a free preprint (not confirmed in search). Alternative open reading: the follow-up in Applied Economics (2024), 'The pre-FOMC announcement drift: short-lived or long-lasting?'. I did not confirm its authors from search results. https://ideas.repec.org/a/eee/finlet/v40y2021ics1544612320315956.html
+- **Save as:** `papers/inbox/the_disappearing_pre_fomc_announcement_drift.pdf`
+
 ### P2 · The Pre-FOMC Announcement Drift (2015)
 *David O. Lucca, Emanuel Moench* · instruments: ES, S&P 500 · access: unknown · testable on our data: yes
 
@@ -181,6 +216,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Should contain:** Sample 1997-2023 using S&P 500 and 10-year Treasury note futures returns. 'Calendar' and 'Threshold' rebalancing signals built from a 60/40 portfolio drifting from target; when stocks are overweight, funds sell equities and buy bonds, and next-day equity returns fall by about 17 bps. Predictability concentrated around month-end, robust to momentum/reversal/macro controls, with Sharpe ratios for a front-running rule and robustness tables (including end-of-month reversal). Needs 10-year note futures/Treasury returns to build the stock-vs-bond signal; ES alone only lets us test the month-end calendar part.
 - **Get it:** Free PDF (AFA conference copy): https://afajof.org/management/viewp.php?n=144452 . SSRN abstract page https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5122748 -> 'Download This Paper'. NBER version: https://www.nber.org/system/files/working_papers/w33554/w33554.pdf (may need a subscription). https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5122748
 - **Save as:** `papers/inbox/the_unintended_consequences_of_rebalancing.pdf`
+
+### P2 · Volatility Targeting Is Trendy: How Trend Following Explains Alpha in Volatility-Managed Strategies (2024)
+*Benjamin Hood, Cameron Raughtigan* · instruments: 14 global equity index futures, ES · access: ssrn_free_download · testable on our data: partial
+
+- **Why:** FINDING: volatility targeting beats constant exposure in equity indices, but once trend exposure is controlled for, the alpha mostly goes to the trend component, for a long equity history and 14 global equity index futures. This is not true for commodity, fixed income or currency futures. WHY: the leverage effect (negative link between returns and volatility) means a vol-scaled position is mechanically de-risked in down-trends and re-risked in up-trends. WHAT WOULD KILL THE EDGE: a break in the leverage effect (volatility spiking in rallies) or no trends to ride. ANGLE for the desk: when sizing live strategies by ATR or range width, check whether the improvement comes from a hidden long-trend bias. Run the sizing comparison with and without a trend filter on ES 2013-2026 (fixed 1 contract vs vol-targeted contracts), and separately in the 2022 down year.
+- **Should contain:** A regression of vol-managed minus unmanaged returns on a trend factor (time-series momentum). Alpha with and without trend control for equity index futures versus other asset classes. A mechanical derivation linking vol targeting to trend following. Expect tables of alpha, trend beta and Sharpe ratios by asset class. Data needed: daily ES returns (from our 1-min bars), a realized-vol estimator and a trend signal.
+- **Get it:** Open the SSRN abstract page (abstract_id=4773781) and click 'Download This Paper' (free PDF). The abstract page is confirmed in search; the free-download button was not verified. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4773781
+- **Save as:** `papers/inbox/volatility_targeting_is_trendy_how_trend_following_explains.pdf`
 
 ### P3 · Closing the Question on the Continuation of Turn-of-the-Month Effects: Evidence from the S&P 500 Index Futures Contract (?)
 ** · instruments: S&P 500 futures, ES · access: open_pdf · testable on our data: yes
@@ -265,6 +308,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Get it:** Free: arXiv abs/1005.3535 ('View PDF'). Also on SSRN abstract 1107590 ('Download This Paper') and on the University of Houston Bauer site (PDF). https://arxiv.org/abs/1005.3535
 - **Save as:** `papers/inbox/intraday_patterns_in_the_cross_section_of_stock_returns.pdf`
 
+### P1 · Investor Inattention and Friday Earnings Announcements (2009)
+*Stefano DellaVigna, Joshua M. Pollet* · instruments: US single stocks (small/mid and large caps) · access: open_pdf · testable on our data: no
+
+- **Why:** FINDING: Friday announcements get a weaker immediate reaction and a larger delayed drift. WHY (limited attention, slow information diffusion): investors are distracted before the weekend, so the news is digested slowly. This gives a concrete conditioning rule for PEAD or earnings-gap continuation: expect more drift when attention is low, such as Fridays, crowded earnings days and low coverage. It supports the Conti PEAD logic on a testable calendar variable. Caveat: a later paper (cited in the results) argues the effect is firm-specific rather than pure inattention. Treat the WHY as plausible but contested, and note the evidence is mostly pre-2006.
+- **Should contain:** Earnings announcement returns split into an immediate response and a delayed response, by weekday (Friday vs Mon-Thu). It also reports the share of the response that arrives late, trading volume around announcements, and the long-short 'Friday drift' portfolio alphas. It needs earnings dates with timestamps, EPS surprises and stock returns, none of which we hold.
+- **Get it:** Author's Berkeley page PDF (pdf_url, forthcoming JF version, Feb 2008). The earlier version is on SSRN (abstract_id=843786, 'Download This Paper') and NBER (w11683). Published version: https://doi.org/10.1111/j.1540-6261.2009.01447.x https://papers.ssrn.com/sol3/papers.cfm?abstract_id=843786
+- **Save as:** `papers/inbox/investor_inattention_and_friday_earnings_announcements.pdf`
+
 ### P1 · News-Driven Return Reversals: Liquidity Provision Ahead of Earnings Announcements (2014)
 *Eric C. So, Sean Wang* · instruments: US single stocks (CRSP universe) · access: open_pdf · testable on our data: no
 
@@ -273,6 +324,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Get it:** SSRN abstract page https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2275982 -> click 'Download This Paper'. A free author-accepted copy is also on MIT DSpace (the pdf_url above). The journal version is on ScienceDirect (paywalled). https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2275982
 - **Save as:** `papers/inbox/news_driven_return_reversals_liquidity_provision_ahead_of_ea.pdf`
 
+### P1 · Regression Discontinuity and the Price Effects of Stock Market Indexing (2015)
+*Yen-Cheng Chang, Harrison Hong, Inessa Liskovich* · instruments: Russell 1000/2000 stocks · access: open_pdf · testable on our data: no
+
+- **Why:** FINDING: stocks that land just inside the Russell 2000 earn higher returns than those just outside, and deleted stocks fall. The effect is concentrated in the month after the May ranking day. WHY (mandated forced trading plus liquidity limits): index trackers must buy or sell on a known date, and the index weights make the buying very uneven across the cutoff. This is the same logic as the 'institutional constraint' pattern, and the cutoff is public in advance. What would kill it: front-running by arbitrageurs (the authors document falling price effects since the 2000s), Russell's 2019 band/rule changes, or a shift in how index money is allocated. The ranking date and the reconstitution date are fixed, so the rules are simple to write down.
+- **Should contain:** Regression-discontinuity tests around the Russell 1000/2000 cutoff at rank 1000 and the 3000 cutoff. They show June returns for stocks just added to or deleted from the Russell 2000, with price effects declining over time, and which fund types supply liquidity. It needs single-stock returns, end-of-May market caps and the Russell membership lists, which we don't have. This is the identification-focused companion to the Russell reconstitution paper already on our list.
+- **Get it:** NBER abstract page https://www.nber.org/papers/w19290 (download link on the page; the working-paper PDF is at https://www.nber.org/system/files/working_papers/w19290/revisions/w19290.rev0.pdf). A copy is also at the cafr.cn PDF listed in pdf_url. https://www.nber.org/papers/w19290
+- **Save as:** `papers/inbox/regression_discontinuity_and_the_price_effects_of_stock_mark.pdf`
+
 ### P1 · Rest in Peace Post-Earnings Announcement Drift (2021)
 *Charles Martineau* · instruments: US single stocks (large caps and microcaps) · access: ssrn_free_download · testable on our data: no
 
@@ -280,6 +339,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Should contain:** Drift (CAR) tests by year and size bucket. It argues the earnings surprise is fully priced on the announcement day in modern markets. It reports large-cap drift as non-existent since 2006 and microcap drift as gone only recently. It adds recommendations for measuring PEAD correctly (announcement timing, intraday windows). Data needed to replicate: single-stock prices, EPS and consensus estimates, and announcement timestamps, none of which we hold.
 - **Get it:** SSRN abstract page https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3111607 -> click 'Download This Paper' (free, 46 pages; the latest version is Aug 2021). The Critical Finance Review also hosts the published version. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3111607
 - **Save as:** `papers/inbox/rest_in_peace_post_earnings_announcement_drift.pdf`
+
+### P1 · Stock Price Reaction to News and No-News: Drift and Reversal After Headlines (2003)
+*Wesley S. Chan* · instruments: US single stocks · access: paywalled · testable on our data: no
+
+- **Why:** FINDING: price moves that come with public news tend to continue, especially after bad news. Extreme moves with no news tend to reverse. WHY (slow information diffusion plus liquidity-driven overreaction): news is digested slowly, while no-news jumps are often liquidity or noise trades that get corrected. This maps directly onto gap-and-go versus gap-fade on single stocks: take the gap only when a catalyst exists, and fade it when there is none. It is a clean filter for our 'stocks in play' ideas. The kill risk is that headline coverage is now processed in seconds, so the drift may have moved to intraday horizons.
+- **Should contain:** Monthly returns after large price moves, split into stocks with and without identifiable public headlines. Drift tables for bad news, reversal tables for no-news extremes, and risk-adjusted alphas. It needs a company-news headline database plus single-stock daily prices, which we don't have. The same split could be rebuilt later with earnings dates as the 'news' flag.
+- **Get it:** Journal of Financial Economics via DOI https://doi.org/10.1016/S0304-405X(03)00146-6 (ScienceDirect, paywalled). The search results showed a first draft (MIT, dated 8/28/2000) on the author's ResearchGate page: https://www.researchgate.net/publication/222535436_Stock_Price_Reaction_to_News_and_No-News_Drift_and_Reversal_after_Headlines. Try 'Download' there, or the author's page. I did not find an SSRN link. https://doi.org/10.1016/S0304-405X(03)00146-6
+- **Save as:** `papers/inbox/stock_price_reaction_to_news_and_no_news_drift_and_reversal.pdf`
 
 ### P1 · The Disappearing Index Effect (2022)
 *Robin Greenwood, Marco Sammon* · instruments: - · access: open_pdf · testable on our data: no
@@ -321,6 +388,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Get it:** SSRN abstract page (abstract_id=291241), click 'Download This Paper'. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=291241
 - **Save as:** `papers/inbox/analyzing_the_analysts_when_do_recommendations_add_value.pdf`
 
+### P2 · Are Insider Trades Informative? (2001)
+*Josef Lakonishok, Inmoo Lee* · instruments: US single stocks (NYSE, AMEX, Nasdaq), small caps especially · access: open_pdf · testable on our data: no
+
+- **Why:** FINDING: insider purchases predict higher future returns, mainly in small firms. Insider sales carry little information. WHY (information asymmetry plus limits to arbitrage and slow diffusion): insiders know more, but small, thinly covered stocks absorb the news slowly. Sales are noisy because of diversification and liquidity needs. Purchases are a natural, rule-based signal (clustered buys, small caps, a fixed holding period). The paper is old (1975-1995), so test for decay on recent data. The cited 'Decoding Inside Information' paper (already on our list) refines this with routine vs opportunistic trades, so read this one as the base. Insider filings are now public within 2 business days, so the edge may have shrunk.
+- **Should contain:** Event-study and calendar-time abnormal returns for portfolios sorted on net insider purchases (1975-1995), split by size tercile and by buys vs sells. It includes the returns of strong-purchase signals, and results for the first, second and third years after formation. It needs SEC Form 4 insider filings plus stock prices, which we don't have. Our desk would need to source EDGAR data first.
+- **Get it:** Free PDF from LSV Asset Management (pdf_url). SSRN abstract: https://www.ssrn.com/abstract=253079. The NBER-era version is SSRN 119828. Journal: https://doi.org/10.1093/rfs/14.1.79 https://www.ssrn.com/abstract=253079
+- **Save as:** `papers/inbox/are_insider_trades_informative.pdf`
+
 ### P2 · Decoding Inside Information (2012)
 *Lauren Cohen, Christopher J. Malloy, Lukasz Pomorski* · instruments: - · access: open_pdf · testable on our data: no
 
@@ -352,6 +427,14 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Should contain:** Event-study tables for post-October-1989 S&P 500 changes. Abnormal returns on the announcement day, between announcement and effective date, and after the change, plus volume. It needs single-stock prices and the index change dates (S&P press releases), neither in our inventory.
 - **Get it:** SSRN abstract page (abstract_id=6851), click 'Download This Paper' (free SSRN login may be needed). https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6851
 - **Save as:** `papers/inbox/new_evidence_on_stock_price_effects_associated_with_changes.pdf`
+
+### P2 · Post-Earnings-Announcement Drift in Global Markets: Evidence from an Information Shock (2015)
+*Mingyi Hung, Xi Li, Shiheng Wang* · instruments: Non-US stocks incl. European markets · access: unknown · testable on our data: no
+
+- **Why:** FINDING: PEAD in non-US markets fell after reporting quality and analyst accuracy improved, and the fall was largest where arbitrage was easiest. WHY (slow diffusion and limited attention, plus limits to arbitrage): the drift is bigger where information is poorer, coverage is lower and arbitrage is harder. That is the Europe/small-cap angle in our playbook. It tells us where to look for surviving drift (low coverage, low institutional ownership, many same-day announcers) and what would kill it (better disclosure, more coverage, more arbitrage capital). It also gives screening variables. A cheaper-to-implement European alternative surfaced in the search: 'Information Uncertainty and the Post-Earnings Announcement Drift in Europe' (EFMA 2011, https://www.efmaefm.org/0efmameetings/EFMA%20ANNUAL%20MEETINGS/2011-Braga%20old/papers/0361.pdf). It uses abnormal return and volume at announcement instead of analyst data, so it needs only prices and volume plus announcement dates.
+- **Should contain:** International PEAD portfolios, before and after the 2005 mandatory IFRS adoption. Drift is split by number of concurrent announcements, institutional holdings, limits to arbitrage and enforcement strength. It needs non-US earnings, analyst forecasts and returns, which we don't have.
+- **Get it:** SSRN abstract page https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2269909 (check for 'Download This Paper'; I could not confirm it is free). Journal version: https://academic.oup.com/rfs/article-abstract/28/4/1242/1928671 (access restricted in the search result). https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2269909
+- **Save as:** `papers/inbox/post_earnings_announcement_drift_in_global_markets_evidence.pdf`
 
 ### P2 · Reversal, Momentum and Intraday Returns (2017)
 *Haoyu Xu* · instruments: US single stocks (intraday) · access: ssrn_free_download · testable on our data: partial
@@ -400,4 +483,12 @@ Updated 2026-10-22. Download each PDF and save it in `papers/inbox/` **using the
 - **Should contain:** Portfolio sorts on short interest, lending supply, utilization and borrow fees. Result: returns to short selling net of borrowing costs are less than one-third of the gross returns and not significant. Option-implied borrowing fee (from put-call parity) equals quoted fee on average, and predicts returns at 1-week and 1-month horizons, including in hard-to-borrow stocks. Needs data: stock-lending data (Markit/IHS), OptionMetrics, CRSP.
 - **Get it:** Free PDFs: the UNC finance site (jhfinance.web.unc.edu ... 2017JH_MuravyevPearsonPollet.pdf) or the AEA 2018 conference program page for the 'Understanding Returns to Short Selling Using Option-Implied Stock Borrowing Fees' draft. Search the title on SSRN for the latest version. https://www.aeaweb.org/conference/2018/preliminary/paper/EKFHFi58
 - **Save as:** `papers/inbox/understanding_returns_to_short_selling_using_option_implied.pdf`
+
+### P3 · Does Academic Research Destroy Stock Return Predictability? (2016)
+*R. David McLean, Jeffrey Pontiff* · instruments: US single stocks, 97 published cross-sectional predictors · access: open_pdf · testable on our data: no
+
+- **Why:** FINDING: predictor returns are about 26% lower out-of-sample and 58% lower after publication. Declines are bigger for predictors with high in-sample returns, and returns stay higher in stocks with high idiosyncratic risk and low liquidity. WHY: arbitrageurs learn about mispricing from publications, while limits to arbitrage (illiquidity, risk) protect some of the edge. This is the empirical basis for the playbook's 'don't copy the paper' rule and its decay-risk checklist item. Use it to set haircuts for all stock anomalies on this list, and to point us to small, illiquid, hard-to-arbitrage universes where the WHY survives longer. It is background reading, not a strategy.
+- **Should contain:** Long-short returns of 97 published predictors in three windows: in-sample, out-of-sample before publication, and post-publication. It reports the decay percentages, and how decay varies with idiosyncratic risk, liquidity and in-sample return size. It uses the full CRSP/Compustat universe, so we can't replicate it, but we can use its numbers as decay benchmarks.
+- **Get it:** SSRN abstract page https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2156623 ('Download This Paper'); a free forthcoming-JF PDF copy is at the pdf_url. Journal: https://doi.org/10.1111/jofi.12365 https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2156623
+- **Save as:** `papers/inbox/does_academic_research_destroy_stock_return_predictability.pdf`
 
