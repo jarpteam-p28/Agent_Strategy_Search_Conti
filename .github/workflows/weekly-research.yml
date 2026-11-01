@@ -2,7 +2,7 @@ name: Weekly research run
 
 on:
   schedule:
-    - cron: "17 11 * * 1"   # Mondays 11:17 UTC (07:17 New York)
+    - cron: "17 11 * * 1"   # Mondays 11:17 UTC (06:17 New York in winter, 07:17 in summer)
   workflow_dispatch:
     inputs:
       max_papers:
@@ -12,7 +12,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
   group: weekly-research
@@ -40,21 +39,18 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python -m conti_agents run --max-papers "${{ github.event.inputs.max_papers || '4' }}"
 
-      - name: Open pull request with this week's findings
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: research/weekly-${{ github.run_id }}
-          commit-message: "Weekly research run ${{ github.run_id }}"
-          title: "Weekly research: new papers and strategy specs"
-          body: |
-            Automated weekly run. See the newest file in `reports/` for the summary:
-            papers read, the WHY behind each, new strategy specs and the critic's verdicts.
-          add-paths: |
-            papers/index.json
-            papers/seeds.yaml
-            papers/READING_LIST.md
-            papers/summaries/**
-            strategies/**
-            knowledge/method_notes.md
-            transcripts/index.json
-            reports/**
+      - name: Save this week's findings to main
+        run: |
+          git config user.name "conti-research-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          for p in papers/index.json papers/seeds.yaml papers/READING_LIST.md papers/summaries strategies \
+                   knowledge/method_notes.md transcripts/index.json reports; do
+            if [ -e "$p" ]; then git add "$p"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "Nothing new this week."
+          else
+            git commit -m "Weekly research run ${{ github.run_id }}"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
