@@ -1154,6 +1154,13 @@
     "read_by": "claude_manual_4_2026-11-01",
     "skipped_reason": "Stock-level; no ES/NQ strategy."
   },
+  "market_underreaction_to_open_market_share_repurchases_post_e": {
+    "title": "Market Underreaction to Open Market Share Repurchases / Post-earnings drift literature by Ball and Brown",
+    "origin": "seed",
+    "status": "duplicate",
+    "updated": "2026-11-01",
+    "note": "Covered by market_underreaction_to_open_market_share_repurchases and an_empirical_evaluation_of_accounting_income_numbers summaries."
+  },
   "nasdaq_100_index_futures_intraday_momentum_or_reversal": {
     "title": "Nasdaq-100 Index Futures: Intraday Momentum or Reversal?",
     "authors": [
@@ -2041,6 +2048,13 @@
     "read_by": "claude_manual_4_2026-11-01",
     "skipped_reason": "No strategy; supports event-based volatility expectations (earnings weeks)."
   },
+  "the_information_content_of_revenue_surprises_revenue_surpris": {
+    "title": "The Information Content of Revenue Surprises / Revenue surprises and stock returns",
+    "origin": "seed",
+    "status": "duplicate",
+    "updated": "2026-11-01",
+    "note": "Covered by papers/summaries/post_earnings_announcement_drift_the_role_of_revenue_surpris.md (Jegadeesh & Livnat 2006)."
+  },
   "the_loan_fee_anomaly_a_short_seller_s_best_ideas": {
     "title": "The Loan Fee Anomaly: A Short Seller's Best Ideas",
     "authors": [
@@ -2108,6 +2122,16 @@
     "strategies": [
       "europe_open_long_es"
     ]
+  },
+  "the_post_earnings_announcement_drift_and_liquidity_risk_trad": {
+    "title": "The Post-Earnings-Announcement Drift and Liquidity Risk / Trading frictions and PEAD (e.g., Sadka 2006; Chordia et al. 2009)",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/the_post_earnings_announcement_drift_and_liquidity_risk_trad.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_5_2026-11-01",
+    "skipped_reason": "Stock-level; confirms PEAD is not tradable in liquid names after costs — keep the PEAD stock specs parked."
   },
   "the_pre_fomc_announcement_drift": {
     "title": "The Pre-FOMC Announcement Drift",

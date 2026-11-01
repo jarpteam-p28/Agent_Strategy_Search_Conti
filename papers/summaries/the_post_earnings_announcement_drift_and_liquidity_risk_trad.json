@@ -1,0 +1,59 @@
+{
+  "title": "Liquidity and Post-Earnings-Announcement Drift (Sadka 2006; Chordia, Goyal, Sadka, Sadka & Shivakumar 2009)",
+  "authors": [
+    "Ronnie Sadka",
+    "Tarun Chordia",
+    "Amit Goyal",
+    "Gil Sadka",
+    "Lakshmanan Shivakumar"
+  ],
+  "year": 2009,
+  "source_url": "https://www.london.edu/faculty-and-research/academic-research/l/liquidity-and-the-post-earnings-announcement-drift",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "PEAD lives almost entirely in illiquid stocks — long-short PEAD earns 0.04%/month in the most liquid stocks vs 2.43% in the most illiquid (Chordia et al. 2009), and trading costs eat 70-100% of the paper profits; Sadka (2006) finds momentum and PEAD returns partly compensate for systematic liquidity (informed-trading) risk.",
+  "findings": [
+    {
+      "statement": "PEAD concentrated in highly illiquid stocks: value-weighted long-short 0.04%/month (most liquid) vs 2.43%/month (most illiquid).",
+      "evidence": "Chordia et al., Financial Analysts Journal 65(4), 2009."
+    },
+    {
+      "statement": "Transaction costs account for 70-100% of the paper profits.",
+      "evidence": "Same paper."
+    },
+    {
+      "statement": "Unexpected market-wide changes in the variable (informed-trading) component of price impact are priced in momentum and PEAD portfolio returns.",
+      "evidence": "Sadka, Journal of Financial Economics 80(2), 2006; intraday data 1983-2001."
+    }
+  ],
+  "why": {
+    "pattern": "Limits to arbitrage / liquidity risk: the drift survives where it is too costly to trade and partly pays for bearing liquidity risk."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1983-2001 (Sadka); n/a (Chordia et al.)",
+    "data_frequency": "intraday / monthly",
+    "holding_period": "months"
+  },
+  "reported_results": {
+    "headline": "Liquid stocks 0.04%/month vs illiquid 2.43%/month; costs eat 70-100%.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; confirms PEAD is not tradable in liquid names after costs — keep the PEAD stock specs parked.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "PEAD gone for large stocks since 2006 (Martineau 2021)."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Abstract-level for both papers (full texts paywalled).",
+    "Read by Claude in a chat session (manual run 5), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}
