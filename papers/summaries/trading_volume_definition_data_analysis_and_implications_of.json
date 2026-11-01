@@ -1,0 +1,47 @@
+{
+  "title": "Trading Volume: Definitions, Data Analysis, and Implications of Portfolio Theory",
+  "authors": [
+    "Andrew W. Lo",
+    "Jiang Wang"
+  ],
+  "year": 2000,
+  "source_url": "https://web.mit.edu/Alo/www/Papers/volume1.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Defines trading volume as turnover; weekly NYSE/AMEX turnover (1962-1996) rejects two-fund separation and is driven mainly by two factors.",
+  "findings": [
+    {
+      "statement": "Turnover-based volume; two-factor structure.",
+      "evidence": "RFS 13(2), 2000."
+    }
+  ],
+  "why": {
+    "pattern": "Portfolio theory of volume."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1962-1996",
+    "data_frequency": "weekly",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "Defines trading volume as turnover; weekly NYSE/AMEX turnover (1962-1996) rejects two-fund separation and is driven mainly by two factors.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "Not a signal.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

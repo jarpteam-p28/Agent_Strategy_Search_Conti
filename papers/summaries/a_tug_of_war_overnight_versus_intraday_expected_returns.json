@@ -1,0 +1,52 @@
+{
+  "title": "A Tug of War: Overnight versus Intraday Expected Returns",
+  "authors": [
+    "Dong Lou",
+    "Christopher Polk",
+    "Spyros Skouras"
+  ],
+  "year": 2019,
+  "source_url": "https://alphaarchitect.com/2015/02/overnight-momentum-vs-intraday-momentum/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Momentum profits are earned almost entirely overnight (3-factor alpha 0.95%/month overnight vs 0.11% intraday), while size, value and most other premia are earned intraday — consistent with individuals trading at the open and institutions during the day.",
+  "findings": [
+    {
+      "statement": "Momentum: overnight alpha 0.95%/month (significant) vs intraday 0.11%.",
+      "evidence": "JFE 134(1), 2019."
+    },
+    {
+      "statement": "Other anomalies mostly intraday; clientele 'tug of war'.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Investor clienteles: retail at the open, institutions near the close."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "long sample",
+    "data_frequency": "daily open/close",
+    "holding_period": "overnight vs intraday"
+  },
+  "reported_results": {
+    "headline": "Momentum profits are earned almost entirely overnight (3-factor alpha 0.95%/month overnight vs 0.11% intraday), while size, value and most other premia are earned intraday — consistent with individuals trading at the open and institutions during the day.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; supports overnight-vs-day framing only.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Published 2019."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,95 @@
+id: famous_earnings_cluster_es
+name: Famous-Firm Earnings Cluster Run-Up (ES/NQ, long only)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/famous_firms_earnings_clusters_and_the_stock_market.md
+  papers:
+  - title: Famous Firms, Earnings Clusters, and the Stock Market
+    authors:
+    - Yixin Chen
+    - Randolph B. Cohen
+    - Zixuan (Kevin) Wang
+    venue: SSRN 3685452
+    year: 2020
+finding: >-
+  E-mini S&P rose ~0.34% in the 24 hours before the three most prominent after-close earnings clusters
+  each earnings month (Jan/Apr/Jul/Oct), vs 0.02% on a typical day (Sharpe ~4.5, 1999-2018); pre-open
+  clusters show nothing.
+why: >-
+  High-attention news with short-sale constraints: before the most-watched announcements, optimists can
+  buy but pessimists can't easily short, so differences of opinion push the market up into the release.
+what_would_kill_it: >-
+  Attention spread more evenly (more mega-caps reporting), easy shorting via futures/options arbitraging
+  the run-up, crowding after publication.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12
+direction: long_only
+entry:
+  long: >-
+    Buy at the 16:00 ET close of the trading day BEFORE the announcement day of each of the 3 most prominent
+    after-close (PM) clusters in Jan, Apr, Jul and Oct.
+  short: null
+  filters:
+  - >-
+    Prominence proxy (paper used prior-year Dow Jones news counts): days with the most S&P 500 market
+    cap reporting after the close, using prior-year top-10 mega caps
+  - Only after-close clusters (pre-open clusters excluded)
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Sell at the 16:00 ET close on the announcement day (just before the after-close reports).
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: clusters_per_month
+  default: 3
+  test_range: 1, 3
+  source: paper
+open_questions:
+- Does a market-cap prominence proxy work as well as the paper's news-count measure?
+- Has it survived since the 2020 publication (2021-2023 vs 2014-2020)?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - 'Baseline: random 24h windows in the same months'
+  - Bootstrap CI per event (~12/yr)
+data_requirements:
+- ES/NQ 1-min
+- Mega-cap earnings dates and timing (before open / after close) 2014-2023
+data_available: partial
+expectations:
+- ~0.2-0.3% per event before costs if it persists
+variants:
+- 1 vs 3 clusters per month = 2 configs
+related_strategies:
+- pre_macro_overnight_es
+- pre_fomc_drift_uncertainty_es
+notes:
+- ~12 trades a year; needs an earnings calendar.
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 4
+    testability: 3
+    overfit_resistance: 4
+  verdict: backtest
+  reasons: >-
+    Tested directly on E-mini futures with a very high Sharpe and a clear attention/short-constraint WHY;
+    few events and the need for an earnings calendar are the costs.
+  required_changes: >-
+    Build the cluster calendar from public earnings dates before looking at returns; pre-register both
+    configs.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 3, 2026-11-01)

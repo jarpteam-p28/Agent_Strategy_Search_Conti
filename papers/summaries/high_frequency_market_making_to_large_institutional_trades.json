@@ -1,0 +1,51 @@
+{
+  "title": "High-Frequency Market Making to Large Institutional Trades",
+  "authors": [
+    "Robert A. Korajczyk",
+    "Dermot Murphy"
+  ],
+  "year": 2019,
+  "source_url": "https://www.kellogg.northwestern.edu/academics-research/research/detail/2019/high-frequency-market-making-to-large-institutional-trades/",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "More HFT activity raises execution costs for large institutional trades (especially informed ones); about two-thirds of HFT competition is inventory management and one-third back-running.",
+  "findings": [
+    {
+      "statement": "Increased HFT activity → higher institutional execution costs (regulatory shock identification).",
+      "evidence": "Canadian order-level data (RFS 2019)."
+    },
+    {
+      "statement": "HFTs back-run using past prices and trade/limit-order imbalances.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics."
+  },
+  "setting": {
+    "markets": [
+      "Canada"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "order-level",
+    "holding_period": "intraday"
+  },
+  "reported_results": {
+    "headline": "More HFT activity raises execution costs for large institutional trades (especially informed ones); about two-thirds of HFT competition is inventory management and one-third back-running.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Microstructure."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

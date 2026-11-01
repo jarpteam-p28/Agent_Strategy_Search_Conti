@@ -1,0 +1,51 @@
+{
+  "title": "Seasonality in the Cross-Section of Stock Returns",
+  "authors": [
+    "Steven L. Heston",
+    "Ronnie Sadka"
+  ],
+  "year": 2008,
+  "source_url": "https://www.rhsmith.umd.edu/news/seasonality-stock-market-returns",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Stocks that did well in a given calendar month tend to do well in the same month in later years, for up to 20 years (decile spreads > 60 bps/month, NYSE/AMEX 1963-2002).",
+  "findings": [
+    {
+      "statement": "Same-calendar-month returns persist up to 20 years; decile spreads > 60 bps/month.",
+      "evidence": "NYSE/AMEX monthly 1963-2002 (JFE 2008)."
+    },
+    {
+      "statement": "Positive in all 12 months; strongest in January, above average in October and December.",
+      "evidence": "Not explained by size, industry or earnings timing."
+    }
+  ],
+  "why": {
+    "pattern": "Unexplained seasonal demand."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1963-2002",
+    "data_frequency": "monthly",
+    "holding_period": "1 month"
+  },
+  "reported_results": {
+    "headline": "Stocks that did well in a given calendar month tend to do well in the same month in later years, for up to 20 years (decile spreads > 60 bps/month, NYSE/AMEX 1963-2002).",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no index strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Old sample."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,51 @@
+{
+  "title": "The Disappearing Index Effect",
+  "authors": [
+    "Robin Greenwood",
+    "Marco Sammon"
+  ],
+  "year": 2025,
+  "source_url": "https://alphaarchitect.com/index-effect/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "The S&P 500 inclusion effect fell from +7.4% abnormal return in the 1990s to ~0.3% in the 2010s (deletions similar), as liquidity provision improved and most additions became mid-cap migrations.",
+  "findings": [
+    {
+      "statement": "Additions +7.4% (1990s) → +0.3% (2010s); deletions ~0.1% 2010-2020.",
+      "evidence": "Journal of Finance 80(2), 2025."
+    },
+    {
+      "statement": "Similar declines in Russell and Nasdaq-100.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Market adaptation to predictable index demand."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500 additions/deletions"
+    ],
+    "sample_period": "1990s-2020",
+    "data_frequency": "daily",
+    "holding_period": "days"
+  },
+  "reported_results": {
+    "headline": "The S&P 500 inclusion effect fell from +7.4% abnormal return in the 1990s to ~0.3% in the 2010s (deletions similar), as liquidity provision improved and most additions became mid-cap migrations.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; another example of a published flow effect decaying.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Documents the decay."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

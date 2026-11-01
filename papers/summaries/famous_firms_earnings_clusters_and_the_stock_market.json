@@ -1,0 +1,67 @@
+{
+  "title": "Famous Firms, Earnings Clusters, and the Stock Market",
+  "authors": [
+    "Yixin Chen",
+    "Randolph B. Cohen",
+    "Zixuan (Kevin) Wang"
+  ],
+  "year": 2020,
+  "source_url": "https://www.cxoadvisory.com/calendar-effects/three-high-attention-earnings-announcement-clusters-drive-market/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "E-mini S&P futures rose ~0.34% in the 24 hours before the most prominent after-close earnings clusters of famous firms (vs 0.02% on a typical day; Sharpe ~4.5, 1999-2018); holding only ~12 such days a year captured nearly two-thirds of the annual excess return.",
+  "findings": [
+    {
+      "statement": "Market +0.34% in the 24h before prominent PM (after-close) earnings clusters vs +0.02% typical; normal volatility; annualized Sharpe ~4.5.",
+      "evidence": "E-mini minute data 1999-2018; 3 most prominent PM clusters in each of Jan/Apr/Jul/Oct, ranked by prior-year Dow Jones news count."
+    },
+    {
+      "statement": "~0.11% the evening before, ~0.23% during the pre-announcement trading day.",
+      "evidence": ""
+    },
+    {
+      "statement": "Only after-close clusters; pre-open clusters show no effect.",
+      "evidence": ""
+    },
+    {
+      "statement": "No correlation between pre- and post-announcement returns (not leakage).",
+      "evidence": ""
+    },
+    {
+      "statement": "~12 days a year ≈ two-thirds of the annual excess return.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Attention + short-sale constraints: differences of opinion before high-attention news push prices up."
+  },
+  "setting": {
+    "markets": [
+      "US"
+    ],
+    "instruments": [
+      "ES",
+      "S&P 500 stocks"
+    ],
+    "sample_period": "1999-2018",
+    "data_frequency": "minute",
+    "holding_period": "24 hours"
+  },
+  "reported_results": {
+    "headline": "E-mini S&P futures rose ~0.34% in the 24 hours before the most prominent after-close earnings clusters of famous firms (vs 0.02% on a typical day; Sharpe ~4.5, 1999-2018); holding only ~12 such days a year captured nearly two-thirds of the annual excess return.",
+    "key_stats": []
+  },
+  "tradable_edge": "Long ES for the 24 hours before the three most-watched after-close mega-cap earnings clusters each earnings month — see spec famous_earnings_cluster_es.",
+  "angles": [
+    "Long ES 16:00 two days before → 16:00 on the announcement day for top PM clusters"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Published 2020; 12 events a year."
+  },
+  "data_fit": "ES 1-min covers it; needs a mega-cap earnings calendar (public).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -71,9 +71,14 @@
     "testable_on_our_data": "no",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/a_tug_of_war_overnight_versus_intraday_expected_returns.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; supports overnight-vs-day framing only."
   },
   "an_empirical_evaluation_of_accounting_income_numbers": {
     "title": "An Empirical Evaluation of Accounting Income Numbers",
@@ -230,9 +235,14 @@
     "testable_on_our_data": "no",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/asset_fire_sales_and_purchases_in_equity_markets.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; no index strategy."
   },
   "beat_the_market_an_effective_intraday_momentum_strategy_for": {
     "title": "Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)",
@@ -618,9 +628,14 @@
     "note": "Also a useful bridge to our index-futures work: the same VIX-conditioning idea can be tried on ES/NQ short-term reversal.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-22"
+    "added": "2026-10-22",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/evaporating_liquidity.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Index angle (speculative): short-term reversal in ES works mainly in high-volatility regimes — a regime filter for the overnight-reversal spec."
   },
   "famous_firms_earnings_clusters_and_the_stock_market": {
     "title": "Famous Firms, Earnings Clusters, and the Stock Market",
@@ -644,9 +659,16 @@
     "testable_on_our_data": "partial",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/famous_firms_earnings_clusters_and_the_stock_market.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "strategies": [
+      "famous_earnings_cluster_es"
+    ]
   },
   "from_drift_to_reversal_temporal_changes_in_delayed_price_rea": {
     "title": "From Drift to Reversal: Temporal Changes in Delayed Price Reactions to Earnings Announcements",
@@ -752,8 +774,13 @@
     "year": 2019,
     "note": "Empirical evidence on how liquidity providers behave when large orders are being split. This is useful for judging how much overshoot can be traded.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/high_frequency_market_making_to_large_institutional_trades.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "No strategy."
   },
   "high_frequency_trading_around_large_institutional_orders": {
     "title": "High-frequency trading around large institutional orders",
@@ -765,8 +792,13 @@
     "year": 2019,
     "note": "Empirical evidence on how HFTs trade around institutional parent orders. It tests the order-splitting footprint directly.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/high_frequency_trading_around_large_institutional_orders.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "No strategy; supports the order-splitting WHY behind VWAP/drift specs (persistent institutional flow is detectable)."
   },
   "improving_vwap_strategies_a_dynamic_volume_approach": {
     "title": "Improving VWAP strategies: A dynamic volume approach",
@@ -802,8 +834,13 @@
     "year": 2018,
     "note": "The companion paper on order-splitting by rebalancers in a Kyle-style market with an informed investor. It shows how price impact interacts with information.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/information_and_trading_targets_in_a_dynamic_market_equilibr.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "No strategy; theoretical support for persistent order-flow (CVD slope) filters."
   },
   "infrequent_rebalancing_return_autocorrelation_and_seasonalit": {
     "title": "Infrequent Rebalancing, Return Autocorrelation, and Seasonality",
@@ -981,9 +1018,14 @@
     "why_promising": "FINDING: Friday announcements get a weaker immediate reaction and a larger delayed drift. WHY (limited attention, slow information diffusion): investors are distracted before the weekend, so the news is digested slowly. This gives a concrete conditioning rule for PEAD or earnings-gap continuation: expect more drift when attention is low, such as Fridays, crowded earnings days and low coverage. It supports the Conti PEAD logic on a testable calendar variable. Caveat: a later paper (cited in the results) argues the effect is firm-specific rather than pure inattention. Treat the WHY as plausible but contested, and note the evidence is mostly pre-2006.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-26"
+    "added": "2026-10-26",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/investor_inattention_and_friday_earnings_announcements.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; PEAD has since disappeared for large caps (Martineau)."
   },
   "market_intraday_momentum": {
     "title": "Market Intraday Momentum",
@@ -1147,9 +1189,14 @@
     "note": "Fills the 'pre-earnings run-up and earnings-day gap continuation / fade' focus area. It supplies a clear structural WHY (market-maker inventory risk) that fits the Conti method. Also related to the known Earnings Announcement Premium papers, but it is a different mechanism.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-21"
+    "added": "2026-10-21",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/news_driven_return_reversals_liquidity_provision_ahead_of_ea.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level."
   },
   "noise_band_intraday_momentum_in_nasdaq_100_futures": {
     "title": "Noise-Band Intraday Momentum in Nasdaq-100 Futures",
@@ -1456,9 +1503,14 @@
     "note": "Counterpoint to the known 'A Review of the PEAD' and 'Delayed Price Response or Risk Premium?'. It stops us copying 1989-style PEAD rules that no longer work.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-21"
+    "added": "2026-10-21",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/rest_in_peace_post_earnings_announcement_drift.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Strong evidence against the PEAD stock specs (pead_long, pead_next_announcement, pead_*): treat them as parked."
   },
   "return_differences_between_trading_and_non_trading_hours_lik": {
     "title": "Return Differences between Trading and Non-trading Hours: Like Night and Day",
@@ -1491,8 +1543,13 @@
     "url": "https://doi.org/10.1111/j.1540-6261.1996.tb05206.x",
     "note": "Links volume surprises to volatility and information flow; supports using volume surprise as a conditioning variable for intraday strategies.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/return_volatility_and_trading_volume_an_information_flow_int.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "No strategy; supports using volume (e.g. relative opening volume) as an information-arrival gauge."
   },
   "reversal_momentum_and_intraday_returns": {
     "title": "Reversal, Momentum and Intraday Returns",
@@ -1515,9 +1572,14 @@
     "note": "Working paper; the author's sample and period should be checked in the PDF. Partial testability only via ES/NQ first/last-hours proxy.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-22"
+    "added": "2026-10-22",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/reversal_momentum_and_intraday_returns.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Cross-sectional; index cousin = morning trend / afternoon mean reversion, already partly in specs."
   },
   "seasonal_fluctuations_in_aggregate_returns_seasonality_in_th": {
     "title": "Seasonal Fluctuations in Aggregate Returns / Seasonality in the Cross-Section of Stock Returns",
@@ -1529,8 +1591,13 @@
     "year": 2008,
     "note": "The core seasonality finding the model aims to explain: same-calendar-month past returns predict current returns. Recalled from memory, not confirmed as a citation in the text I could not read.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/seasonal_fluctuations_in_aggregate_returns_seasonality_in_th.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; no index strategy."
   },
   "short_interest_returns_and_fundamentals": {
     "title": "Short Interest, Returns, and Fundamentals",
@@ -1580,9 +1647,14 @@
     "why_promising": "FINDING: price moves that come with public news tend to continue, especially after bad news. Extreme moves with no news tend to reverse. WHY (slow information diffusion plus liquidity-driven overreaction): news is digested slowly, while no-news jumps are often liquidity or noise trades that get corrected. This maps directly onto gap-and-go versus gap-fade on single stocks: take the gap only when a catalyst exists, and fade it when there is none. It is a clean filter for our 'stocks in play' ideas. The kill risk is that headline coverage is now processed in seconds, so the drift may have moved to intraday horizons.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-26"
+    "added": "2026-10-26",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/stock_price_reaction_to_news_and_no_news_drift_and_reversal.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; idea relevant to ES only as 'news vs no-news days'."
   },
   "structural_limits_of_ohlcv_based_intraday_signals_in_mnq_fut": {
     "title": "Structural Limits of OHLCV-Based Intraday Signals in MNQ Futures: A Systematic Falsification Study",
@@ -1635,9 +1707,14 @@
     "testable_on_our_data": "partial",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_52_week_high_and_momentum_investing.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; an index version (ES near its 52-week high) is untested here."
   },
   "the_adjustment_of_stock_prices_to_new_information": {
     "title": "The Adjustment of Stock Prices to New Information",
@@ -1651,8 +1728,13 @@
     "year": 1969,
     "note": "Cited as a 1967 working paper. The method and the efficiency framing behind the event study.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_adjustment_of_stock_prices_to_new_information.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "No strategy; the event-study method used by many later papers."
   },
   "the_derivative_payoff_bias_later_retitled_the_third_friday_p": {
     "title": "The Derivative Payoff Bias (later retitled \"The Third Friday Price Spike\"; earlier version \"The Equity Derivative Payoff Bias\")",
@@ -1709,9 +1791,14 @@
     "why_promising": "Finding: the S&P 500 inclusion pop has declined sharply and is close to zero on average. The effect survives only where the net demand shock is still large (direct additions, large weights). WHY (Conti pattern 'institutional constraint / mandate' plus 'liquidity constraint on large orders'): index funds must buy on the effective date, but liquidity providers and front-runners now absorb the flow in advance. That tells us exactly what to test: condition on the size of net passive demand. What would kill it: front-running capacity, midcap-fund offsets, and rule changes in S&P announcement timing. Decay risk: already high, and the paper documents it. Use as a template for deciding which forced-flow edges are still alive. Single-stock and event-date data not in our inventory.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_disappearing_index_effect.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; another example of a published flow effect decaying."
   },
   "the_disappearing_overnight_drift": {
     "title": "The Disappearing Overnight Drift",
@@ -1804,9 +1891,14 @@
     "why_promising": "Finding: stocks earn an abnormal return around scheduled earnings dates, strongly tied to volume surges. WHY: attention-driven retail buying. The announcement draws small investors, who are net buyers of attention-grabbing stocks, and the order flow is predictable because the dates are known in advance. That fits the 'someone is predictably forced or likely to trade' test. What would kill it: retail attention shifting away from earnings dates, or arbitrage capital pre-positioning earlier and earlier. Decay risk: published 2007 and widely known (also shown in 46 countries by Barber et al., SSRN 1872183, a good follow-up for the Europe angle). Angle: long-only, buy about 5-10 days before the known earnings date and exit before or at the print, avoiding the surprise risk. Needs earnings dates and single-stock prices, which we do not have.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_earnings_announcement_premium_and_trading_volume.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; index cousin is the earnings-cluster spec."
   },
   "the_earnings_announcement_premium_around_the_globe": {
     "title": "The Earnings Announcement Premium Around the Globe",
@@ -1832,9 +1924,14 @@
     "note": "Covers the pre-earnings run-up and Europe/international focus areas. Not in the already-known list (the known one is Frazzini-Lamont's 'Earnings Announcement Premium and Trading Volume').",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-22"
+    "added": "2026-10-22",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_earnings_announcement_premium_around_the_globe.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "Stock-level; same uncertainty WHY as the pre-FOMC / pre-macro specs."
   },
   "the_impact_of_volatility_targeting": {
     "title": "The Impact of Volatility Targeting",
@@ -2089,8 +2186,13 @@
     "url": "https://academic.oup.com/rfs/article-abstract/13/2/257/1578780",
     "note": "Origin of the turnover/market-volume factor decomposition that this paper applies intraday; useful for a relative-volume factor across ES/NQ.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/trading_volume_definition_data_analysis_and_implications_of.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_3_2026-11-01",
+    "skipped_reason": "No strategy."
   },
   "understanding_intraday_momentum_strategies": {
     "title": "Understanding intraday momentum strategies",

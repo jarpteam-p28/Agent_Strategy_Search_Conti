@@ -1,0 +1,51 @@
+{
+  "title": "The 52-Week High and Momentum Investing",
+  "authors": [
+    "Thomas J. George",
+    "Chuan-Yang Hwang"
+  ],
+  "year": 2004,
+  "source_url": "https://alphaarchitect.com/52-week-high-q-factor-investment-model/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Nearness to the 52-week high predicts stock returns better than past returns and does not reverse long-term; later work links it to profitability/investment (q-factor), and practitioners find it sensitive to holding-period choices.",
+  "findings": [
+    {
+      "statement": "Price / 52-week high dominates past returns in forecasting.",
+      "evidence": "Journal of Finance 2004 (1963-2001)."
+    },
+    {
+      "statement": "Later: q-factor model largely captures it in value-weighted samples.",
+      "evidence": "George, Hwang & Li."
+    }
+  ],
+  "why": {
+    "pattern": "Anchoring on the 52-week high (slow reaction near highs)."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1963-2001",
+    "data_frequency": "monthly",
+    "holding_period": "6-12 months"
+  },
+  "reported_results": {
+    "headline": "Nearness to the 52-week high predicts stock returns better than past returns and does not reverse long-term; later work links it to profitability/investment (q-factor), and practitioners find it sensitive to holding-period choices.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; an index version (ES near its 52-week high) is untested here.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Widely known."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

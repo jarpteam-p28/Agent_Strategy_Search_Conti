@@ -1,0 +1,54 @@
+{
+  "title": "Reversal, Momentum and Intraday Returns",
+  "authors": [
+    "Haoyu Xu"
+  ],
+  "year": 2017,
+  "source_url": "https://www.cxoadvisory.com/momentum-investing/when-to-look-for-momentum-and-reversal-intraday/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "In US stocks (1993-2014), momentum is a morning effect (first-2-hour momentum alpha 0.82%/month) and reversal an afternoon effect (last-2-hour reversal alpha 0.59%/month); both weakened in 2004-2014.",
+  "findings": [
+    {
+      "statement": "First 2 hours (9:30-11:30) momentum: 4-factor alpha 0.82%/month vs 0.36% conventional.",
+      "evidence": "Stocks > $5, top 90% NYSE caps."
+    },
+    {
+      "statement": "Last 2 hours (14:00-16:00) reversal: alpha 0.59%/month; first-2-hour reversal negative.",
+      "evidence": ""
+    },
+    {
+      "statement": "Last-2-hour reversal alpha fell from 0.96% (1993-2003) to 0.35% (2004-2014).",
+      "evidence": "Gross; 28 windows tested."
+    }
+  ],
+  "why": {
+    "pattern": "Information trading in the morning, liquidity trading in the afternoon."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1993-2014",
+    "data_frequency": "intraday",
+    "holding_period": "monthly portfolios"
+  },
+  "reported_results": {
+    "headline": "In US stocks (1993-2014), momentum is a morning effect (first-2-hour momentum alpha 0.82%/month) and reversal an afternoon effect (last-2-hour reversal alpha 0.59%/month); both weakened in 2004-2014.",
+    "key_stats": []
+  },
+  "tradable_edge": "Cross-sectional; index cousin = morning trend / afternoon mean reversion, already partly in specs.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Weakened in second half."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

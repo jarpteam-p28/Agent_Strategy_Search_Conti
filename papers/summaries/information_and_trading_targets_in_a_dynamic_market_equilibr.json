@@ -1,0 +1,52 @@
+{
+  "title": "Information and Trading Targets in a Dynamic Market Equilibrium",
+  "authors": [
+    "Jin Hyuk Choi",
+    "Kasper Larsen",
+    "Duane J. Seppi"
+  ],
+  "year": 2018,
+  "source_url": "https://ar5iv.arxiv.org/html/1502.02083",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "Theory: a rebalancer splitting orders toward a target and an informed insider produce autocorrelated order flow, U-shaped intraday volume and S-shaped price impact; their orders partly offset each other.",
+  "findings": [
+    {
+      "statement": "Order flow autocorrelated because of the rebalancer's splitting.",
+      "evidence": "Multi-period Kyle model."
+    },
+    {
+      "statement": "U-shaped expected volume; S-shaped price impact.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Theory of order splitting."
+  },
+  "setting": {
+    "markets": [
+      "model"
+    ],
+    "instruments": [
+      "n/a"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "n/a",
+    "holding_period": "intraday"
+  },
+  "reported_results": {
+    "headline": "Theory: a rebalancer splitting orders toward a target and an informed insider produce autocorrelated order flow, U-shaped intraday volume and S-shaped price impact; their orders partly offset each other.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy; theoretical support for persistent order-flow (CVD slope) filters.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Theory."
+  },
+  "data_fit": "Theory only.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

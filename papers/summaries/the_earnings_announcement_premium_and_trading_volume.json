@@ -1,0 +1,51 @@
+{
+  "title": "The Earnings Announcement Premium and Trading Volume",
+  "authors": [
+    "Andrea Frazzini",
+    "Owen A. Lamont"
+  ],
+  "year": 2007,
+  "source_url": "https://www.nber.org/digest/mar08/stocks-rise-around-earnings-announcements",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Stocks rise around their earnings announcements; buying expected announcers and shorting non-announcers earned > 60 bps/month (1972-2004), strongest where announcement volume (small-investor buying) is high.",
+  "findings": [
+    {
+      "statement": "Long expected announcers / short non-announcers: > 60 bps per month.",
+      "evidence": "CRSP 1972-2004; premium back to 1927."
+    },
+    {
+      "statement": "Larger for stocks with big predicted volume surges and small-investor buying.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Attention-driven buying pressure around announcements."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1972-2004",
+    "data_frequency": "monthly",
+    "holding_period": "1 month"
+  },
+  "reported_results": {
+    "headline": "Stocks rise around their earnings announcements; buying expected announcers and shorting non-announcers earned > 60 bps/month (1972-2004), strongest where announcement volume (small-investor buying) is high.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; index cousin is the earnings-cluster spec.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "High turnover."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

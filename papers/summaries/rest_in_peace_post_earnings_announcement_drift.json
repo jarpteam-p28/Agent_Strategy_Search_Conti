@@ -1,0 +1,46 @@
+{
+  "title": "Rest in Peace Post-Earnings Announcement Drift",
+  "authors": [
+    "Charles Martineau"
+  ],
+  "year": 2021,
+  "source_url": "https://ideas.repec.org/a/now/jnlcfr/104.00000122.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Post-earnings announcement drift has been non-existent for large stocks since 2006 and has only recently disappeared for microcaps — prices now absorb surprises on the announcement day.",
+  "findings": [
+    {
+      "statement": "PEAD gone for large stocks since 2006; recently gone for microcaps.",
+      "evidence": "Critical Finance Review."
+    }
+  ],
+  "why": {
+    "pattern": "Market efficiency / faster information processing."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "to ~2019",
+    "data_frequency": "daily",
+    "holding_period": "60 days"
+  },
+  "reported_results": {
+    "headline": "Post-earnings announcement drift has been non-existent for large stocks since 2006 and has only recently disappeared for microcaps — prices now absorb surprises on the announcement day.",
+    "key_stats": []
+  },
+  "tradable_edge": "Strong evidence against the PEAD stock specs (pead_long, pead_next_announcement, pead_*): treat them as parked.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Documents the decay."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

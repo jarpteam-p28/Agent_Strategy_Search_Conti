@@ -1,0 +1,53 @@
+{
+  "title": "Evaporating Liquidity",
+  "authors": [
+    "Stefan Nagel"
+  ],
+  "year": 2012,
+  "source_url": "https://nber.org/papers/w17653",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Short-term reversal returns (a proxy for paid liquidity provision) are predictable with the VIX: expected returns and Sharpe ratios spike when VIX rises in turmoil (e.g. 2007-09), even for industry portfolios that earn little on average.",
+  "findings": [
+    {
+      "statement": "Reversal strategy returns vary strongly over time and are predicted by VIX.",
+      "evidence": "RFS 25(7), 2012."
+    },
+    {
+      "statement": "Industry-level reversal earns little on average but a lot when VIX is high.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Liquidity provision is paid more when intermediaries withdraw (high VIX)."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks",
+      "industry portfolios"
+    ],
+    "sample_period": "to 2010",
+    "data_frequency": "daily/weekly",
+    "holding_period": "days"
+  },
+  "reported_results": {
+    "headline": "Short-term reversal returns (a proxy for paid liquidity provision) are predictable with the VIX: expected returns and Sharpe ratios spike when VIX rises in turmoil (e.g. 2007-09), even for industry portfolios that earn little on average.",
+    "key_stats": []
+  },
+  "tradable_edge": "Index angle (speculative): short-term reversal in ES works mainly in high-volatility regimes — a regime filter for the overnight-reversal spec.",
+  "angles": [
+    "Condition overnight_reversal_first_hour_es on high AvgRange"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Regime-dependent."
+  },
+  "data_fit": "Cross-sectional; the ES version would be a regime filter only.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

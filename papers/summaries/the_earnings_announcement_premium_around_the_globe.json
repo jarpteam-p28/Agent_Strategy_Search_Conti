@@ -1,0 +1,53 @@
+{
+  "title": "The Earnings Announcement Premium Around the Globe",
+  "authors": [
+    "Brad M. Barber",
+    "Emmanuel T. De George",
+    "Reuven Lehavy",
+    "Brett Trueman"
+  ],
+  "year": 2013,
+  "source_url": "https://alphaarchitect.com/introducing-the-global-earnings-announcement-premium/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Across 46 markets (1991-2010) a long-announcers / short-non-announcers portfolio earned 7.16%/yr with a 40% higher Sharpe than the market; the premium tracks the rise in idiosyncratic uncertainty around announcements.",
+  "findings": [
+    {
+      "statement": "7.16%/yr raw; significant in 9 of the 20 biggest countries (63-236 bps).",
+      "evidence": "~200,000 announcements."
+    },
+    {
+      "statement": "Driven by uncertainty about the disclosure, not attention or limits to arbitrage.",
+      "evidence": "~100% monthly turnover."
+    }
+  ],
+  "why": {
+    "pattern": "Uncertainty premium around scheduled information."
+  },
+  "setting": {
+    "markets": [
+      "46 markets"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1991-2010",
+    "data_frequency": "monthly",
+    "holding_period": "1 month"
+  },
+  "reported_results": {
+    "headline": "Across 46 markets (1991-2010) a long-announcers / short-non-announcers portfolio earned 7.16%/yr with a 40% higher Sharpe than the market; the premium tracks the rise in idiosyncratic uncertainty around announcements.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; same uncertainty WHY as the pre-FOMC / pre-macro specs.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Costs may consume most of it."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

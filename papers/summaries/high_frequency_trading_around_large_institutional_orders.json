@@ -1,0 +1,51 @@
+{
+  "title": "High-Frequency Trading around Large Institutional Orders",
+  "authors": [
+    "Vincent van Kervel",
+    "Albert J. Menkveld"
+  ],
+  "year": 2019,
+  "source_url": "https://www.cemfi.es/ftp/pdf/papers/wshop/SSRN-id2619686.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "HFTs first trade against large institutional orders (cutting their cost) but then trade with long-lasting orders after ~2-7 hours (raising it): 1 SD of against-flow cuts implementation shortfall 3.4 bps (−46%), 1 SD of with-flow adds 12.5 bps (+169%).",
+  "findings": [
+    {
+      "statement": "Average implementation shortfall 7.4 bps; HFT against-the-order flow −3.4 bps, with-the-order +12.5 bps per SD.",
+      "evidence": "Swedish index stocks 2011-2013, 5,910 institutional orders."
+    },
+    {
+      "statement": "Pattern fits back-running of informed orders.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics: fast traders detect and ride persistent institutional order flow."
+  },
+  "setting": {
+    "markets": [
+      "Sweden"
+    ],
+    "instruments": [
+      "index stocks"
+    ],
+    "sample_period": "2011-2013",
+    "data_frequency": "trade-level",
+    "holding_period": "hours"
+  },
+  "reported_results": {
+    "headline": "HFTs first trade against large institutional orders (cutting their cost) but then trade with long-lasting orders after ~2-7 hours (raising it): 1 SD of against-flow cuts implementation shortfall 3.4 bps (−46%), 1 SD of with-flow adds 12.5 bps (+169%).",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy; supports the order-splitting WHY behind VWAP/drift specs (persistent institutional flow is detectable).",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Microstructure."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

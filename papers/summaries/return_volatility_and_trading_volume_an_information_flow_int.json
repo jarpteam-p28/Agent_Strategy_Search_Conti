@@ -1,0 +1,46 @@
+{
+  "title": "Return Volatility and Trading Volume: An Information Flow Interpretation of Stochastic Volatility",
+  "authors": [
+    "Torben G. Andersen"
+  ],
+  "year": 1996,
+  "source_url": "https://ideas.repec.org/a/bla/jfinan/v51y1996i1p169-204.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "A microstructure model in which information arrival drives both volatility and volume (modified mixture-of-distributions) fits the data far better than the standard version and helps explain volatility clustering.",
+  "findings": [
+    {
+      "statement": "Modified MDH vastly outperforms the standard MDH.",
+      "evidence": "Journal of Finance 51(1), 1996."
+    }
+  ],
+  "why": {
+    "pattern": "Information flow drives volume and volatility together."
+  },
+  "setting": {
+    "markets": [
+      "equities"
+    ],
+    "instruments": [
+      "n/a"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "daily",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "A microstructure model in which information arrival drives both volatility and volume (modified mixture-of-distributions) fits the data far better than the standard version and helps explain volatility clustering.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy; supports using volume (e.g. relative opening volume) as an information-arrival gauge.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "Not a signal.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

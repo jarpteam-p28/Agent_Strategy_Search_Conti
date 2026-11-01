@@ -1,0 +1,47 @@
+{
+  "title": "Investor Inattention and Friday Earnings Announcements",
+  "authors": [
+    "Stefano DellaVigna",
+    "Joshua M. Pollet"
+  ],
+  "year": 2009,
+  "source_url": "https://alphaarchitect.com/pay-attention-to-friday-earnings-announcements/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Friday earnings announcements get a ~15% smaller immediate reaction, ~70% more drift and ~8% less volume than other days (1984-2006) — evidence that inattention drives PEAD.",
+  "findings": [
+    {
+      "statement": "Immediate response −15%, drift +70%, volume −8% on Fridays.",
+      "evidence": "IBES/CRSP/Compustat 1984-2006."
+    }
+  ],
+  "why": {
+    "pattern": "Limited attention."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1984-2006",
+    "data_frequency": "daily",
+    "holding_period": "weeks"
+  },
+  "reported_results": {
+    "headline": "Friday earnings announcements get a ~15% smaller immediate reaction, ~70% more drift and ~8% less volume than other days (1984-2006) — evidence that inattention drives PEAD.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; PEAD has since disappeared for large caps (Martineau).",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "PEAD decay."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

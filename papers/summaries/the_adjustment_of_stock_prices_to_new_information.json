@@ -1,0 +1,53 @@
+{
+  "title": "The Adjustment of Stock Prices to New Information",
+  "authors": [
+    "Eugene F. Fama",
+    "Lawrence Fisher",
+    "Michael C. Jensen",
+    "Richard Roll"
+  ],
+  "year": 1969,
+  "source_url": "https://wilsonh.substack.com/p/event-studies-and-the-proof-for-emh",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "The first event study: around 940 stock splits (1926-1960), abnormal returns occur before the split and prices adjust quickly at the announcement, mostly reflecting expected dividend increases — evidence that prices absorb news rapidly.",
+  "findings": [
+    {
+      "statement": "Large positive abnormal returns before splits; adjustment by the split month.",
+      "evidence": "940 splits, CRSP monthly 1926-1960."
+    },
+    {
+      "statement": "Response depends on subsequent dividend changes.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Market efficiency."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1926-1960",
+    "data_frequency": "monthly",
+    "holding_period": "±30 months"
+  },
+  "reported_results": {
+    "headline": "The first event study: around 940 stock splits (1926-1960), abnormal returns occur before the split and prices adjust quickly at the announcement, mostly reflecting expected dividend increases — evidence that prices absorb news rapidly.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy; the event-study method used by many later papers.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Classic."
+  },
+  "data_fit": "Methodological.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}
