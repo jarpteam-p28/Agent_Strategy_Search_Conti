@@ -126,12 +126,14 @@ def test_failed_paper_is_retried_then_dropped(repo, monkeypatch):
     def boom(*a, **k):
         raise RuntimeError("fetch blocked")
     monkeypatch.setattr(agents, "read_paper", boom)
+    shutil.rmtree(repo.path("papers/summaries"))      # cached summaries would skip read_paper entirely
+    repo.path("papers/summaries").mkdir()
     for _ in range(4):
         pipeline.run(repo, FakeLLM(), max_papers=1, scout=False, transcripts=False)
-    first = repo.paper_index()[sorted(repo.paper_index())[0]]
-    attempts = [e["attempts"] for e in repo.paper_index().values()]
+    idx = repo.paper_index()
+    attempts = [e.get("attempts", 0) for e in idx.values()]
     assert max(attempts) <= pipeline.MAX_ATTEMPTS
-    assert first["status"] == "failed"
+    assert any(e.get("status") == "failed" and "fetch blocked" in (e.get("error") or "") for e in idx.values())
 
 
 def test_ssrn_pdf_urls():

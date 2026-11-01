@@ -3,7 +3,7 @@ name: Pre-Announcement Overnight Long before NFP / ISM / GDP (ES/NQ)
 status: spec
 source:
   kind: paper
-  ref: papers/summaries/premium_for_heightened_uncertainty_explaining_pre_annou.md
+  ref: papers/summaries/premium_for_heightened_uncertainty_explaining_pre_announceme.md
   papers:
   - title: 'Premium for Heightened Uncertainty: Explaining Pre-Announcement Market Returns'
     authors:

@@ -35,8 +35,14 @@ entry:
   short: If it is in the top third (stocks led), sell ES.
   filters:
   - >-
-    Bond return: ZN futures if added to the data; otherwise a proxy (e.g. TLT daily closes) — record which
-  - Thresholds from 2014-2018 only
+    Bond return series (Pablo approved this free external source, 2026-11-01): FRED DGS10, the daily 10-year
+    Treasury constant-maturity yield (https://fred.stlouisfed.org/data/DGS10). Daily bond return ≈ y(t-1)/100/252
+    − 7 × (y(t) − y(t-1))/100 (duration ≈ 7, close to the 10-year note future). Skip missing (holiday)
+    rows.
+  - >-
+    Signal = month-to-date ES return minus month-to-date bond return, measured at the T-4 close (both
+    known at that time).
+  - Thresholds (top/bottom third) set from 2014-2018 only, then frozen.
 exit:
   stop_loss: null
   take_profit: null
@@ -51,7 +57,9 @@ parameters:
   test_range: T, T+2
   source: paper
 open_questions:
-- Can a bond proxy stand in for ZN?
+- >-
+  Does the duration-7 yield-change approximation track ZN returns well enough (check correlation on months
+  where both exist, if ZN is ever added)?
 - >-
   How does this interact with month_end_cash_cycle_es (long into month end)? Opposite signs after strong
   equity months.
@@ -65,9 +73,9 @@ validation:
   - Bootstrap CI per event (small samples)
   - Compare with month_end_cash_cycle_es on the same months
 data_requirements:
-- ES daily closes
-- 10-year Treasury futures or proxy (not in inventory)
-data_available: partial
+- ES daily closes from 1-min bars
+- FRED DGS10 daily yields (free download, approved)
+data_available: 'yes'
 expectations:
 - Short after strong equity months should earn; long after weak months too
 variants:
@@ -76,7 +84,7 @@ related_strategies:
 - month_end_cash_cycle_es
 - month_end_rebalance_es
 notes:
-- Needs bond data; ask Pablo whether to add ZN 1-min or a daily bond series.
+- Bond leg comes from FRED DGS10 (approved free daily source); no ZN futures needed.
 review:
   scores:
     why_strength: 5
