@@ -1,0 +1,267 @@
+id: pead_revenue_confirmed
+name: 'Revenue-Confirmed PEAD: long only when the EPS beat and the revenue beat agree (small/mid caps)'
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/post_earnings_announcement_drift_the_role_of_revenue_surpris.md
+  papers:
+  - title: 'Post-Earnings-Announcement Drift: The Role of Revenue Surprises'
+    authors:
+    - Narasimhan Jegadeesh
+    - Joshua Livnat
+    year: 2006
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=903767
+    note: >-
+      Source of the finding. The summary was written from memory (abstract only), so the numbers are unverified.
+  - title: 'Post-Earnings-Announcement Drift: Delayed Price Response or Risk Premium?'
+    authors:
+    - Victor Bernard
+    - Jacob Thomas
+    year: 1989
+    venue: Journal of Accounting Research
+    note: Source of the 60-day drift horizon.
+  - title: An Empirical Evaluation of Accounting Income Numbers
+    authors:
+    - Ray Ball
+    - Philip Brown
+    year: 1968
+    venue: Journal of Accounting Research
+    note: The original drift finding.
+finding: >-
+  US stocks, roughly the late 1980s to early 2000s, Compustat quarterly data (recalled from memory, not
+  verified). The revenue surprise (sales vs a seasonal random walk, scaled by its volatility) predicts
+  later returns even after controlling for the earnings surprise. Stocks with both a strong EPS surprise
+  and a strong revenue surprise drift more, and for longer (reportedly up to about 6 months), than stocks
+  with an EPS surprise alone. Beats backed by sales persist. Beats driven by cost cuts or accruals do
+  not.
+why: >-
+  Slow information diffusion plus liquidity constraints on large orders. Screens and investors anchor
+  on headline EPS and under-react to the less visible revenue line. Revenue is harder to manage than earnings,
+  so a sales-backed beat says the improvement is real and likely to repeat. In thinly covered small and
+  mid caps, that information spreads slowly. Funds that do notice still build positions over days or weeks,
+  which stretches the price adjustment. Our framing differs from pead_long: the revenue line is a quality
+  gate on the EPS beat. We trade only beats the market is likely to keep repricing as the next quarters
+  confirm them.
+market:
+  instruments:
+  - US single stocks
+  bar_size: 1day
+  session: >-
+    RTH 09:30-16:00 America/New_York; signals evaluated at the close of the first full session after the
+    announcement
+  universe: >-
+    US common stocks, small and mid caps (e.g. Russell 2000 plus S&P 400; market cap roughly $300M-$10B).
+    Exclude mega caps and stocks under $5. Require an average daily dollar volume of at least $2M. Angle:
+    European small/mid caps.
+direction: long_only
+entry:
+  long: >-
+    At the close of day +1 (day 0 = announcement day; use day +1 if the report came after the close),
+    buy when all of these hold: (1) the EPS surprise is in the top quintile of the trailing cross-section.
+    Use the consensus surprise ((actual - consensus)/price) if available, otherwise SUE vs the seasonal
+    random walk. (2) The revenue surprise is in the top quintile too: (actual sales - consensus sales)/price,
+    or SURGE = (sales - sales same quarter last year - drift)/std, as in the paper. (3) The announcement
+    reaction is positive: the abnormal return from day -1 to day +1 vs IWM is > 0.
+  short: null
+  filters:
+  - >-
+    Both surprises must point the same way (both beat). An EPS beat with a revenue miss is skipped. That
+    skip is the whole point of the strategy.
+  - Market cap and liquidity screen as in the universe
+  - Skip if another earnings date falls inside the holding window (should not happen with a 60-day hold)
+exit:
+  stop_loss: >-
+    Catastrophic stop only: close if the price falls 25% below the entry close (to test: no stop vs a
+    3x ATR(20) stop)
+  take_profit: null
+  time_exit: >-
+    Sell at the close of trading day 60 after entry, or the day before the next earnings announcement,
+    whichever comes first
+  other:
+  - Exit early if the next quarterly report has a revenue miss (variant only, not the base rule)
+position_sizing:
+  development: >-
+    Equal weight: a fixed $10,000 per position, no cap on the number of names. Report gross and net of
+    a 20 bps round-trip cost.
+  live: >-
+    Volatility target: each name's weight = (target daily risk, e.g. 0.1% of the portfolio) / its 60-day
+    daily volatility, capped at 2% of the portfolio per name and 15% per sector. Scale gross exposure
+    down when the portfolio's realised volatility is above target (Moreira & Muir).
+parameters:
+- name: eps_surprise_quantile
+  default: top 20%
+  source: paper (extreme portfolios), assumption on the exact cut
+  test_range: top 10% / 20% / 30%
+- name: revenue_surprise_quantile
+  default: top 20%
+  source: paper
+  test_range: top 10% / 20% / 30% / simply > 0
+- name: holding_days
+  default: 60
+  source: Bernard & Thomas 1989; the paper reportedly up to ~6 months
+  test_range: 20, 40, 60, 120
+- name: reaction_window
+  default: day -1 to +1 abnormal return > 0
+  source: Conti PEAD recipe
+  test_range: no filter / > 0 / > +2%
+- name: revenue_expectation
+  default: consensus if available, otherwise seasonal random walk
+  source: paper uses the seasonal random walk
+  test_range: compare both
+- name: stop_loss_pct
+  default: 25
+  source: assumption
+  test_range: none, 15, 25, 3xATR
+open_questions:
+- >-
+  The summary was written from memory without the text. Verify the paper's quantile cuts, the holding
+  period, and whether the joint-signal spread survives risk adjustment.
+- >-
+  Consensus revenue vs a seasonal random walk: which to use? Consensus revenue estimates are sparse before
+  about 2000 and for small caps.
+- >-
+  Is the gain truly incremental to pead_long (EPS + reaction)? We must test the joint signal against EPS-only
+  on the same universe and dates.
+- >-
+  How should rebalances overlap? Announcements cluster in earnings season, so capital use is lumpy. Do
+  we cap the number of positions or scale per name?
+- >-
+  What is the cross-section for the quantiles: trailing 90-day announcements or calendar quarter? It must
+  use only past data to avoid look-ahead.
+- >-
+  Should an EPS beat with a revenue miss be faded on the short side? The summary suggests it, but the
+  short side is weak (pre-announcements, borrow), so it is left as a variant.
+- How should the announcement time (before vs after the market) be handled for entry timing?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop and review if the live drawdown exceeds the 95th-percentile drawdown from the bootstrap over
+    the same number of trades
+  extra_checks:
+  - >-
+    Benchmark against EPS-only PEAD (pead_long rules) and against holding IWM over the same windows. The
+    joint signal must beat both.
+  - 'Long-only beta check: results in 2008, 2018 Q4, 2020 Q1 and 2022, and returns hedged with IWM'
+  - >-
+    Split by size bucket: the edge should shrink in large caps. If it is just as strong there, suspect
+    a data error.
+  - Split by decade or pre/post-2006 publication to measure alpha decay
+  - Net of costs at 20 and 50 bps round trip
+data_available: 'no'
+data_requirements:
+- Point-in-time US stock daily OHLCV with delisting returns (CRSP or similar), small/mid-cap universe
+- Earnings announcement dates and times (before/after the market)
+- Actual quarterly EPS and revenue (Compustat or I/B/E/S actuals), point-in-time
+- >-
+  Analyst consensus EPS and revenue estimates (I/B/E/S, Zacks or FactSet), optional for the seasonal-random-walk
+  version
+- Index benchmark (IWM/Russell 2000) daily returns
+expectations:
+- >-
+  Joint top-quintile EPS and revenue beats should outperform EPS-only top-quintile beats over the 60-day
+  hold
+- Drift should be larger in small caps than in mid caps, and close to zero in mega caps
+- EPS beats with revenue misses should drift less than those with revenue beats, possibly negatively
+- Cumulative abnormal return should rise steadily over 60 days, not all in the first week
+- Weaker after 2006 than before, but still positive in small caps if the WHY holds
+what_would_kill_it: >-
+  Revenue-surprise screens become standard in quant and retail tools, so the price reacts fully on day
+  0-1. Small-cap analyst coverage and liquidity improve. Costs in small caps eat a thin drift. If the
+  joint signal adds nothing over EPS-only PEAD out of sample, the revenue angle is dead.
+variants:
+- 'Divergence filter only: run pead_long but drop names with a revenue miss'
+- 'Short leg: EPS beat plus revenue miss, or both missing (expected weak)'
+- Europe small/mid caps (STOXX Small 200)
+- Longer hold of 120 days, per the paper's reported ~6-month drift
+- >-
+  Index proxy for ES/NQ: aggregate revenue-beat breadth in earnings season vs the next 20-day index return
+  (needs outside data; speculative)
+related_strategies:
+- pead_long
+- pead_benchmark_disagreement
+- pead_next_announcement
+notes:
+- >-
+  New angle vs the existing PEAD specs: the revenue line is used as a quality gate on the EPS beat. pead_long
+  uses EPS + reaction, pead_benchmark_disagreement compares EPS benchmarks, and pead_next_announcement
+  trades the next report.
+- It can share a backtest engine with pead_long; only the signal changes.
+- Status is 'idea' because the paper's details are unverified and no data is available in-house.
+open_questions_count: 7
+review:
+  scores:
+    why_strength: 4
+    persistence: 2
+    simplicity: 3
+    testability: 2
+    overfit_resistance: 2
+  verdict: park
+  reasons:
+  - >-
+    The WHY holds up. It combines slow information diffusion (investors and screens focus on headline
+    EPS, revenue is harder to manage, coverage of small caps is thin) with funds building positions over
+    days or weeks. Both are patterns from §4. The spec also says what would kill the edge, and that the
+    revenue angle is dead if it adds nothing over EPS-only PEAD.
+  - >-
+    Persistence is the weak point. PEAD is one of the most widely known anomalies. The paper came out
+    in 2006, revenue surprise is a standard quant factor today, and the cited evidence ends in the early
+    2000s. Whatever drift survives in small caps net of 20-50 bps costs may be thin. The spec's own expectations
+    list admits it should be weaker after 2006.
+  - >-
+    The paper was summarised from memory, abstract only. The quantile cuts, the ~6-month horizon and whether
+    the joint signal survives risk adjustment are all unverified. We would be spending backtest effort
+    on a finding we haven't read.
+  - >-
+    We have none of the data in-house: no point-in-time CRSP-style prices with delisting returns, no announcement
+    dates and times, no Compustat/I/B/E/S actuals, no revenue consensus. Missing data alone isn't a reason
+    to reject. But this is expensive institutional-grade data, and consensus revenue for small caps before
+    about 2000 is sparse, which undercuts the preferred surprise definition.
+  - >-
+    The increment is marginal. This is pead_long with one extra gate. Its value depends entirely on beating
+    pead_long out of sample, and pead_long can't be tested in-house either. So it is low priority until
+    a PEAD data stack exists.
+  - >-
+    Overfit risk is real. There are six parameters, each with 2-4 test values, about 1,000 combinations,
+    plus two different surprise definitions. That is a lot of room to data-mine a thin edge.
+  - >-
+    There are gaps in the rules: the quantile cross-section isn't defined (trailing 90 days vs calendar
+    quarter), the choice between consensus and seasonal random walk is left open, the before/after-close
+    timing is unresolved, and the 'day before next earnings' exit needs a point-in-time announced date
+    to avoid look-ahead.
+  - >-
+    It doesn't copy the paper. The paper sorts on SRW revenue surprise long-short. Our version is long-only,
+    small/mid caps, adds a reaction filter and frames revenue as a quality gate tied to the WHY. Still,
+    the core signal is the paper's signal, so decay risk carries over.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Before reviving, get the paper's full text (or the JAE companion paper) and replace the from-memory
+    numbers with verified quantile cuts, holding horizons and post-risk-adjustment spreads.
+  - >-
+    Pick one revenue-surprise definition for the base rule. Seasonal random walk (SURGE) is the safer
+    choice because it needs no sparse consensus data. Keep consensus as a single comparison, not a tuned
+    option.
+  - >-
+    Define the quantile cross-section exactly, using past data only. For example: the SUE/SURGE breakpoints
+    from all announcements in the trailing 90 calendar days, known at the entry date.
+  - >-
+    Freeze most parameters at their defaults (top quintile for both, 60 days, reaction > 0, no stop).
+    Tune at most two in-sample, for example holding_days and the revenue cut, to cut the roughly 1,000-combination
+    search.
+  - >-
+    Make entry timing concrete. For before-open announcements, day 0 is the announcement day and entry
+    is at the day +1 close. For after-close announcements, day 0 is the next session. Specify the exit-before-next-earnings
+    rule using only dates announced before that exit.
+  - >-
+    Make the head-to-head against pead_long, on the same universe and dates, the main pass/fail test,
+    and do it out of sample. Add a post-2010 sub-period requirement: the joint signal must beat EPS-only
+    net of 50 bps there.
+  - >-
+    Add a position cap or a fixed per-name size as a fraction of capital to deal with earnings-season
+    clustering, so the backtest P&L is achievable in practice.
+  - >-
+    Bundle the data purchase decision with the other PEAD specs (pead_long, pead_benchmark_disagreement,
+    pead_next_announcement). Buying one dataset (CRSP/Compustat/I/B/E/S or a cheaper point-in-time vendor)
+    covers all of them. Only un-park once that data is available.

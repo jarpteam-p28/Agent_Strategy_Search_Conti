@@ -1,0 +1,220 @@
+id: noise_area_last_half_hour_es
+name: 'Noise-Area Close Continuation: last 30 minutes only (ES/NQ, long/short, time exit at 16:00 ET)'
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/1987_paper_on_the_intraday_noise_area_around_the_session_ope.md
+  papers:
+  - title: 'Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)'
+    authors:
+    - Carlo Zarattini
+    - Andrew Aziz
+    - Andrea Barbon
+    venue: SSRN
+    year: 2024
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4824172
+    note: >-
+      Source of the time-of-day noise band and the finding that trend returns build up from 14:00 into
+      the close (FAQ Q18).
+  - title: Hedging demand and market intraday momentum
+    authors:
+    - G. Baltussen
+    - Z. Da
+    - S. Lammers
+    - M. Martens
+    venue: Journal of Financial Economics 142(1)
+    year: 2021
+    note: >-
+      The WHY: dealer gamma hedging and levered-ETF rebalancing are concentrated near the close and trade
+      in the direction of the day's move.
+  - title: Market intraday momentum
+    authors:
+    - Li Gao
+    - Yan Han
+    - S. Zhengzi Li
+    - Guofu Zhou
+    venue: Journal of Financial Economics 129(2)
+    year: 2018
+    note: >-
+      The earlier result that the first half hour plus the overnight return predict the last half hour.
+      Here we use the noise-band state as the predictor instead.
+finding: >-
+  On SPY 1-minute data from 2007 to 2024, a move away from the open that is larger than the 14-day average
+  absolute move at the same clock time tends to keep going into the close. The paper's FAQ chart shows
+  the trend P&L builds mostly from 10:00 to noon and from 14:00 to the close. Earlier work (Gao et al.
+  2018; Baltussen et al. 2021) finds the last half hour is predictable from the day's earlier move. Our
+  angle, which neither paper tests: use only the noise-band break and enter late. If price is still outside
+  the band at 15:30 ET, trade the last 30 minutes in the direction of the break.
+why: >-
+  Execution mechanics of forced players. Several flows have to trade near the close in the direction of
+  the day's move. Options dealers who are short gamma re-hedge their delta, and the hedge size grows with
+  the day's return. Leveraged and inverse ETFs rebalance into the close. Institutional VWAP/close-benchmark
+  algos finish their parent orders, and MOC imbalances follow the day's direction. These flows are mandatory
+  and scale with the size of the move, so a day that has left its normal time-of-day range by 15:30 is
+  the day when that forced flow is largest. The noise band gives a volatility-normalised test of 'big
+  enough move'. This sleeve isolates the part of the existing full-day noise-area trade that is most directly
+  explained by forced flow. It has far fewer bars at risk and gives a test of the mechanism itself: if
+  the last 30 minutes carry no edge, the gamma/rebalancing WHY is weak on ES.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC; convert with DST)
+  universe: ES continuous front month 2013-12 to 2026-09; NQ 2021-07 to 2026-09 as a second market
+direction: long_short
+entry:
+  long: >-
+    At the 15:30 ET decision bar (the close of the 1-min bar ending 15:30): ES close > UpperBand(15:30)
+    AND close > session VWAP (from 09:30) -> buy 1 contract at the next bar open.
+  short: >-
+    At the 15:30 ET decision bar: close < LowerBand(15:30) AND close < session VWAP -> sell 1 contract
+    at the next bar open.
+  filters:
+  - >-
+    Noise band: sigma(t) = mean over the last 14 RTH sessions of |close at minute t / RTH open (09:30)
+    - 1|. UpperBand(t) = max(today's open, prior RTH close) * (1 + VM*sigma(t)); LowerBand(t) = min(today's
+    open, prior RTH close) * (1 - VM*sigma(t)). Prior RTH close = close of the 15:59 ET bar the day before
+    (16:00 equity close, not the 16:15/17:00 futures close).
+  - One trade per day; no trade if the decision bar is missing.
+  - >-
+    Skip half-day sessions (early 13:00 close) and the first 14 sessions after the data start (warm-up
+    for sigma).
+  - >-
+    Roll days: compute bands on the continuous back-adjusted series; skip the roll date if it is not handled.
+exit:
+  time_exit: Flatten at the close of the 15:59 ET bar (the 16:00 ET equity close).
+  stop_loss: >-
+    Main version: none (a pure 30-minute master signal, so the exit cannot flatter the entry). Variant:
+    exit on a 1-min close back through max(UpperBand, VWAP) for longs / min(LowerBand, VWAP) for shorts.
+  take_profit: null
+  other:
+  - >-
+    Always compare against the baseline of always going long ES from 15:30 to 16:00 every day, and against
+    the same window traded in the direction of the day's open-to-15:30 return with no band (the Gao-style
+    rule).
+position_sizing:
+  development: 1 ES contract fixed (1 NQ for the NQ run). Costs $12.50 round turn plus 1 tick slippage
+    per side.
+  live: >-
+    Volatility targeting: contracts = floor(dollar risk per trade / (point value * 14-day average of |15:30-16:00
+    ES move| in points)), capped at 4x the base size. Smaller size on wide days, larger on quiet ones.
+parameters:
+- name: lookback_days
+  default: 14
+  source: paper
+  test_range: 10, 14, 30, 60, 90
+- name: vol_multiplier_VM
+  default: 1.0
+  source: paper
+  test_range: 0.8, 1.0, 1.25, 1.5
+- name: decision_time_ET
+  default: '15:30'
+  source: assumption (Gao/Baltussen last half hour)
+  test_range: 15:00, 15:30, 15:45
+- name: vwap_confirmation
+  default: true
+  source: paper (VWAP used as stop)
+  test_range: true/false
+- name: stop_mode
+  default: none
+  source: assumption
+  test_range: none, band+VWAP trailing
+- name: gap_reference_close
+  default: 15:59 ET bar close
+  source: assumption
+  test_range: 16:00 ET vs 16:14 ET futures settle-ish bar
+open_questions:
+- >-
+  How correlated is this with noise_area_momentum_es? If the full-day strategy already holds through 15:30-16:00
+  on the same days, daily P&L correlation will be high. Is this a replacement, a test of the mechanism,
+  or a separate sleeve?
+- >-
+  Which prior close should the gap use for ES: the 16:00 ET equity close, the 16:15 ET futures close,
+  or the 17:00 ET Globex close?
+- >-
+  Should overnight (Globex) movement be in the open reference at all, given that ES trades through the
+  night?
+- >-
+  Is a 30-minute hold, about 0.1-0.2% average |move|, enough to clear $12.50 plus slippage per contract
+  on 1 ES? Check the average trade against costs.
+- >-
+  Should the exit be at 15:59 ET or include the 16:00-16:15 ES trading after the cash close, when MOC
+  prints arrive?
+- >-
+  0DTE options (since 2022) may have changed dealer gamma near the close, either amplifying or pinning.
+  Test pre- and post-2022 separately.
+- Does the decision need both band and VWAP agreement, or is the band alone enough?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop live trading if drawdown exceeds the 95th-percentile simulated max drawdown for the same number
+    of trades. Bench it if drawdown goes above the 75th percentile and it is not near its equity high.
+  extra_checks:
+  - >-
+    Chronological split: in-sample 2013-12 to about 2023-07, out-of-sample to 2026-09; tune only in-sample.
+  - Must beat the always-long 15:30-16:00 baseline and the no-band Gao rule on the same bars.
+  - Report by year, with special attention to quiet years (2017, 2019, 2024) and to 2018, 2020 and 2022.
+  - Report long and short legs separately.
+  - Run NQ 2021-2026 with frozen ES parameters as a second-market check.
+  - Daily P&L correlation vs noise_area_momentum_es, overnight_drift_long and drift_vwap_pullback.
+  - 'Outlier dependence: what share of profit comes from the top 20 days?'
+  - Pre/post 2022 split for the 0DTE regime.
+data_requirements:
+- ES 1-min RTH bars 2013-12 to 2026-09 (clean_ES_master.parquet)
+- NQ 1-min 2021-07 to 2026-09
+- US exchange holiday and half-day calendar
+- 'Optional: VIX daily for a regime check (not in inventory)'
+data_available: 'yes'
+expectations:
+- >-
+  The paper and Gao et al. imply a positive average trade in the last 30 minutes when the day has broken
+  its noise band, with larger returns on high-volatility days.
+- The edge should be weaker in calm low-VIX years such as 2016-2017.
+- Both legs should contribute.
+- >-
+  The edge should be larger when the 15:30 distance from the open (relative to sigma) is larger. A monotonic
+  dose-response would support the forced-hedging WHY.
+what_would_kill_it: >-
+  No edge over the always-long baseline in the last 30 minutes, which would mean the close-hedging WHY
+  doesn't hold on ES. Other ways it dies: dealers moving to net long gamma near the close (heavy call
+  overwriting, 0DTE pinning), leveraged-ETF AUM shrinking, crowding of noise-band rules front-running
+  the close, or costs eating a 30-minute move.
+variants:
+- Decision at 15:00 with a 60-minute hold
+- Long-only
+- >-
+  Add a regime gate: prior-day RSI(5) < 50 or 14-day realised vol above its 1-year median (short-gamma
+  proxy)
+- 'Band-distance scaling: size by (price - band)/sigma'
+related_strategies:
+- noise_area_momentum_es
+- noise_area_overnight_es
+- vault_break
+- same_slot_seasonality_es
+- vwap_trend
+notes:
+- >-
+  The full-day noise-area strategy is already specced as noise_area_momentum_es. This spec is a deliberately
+  narrower angle that tests the into-the-close mechanism, not a copy.
+- Fixed 30-minute holding window, following the master-signal discipline from transcript 04.
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 4
+    testability: 5
+    overfit_resistance: 4
+  verdict: backtest
+  reasons: |2-
+
+    <parameter name="item">The WHY is a real forced-flow mechanism: short-gamma dealer hedging (Baltussen et al.), leveraged and inverse ETF rebalancing into the close, close-benchmark algos finishing parent orders, and MOC imbalances. These flows have to trade, they get bigger as the day's move gets bigger, and they bunch up in the last half hour. That is exactly the window this spec isolates.
+  item: >-
+    Report the result net of costs. Also report gross, as a fraction of the average |15:30-16:00| move,
+    so you can see how much of the move the costs eat.
+  required_changes: |2-
+
+    <parameter name="item">Pre-register the headline run before any tuning: lookback 14, VM 1.0, decision at 15:30, VWAP confirmation on, no stop, exit at 15:59. Report that run first. Any sweep is in-sample only, and you must pick values from a stable plateau, not the single best cell. The RSI/vol regime gate stays a later variant, tested only if the base signal beats both baselines.
+  copies_the_paper: false
