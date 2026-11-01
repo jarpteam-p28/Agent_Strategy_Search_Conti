@@ -1,22 +1,4 @@
 {
-  "beat_the_market_zarattini_reread_2026_10_26": {
-    "title": "1987 paper on the intraday noise area around the session open (title unknown - cited by Conti for the Vault Break)",
-    "year": 1987,
-    "note": "transcript 03 - find the actual paper; see also 'Beat the Market' (Zarattini, Barbon, Aziz 2024)",
-    "origin": "seed",
-    "status": "summarized",
-    "attempts": 1,
-    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4824172",
-    "pdf_url": "https://alexandria.unisg.ch/bitstreams/a99aba00-f967-49b3-aceb-f544dc386e0b/download",
-    "venue": "SSRN / Swiss Finance Institute Research Paper No. 24-97",
-    "read_mode": "full_pdf",
-    "summary": "papers/summaries/beat_the_market_zarattini_reread_2026_10_26.md",
-    "updated": "2026-10-26",
-    "strategies": [
-      "noise_area_last_half_hour_es"
-    ],
-    "skipped_reason": null
-  },
   "a_profitable_day_trading_strategy_for_the_u_s_equity_market": {
     "title": "A Profitable Day Trading Strategy For The U.S. Equity Market",
     "authors": [
@@ -219,7 +201,8 @@
     "origin": "librarian",
     "status": "queued",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "note_manual_2026_11_01": "Full text/abstract not reachable from the chat session (paywall or site block); left queued."
   },
   "asset_fire_sales_and_purchases_in_equity_markets": {
     "title": "Asset Fire Sales (and Purchases) in Equity Markets",
@@ -291,6 +274,24 @@
     ],
     "skipped_reason": null
   },
+  "beat_the_market_zarattini_reread_2026_10_26": {
+    "title": "1987 paper on the intraday noise area around the session open (title unknown - cited by Conti for the Vault Break)",
+    "year": 1987,
+    "note": "transcript 03 - find the actual paper; see also 'Beat the Market' (Zarattini, Barbon, Aziz 2024)",
+    "origin": "seed",
+    "status": "summarized",
+    "attempts": 1,
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4824172",
+    "pdf_url": "https://alexandria.unisg.ch/bitstreams/a99aba00-f967-49b3-aceb-f544dc386e0b/download",
+    "venue": "SSRN / Swiss Finance Institute Research Paper No. 24-97",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/beat_the_market_zarattini_reread_2026_10_26.md",
+    "updated": "2026-10-26",
+    "strategies": [
+      "noise_area_last_half_hour_es"
+    ],
+    "skipped_reason": null
+  },
   "can_day_trading_really_be_profitable": {
     "title": "Can Day Trading Really Be Profitable?",
     "authors": [
@@ -356,9 +357,16 @@
     "note": "Background/decay evidence only. Companion papers to chase if this is useful: Dzhabarov & Ziemba, 'Do Seasonal Anomalies Still Work?' (JPM 36(3), 2010, paywalled, DOI 10.3905/jpm.2010.36.3.093) and 'Infrequent rebalancing, risk deferral, and equity returns at the turn of the month' (ScienceDirect S1042443126000259, 2026). The 'Dash for Cash' paper is already on the known list.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/closing_the_question_on_the_continuation_of_turn_of_the_mont.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "strategies": [
+      "month_end_cash_cycle_es"
+    ]
   },
   "comparing_the_post_earnings_announcement_drift_for_surprises": {
     "title": "Comparing the Post-Earnings Announcement Drift for Surprises Calculated from Analyst and Time Series Forecasts",
@@ -404,9 +412,16 @@
     "testable_on_our_data": "yes",
     "priority": 2,
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/dash_for_cash_monthly_market_impact_of_institutional_liquidi.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "strategies": [
+      "month_end_cash_cycle_es"
+    ]
   },
   "decoding_inside_information": {
     "title": "Decoding Inside Information",
@@ -534,7 +549,8 @@
     "origin": "librarian",
     "status": "queued",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "note_manual_2026_11_01": "Full text/abstract not reachable from the chat session (paywall or site block); left queued."
   },
   "equilibrium_effects_of_intraday_order_splitting_benchmarks": {
     "title": "Equilibrium effects of intraday order-splitting benchmarks",
@@ -691,9 +707,14 @@
     "testable_on_our_data": "yes",
     "priority": 1,
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/hedging_demand_and_market_intraday_momentum.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "skipped_reason": "Covered by noise_area_last_half_hour_es (this paper is its WHY; its signal is baseline B2)."
   },
   "high_frequency_market_making_to_large_institutional_trades": {
     "title": "High-frequency market making to large institutional trades",
@@ -872,7 +893,8 @@
     "origin": "librarian",
     "status": "queued",
     "attempts": 0,
-    "added": "2026-10-26"
+    "added": "2026-10-26",
+    "note_manual_2026_11_01": "Full text/abstract not reachable from the chat session (paywall or site block); left queued."
   },
   "intraday_trading_invariance_in_the_e_mini_s_p_500_futures_ma": {
     "title": "Intraday Trading Invariance in the E-mini S&P 500 Futures Market",
@@ -938,14 +960,15 @@
     "year": 2018,
     "note": "transcript 01 - opening range breakout (open preprint may exist on author pages)",
     "origin": "seed",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2440866",
     "venue": "Journal of Financial Economics 129(2), 394-414 (DOI 10.1016/j.jfineco.2018.05.009); SSRN 2440866",
-    "read_mode": "abstract_only",
+    "read_mode": "web_fetch",
     "summary": "papers/summaries/market_intraday_momentum.md",
-    "updated": "2026-10-20",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'tool_choice: type \"tool\" and \"any\" are not supported for this model.'}, 'request_id': 'req_011CgCnuDKFH1MgU6iFZsb9U'}"
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "skipped_reason": "Covered by noise_area_last_half_hour_es (baseline B2)."
   },
   "market_return_around_the_clock_a_puzzle": {
     "title": "Market Return Around the Clock: A Puzzle",
@@ -968,9 +991,16 @@
     "why_promising": "Directly extends the 'overnight drift' idea Conti uses but is not in our already-known list. Finding: the overnight premium is concentrated in a ~4-hour window around the European open (roughly 02:00-06:00 ET). Structural WHY (risk/liquidity premium + information accumulated while the US is closed): uncertainty builds during Asian hours and is resolved when European investors process it. That gives a precise clock-time window we can turn into a simple long-only 'European-open' ES rule and a 'different session' angle. What would kill it: 24h participation by US desks / Asian-session price discovery, or the VIX-uncertainty pattern vanishing. Decay risk: published 2020, so check the 2019-2026 out-of-sample portion of our ES data (our ES 1-min covers 2013-2026 in UTC; remember DST handling for European open).",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/market_return_around_the_clock_a_puzzle.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "strategies": [
+      "europe_open_long_es"
+    ]
   },
   "market_underreaction_to_open_market_share_repurchases": {
     "title": "Market Underreaction to Open Market Share Repurchases",
@@ -1022,9 +1052,16 @@
     "why_promising": "Finding: NQ futures show both momentum and reversal in the opening hours, depending on the sign of the overnight and prior-day returns and on Mondays. The authors point to a structural feature of the futures market in the opening hours. WHY (information while the market is closed, digested on the open): overnight returns reverse after the cash open, while the prior day's return carries over. It is old and the effect size is uncertain, so treat it as a hypothesis generator, not a rule to copy. Its value is the conditioning grid (overnight sign x prior-day sign x weekday), which is cheap to test on NQ and ES, in-sample first. Expect the effect to have decayed since 2005, so a post-2021 test is a real out-of-sample check.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-22"
+    "added": "2026-10-22",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/nasdaq_100_index_futures_intraday_momentum_or_reversal.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "strategies": [
+      "overnight_reversal_first_hour_es"
+    ]
   },
   "new_evidence_on_stock_price_effects_associated_with_changes": {
     "title": "New Evidence on Stock Price Effects Associated with Changes in the S&P 500 Index",
@@ -1101,7 +1138,8 @@
     "origin": "librarian",
     "status": "queued",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "note_manual_2026_11_01": "Full text/abstract not reachable from the chat session (paywall or site block); left queued."
   },
   "order_consolidation_price_efficiency_and_extreme_liquidity_s": {
     "title": "Order Consolidation, Price Efficiency, and Extreme Liquidity Shocks (S&P 500 futures quarterly expiration / witching days)",
@@ -1375,7 +1413,10 @@
     "pdf_url": "https://assets.super.so/e46b77e7-ee08-445e-b43f-4ffd88ae0a0e/files/d0749895-bc80-4bf5-9b53-fed6eed60914.pdf",
     "venue": "SSRN working paper",
     "error": "'str' object has no attribute 'get'",
-    "updated": "2026-10-26"
+    "updated": "2026-10-26",
+    "strategies": [
+      "overnight_reversal_first_hour_es"
+    ]
   },
   "return_volatility_and_trading_volume_an_information_flow_int": {
     "title": "Return Volatility and Trading Volume: An Information Flow Interpretation of Stochastic Volatility",
@@ -1502,9 +1543,14 @@
     "where_to_get_it": "Free. Download the PDF from arXiv (arxiv.org/abs/2605.04004, 'Download PDF'). A version is also on the SSRN abstract page (abstract_id=6709401).",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-26"
+    "added": "2026-10-26",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/structural_limits_of_ohlcv_based_intraday_signals_in_mnq_fut.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "skipped_reason": "Methodological/negative result: a cost hurdle (~2 NQ pts per round trip) for all NQ intraday tests; no strategy."
   },
   "the_52_week_high_and_momentum_investing": {
     "title": "The 52-Week High and Momentum Investing",
@@ -1570,9 +1616,16 @@
     "note": "Not on the already-known list. It is the only paper found that ties third-Friday/quad-witching settlement mechanics directly to an ES overnight-to-open drift and reversal. Our ES 1-min ETH data (2013-2026, UTC; convert to ET) covers about 150 expiry Fridays, including about 50 quarterly ones, which is thin, so use confidence intervals. Check the roll: on quarterly expiries trade the next contract, not the expiring one.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_derivative_payoff_bias_later_retitled_the_third_friday_p.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "strategies": [
+      "third_friday_spike_es"
+    ]
   },
   "the_disappearing_index_effect": {
     "title": "The Disappearing Index Effect",
@@ -1622,9 +1675,17 @@
     "what_it_should_contain_extra": null,
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-26"
+    "added": "2026-10-26",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_disappearing_overnight_drift.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "strategies": [
+      "europe_open_long_es"
+    ],
+    "skipped_reason": "Folded into europe_open_long_es as its regime/decay check."
   },
   "the_disappearing_pre_fomc_announcement_drift": {
     "title": "The Disappearing Pre-FOMC Announcement Drift",
@@ -1786,9 +1847,16 @@
     "testable_on_our_data": "yes",
     "priority": 1,
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/the_overnight_drift.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2026-11-01",
+    "strategies": [
+      "europe_open_long_es"
+    ]
   },
   "the_pre_fomc_announcement_drift": {
     "title": "The Pre-FOMC Announcement Drift",

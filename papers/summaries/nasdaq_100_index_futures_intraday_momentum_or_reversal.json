@@ -1,0 +1,62 @@
+{
+  "title": "Nasdaq-100 Index Futures: Intraday Momentum or Reversal?",
+  "authors": [
+    "Susana Yu",
+    "Joel Rentzler",
+    "Avner Wolf"
+  ],
+  "year": 2005,
+  "source_url": "https://joim.com/downloads/nasdaq-100-index-futures-intraday-momentum-reversal",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "In Nasdaq-100 futures, today's intraday returns show both momentum and reversal depending on the signs of yesterday's and last night's returns; last night's return is mainly followed by reversal.",
+  "findings": [
+    {
+      "statement": "Last night's (overnight) return is mainly associated with intraday reversal.",
+      "evidence": "Multiple regression of intraday returns on yesterday's and overnight returns (Journal of Investment Management)."
+    },
+    {
+      "statement": "Yesterday's return is associated with both momentum and reversal, depending on signs, bull/bear state and Mondays.",
+      "evidence": "'A simplistic view of momentum and reversal proves untenable.'"
+    },
+    {
+      "statement": "A forecast model is favoured in four intraday periods, suggesting structure in the opening hours.",
+      "evidence": "No magnitudes in the abstract."
+    }
+  ],
+  "why": {
+    "pattern": "Overnight overreaction corrected when the regular session opens (liquidity returns).",
+    "mechanism": "Thin overnight trading pushes prices too far; full-session liquidity at the open reverses part of the move."
+  },
+  "setting": {
+    "markets": [
+      "CME Nasdaq-100 futures"
+    ],
+    "instruments": [
+      "NQ"
+    ],
+    "sample_period": "not stated in abstract",
+    "data_frequency": "intraday",
+    "holding_period": "intraday periods"
+  },
+  "reported_results": {
+    "headline": "Overnight return → intraday reversal; sign- and day-dependent.",
+    "key_stats": []
+  },
+  "tradable_edge": "Fade the overnight move in the first hour of the regular session (see spec overnight_reversal_first_hour_es, which combines this with Cliff, Cooper & Gulen 2008).",
+  "angles": [
+    "Fade the overnight return 09:30→10:30 ET, ES and NQ",
+    "Only after large overnight moves (top tercile vs AvgRange)",
+    "Mondays separately"
+  ],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Old sample; MNQ falsification study found gap-fill fades unprofitable after costs 2021-2025."
+  },
+  "data_fit": "ES 1-min (ETH + RTH) Dec 2013 → Sep 2026 in clean_ES_master.parquet; NQ 1-min Jul 2021 → Sep 2026. 2024+ is protected in the backtest project.",
+  "caveats": [
+    "Abstract only; no sample period or magnitudes.",
+    "Read by Claude in a chat session (manual run), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -83,3 +83,7 @@
 - **Build your own data when the edge depends on it.** He built gamma levels minute by minute from raw 0DTE
   option volume, using only volume traded inside each minute to avoid look-ahead bias.
 - **Report the ugly parts:** losing year, worst months, cost drag ($19 round trip), half-by-half and side-by-side results.
+
+## 2026-11-01 — cost hurdle from the MNQ falsification study (Mesfin 2026)
+- 14 families of 5-minute single-bar OHLCV signals on MNQ (2021-2025) all failed walk-forward with 2-point round-trip friction; most had gross edges of 0.07-1.5 points per trade.
+- Rule for our NQ tests: report gross points per trade vs costs; prefer holds of 60+ minutes; demand net t ≥ 2 and the same sign in every out-of-sample year.

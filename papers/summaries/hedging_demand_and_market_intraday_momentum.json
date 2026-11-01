@@ -1,0 +1,65 @@
+{
+  "title": "Hedging Demand and Market Intraday Momentum",
+  "authors": [
+    "Guido Baltussen",
+    "Zhi Da",
+    "Sten Lammers",
+    "Martin Martens"
+  ],
+  "year": 2021,
+  "source_url": "https://pure.eur.nl/en/publications/hedging-demand-and-market-intraday-momentum/",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Across 60+ futures (equities, bonds, commodities, FX) 1974-2020, the return from the previous close to the last half hour predicts the last 30 minutes' return, and the effect reverts over the next days; the authors link it to short-gamma hedging by option dealers and leveraged ETFs.",
+  "findings": [
+    {
+      "statement": "The return from the previous close up to the last half hour positively predicts the last-30-minute return.",
+      "evidence": "Economically and statistically significant across 60+ futures, 1974-2020 (Journal of Financial Economics 142(1), 2021)."
+    },
+    {
+      "statement": "The effect reverts over the following days.",
+      "evidence": "Abstract."
+    },
+    {
+      "statement": "Intraday momentum is linked to hedging of short-gamma positions by option market makers and leveraged ETFs.",
+      "evidence": "Hedging short gamma requires trading in the direction of the price move."
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics of forced players (short-gamma dealers, leveraged-ETF rebalancing) near the close.",
+    "mechanism": "Short-gamma hedgers must buy after rallies and sell after drops, mostly near the close; the push scales with the day's move.",
+    "who_is_forced": "Option dealers net short gamma; leveraged/inverse ETFs rebalancing daily.",
+    "why_it_persists": "Mandatory, size-dependent flows.",
+    "what_would_kill_it": "Dealers moving net long gamma (heavy overwriting, 0DTE dynamics), shrinking leveraged-ETF AUM."
+  },
+  "setting": {
+    "markets": [
+      "Global futures"
+    ],
+    "instruments": [
+      "60+ futures incl. equity index futures"
+    ],
+    "sample_period": "1974-2020",
+    "data_frequency": "intraday",
+    "holding_period": "last 30 minutes"
+  },
+  "reported_results": {
+    "headline": "Rest-of-day return predicts the last 30 minutes; reverts over the next days.",
+    "key_stats": []
+  },
+  "tradable_edge": "Covered by the existing spec noise_area_last_half_hour_es (this paper is its WHY) — its baseline B2 (direction of the day's move into 15:30, no band) is exactly this paper's signal.",
+  "angles": [
+    "Already in the last-30-minutes sheet as baseline B2",
+    "Split by a gamma proxy (prior-day move / volatility) if the base works"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Long sample, structural flows; but 0DTE since 2022 may change dealer gamma near the close."
+  },
+  "data_fit": "ES 1-min (ETH + RTH) Dec 2013 → Sep 2026 in clean_ES_master.parquet; NQ 1-min Jul 2021 → Sep 2026. 2024+ is protected in the backtest project.",
+  "caveats": [
+    "Abstract only — the full PDF links were blocked from this session; no coefficients recorded.",
+    "Read by Claude in a chat session (manual run), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,74 @@
+{
+  "title": "Market Return Around the Clock: A Puzzle",
+  "authors": [
+    "Oleg Bondarenko",
+    "Dmitriy Muravyev"
+  ],
+  "year": 2023,
+  "source_url": "https://ideas.repec.org/a/cup/jfinqa/v58y2023i3p939-967_1.html",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "On E-mini S&P futures 2004-2018, essentially the whole average return was earned in the 'EU-open' window (23:30-03:30 ET): 7.6% a year, Sharpe 1.67, t = 6.4; the other ~20 hours averaged about zero.",
+  "findings": [
+    {
+      "statement": "The EU-open window (11:30 pm to 3:30 am ET) accounts for essentially all of the E-mini S&P 500's average return.",
+      "evidence": "7.6% annualised, Sharpe 1.67, t = 6.4; rest of the day about -0.8% a year. Tick data 2004-2018."
+    },
+    {
+      "statement": "The pattern is positive in every year, calendar month and weekday, and similar in both halves of the sample.",
+      "evidence": "Trade-price and mid-quote returns nearly identical; Bonferroni-type tests reported."
+    },
+    {
+      "statement": "A buy-before / sell-after EU-open rule is profitable after conservative costs, and better when VIX and Asian-session volatility are rising.",
+      "evidence": "Timing version: Sharpe about 1.2 after costs, high out-of-sample R2; capacity about $50m a year (as reported in the Alpha Architect summary)."
+    },
+    {
+      "statement": "VIX futures rise during Asian hours and fall sharply around the European open.",
+      "evidence": "Used as evidence for uncertainty resolution."
+    }
+  ],
+  "why": {
+    "pattern": "Risk premium for bearing uncertainty, paid when information that built up while the US was closed is resolved by European investors.",
+    "mechanism": "Uncertainty accumulates during Asian hours (VIX futures rise); European participants process it at their open; the uncertainty premium is realised in that window.",
+    "who_is_forced": "Holders of equity exposure through the Asian session bear unresolved uncertainty and are paid when it resolves.",
+    "why_it_persists": "Thin, operationally awkward window for most US investors; capacity is limited (~$50m/yr).",
+    "what_would_kill_it": "Overnight trading becoming crowded (ETFs/24h trading), or the uncertainty pattern in VIX disappearing. See Boyarchenko et al. (2026): the 2-3am drift has averaged ~0 since 2021.",
+    "authors_explanation_vs_ours": "Authors favour uncertainty resolution and reject inventory risk; Boyarchenko, Larsen & Whelan argue for dealer inventory risk from closing imbalances. Both predict the same window, different conditioning variables."
+  },
+  "setting": {
+    "markets": [
+      "CME E-mini S&P 500 futures"
+    ],
+    "instruments": [
+      "ES"
+    ],
+    "sample_period": "2004-2018",
+    "data_frequency": "tick",
+    "holding_period": "4 hours (23:30-03:30 ET)"
+  },
+  "reported_results": {
+    "headline": "EU-open window: 7.6%/yr, Sharpe 1.67, t = 6.4; rest of day ~0.",
+    "key_stats": [
+      "Timing rule Sharpe ~1.2 after costs",
+      "Positive every year/month/weekday 2004-2018"
+    ],
+    "costs_included": "Conservative estimates (not detailed in the summary read)."
+  },
+  "tradable_edge": "Hold ES only in the European-open window (about 23:30-03:30 ET, or the tighter 02:00-03:00 ET), flat otherwise. Condition on rising Asian-session volatility. Must be checked post-2021, when the related 2-3am drift reportedly vanished.",
+  "angles": [
+    "Long ES 23:30→03:30 ET every night vs 02:00→03:00 ET",
+    "Only when the prior US session closed down (Boyarchenko asymmetry) or Asian-session range is above its 15-day average",
+    "Split 2014-2020 vs 2021-2023 (decay test)"
+  ],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Published 2020-2023; the same authors' window (2-3am) has averaged ~0 since 2021 per Boyarchenko et al. (2026)."
+  },
+  "data_fit": "ES 1-min (ETH + RTH) Dec 2013 → Sep 2026 in clean_ES_master.parquet; NQ 1-min Jul 2021 → Sep 2026. 2024+ is protected in the backtest project. ETH bars cover the window.",
+  "caveats": [
+    "Read via the Alpha Architect summary and the abstract listing, not the full PDF; numbers are as reported there.",
+    "Sample ends 2018; ES overnight volume roughly doubled in 2020.",
+    "Read by Claude in a chat session (manual run), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

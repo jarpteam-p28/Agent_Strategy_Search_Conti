@@ -1,0 +1,70 @@
+{
+  "title": "The Disappearing Overnight Drift",
+  "authors": [
+    "Nina Boyarchenko",
+    "Lars C. Larsen",
+    "Paul Whelan"
+  ],
+  "year": 2026,
+  "source_url": "https://libertystreeteconomics.newyorkfed.org/2026/07/the-disappearing-overnight-drift/",
+  "paper_type": "industry",
+  "read_mode": "web_fetch",
+  "one_line": "The 2-3am ET ES drift that earned ~3.7%/yr in 1998-2020 has averaged close to zero in 2021-2025 (also NQ and YM); the authors trace it to closing order imbalances becoming much less dispersed.",
+  "findings": [
+    {
+      "statement": "The 2:00-3:00 am ET window earned ~3.7% a year (more than 60% of ES's 5.9% close-to-close return) in 1998-2020, and close to zero since 2021.",
+      "evidence": "Post-publication sample Jan 2021-Dec 2025, 1,245 trading days; same in NQ and YM."
+    },
+    {
+      "statement": "The dispersion of closing order imbalances fell by more than half.",
+      "evidence": "SD of end-of-day relative signed volume 6.5% → 2.9%; VIX mean 20.4 → 19.4; overnight share of volume 15% → 16%."
+    },
+    {
+      "statement": "The closing-imbalance → overnight-return link is much weaker in 2021-25.",
+      "evidence": "Spread between imbalance-sorted return bins much narrower."
+    },
+    {
+      "statement": "NightShares overnight ETFs (NSPY, NIWM), launched June 2022, closed after ~14 months.",
+      "evidence": "Authors call this consistent with the weakened pattern (ETF costs also played a part)."
+    }
+  ],
+  "why": {
+    "pattern": "Inventory risk premium that depends on closing imbalances; it fades when any of imbalance dispersion, variance or dealer capacity collapses.",
+    "mechanism": "Closing limit orders became smaller (finer algorithmic slicing), so dealers carry less overnight inventory and earn less premium.",
+    "what_would_kill_it": "Already weakened; it could return if closing-imbalance dispersion widens again (authors' prediction)."
+  },
+  "setting": {
+    "markets": [
+      "CME equity index futures"
+    ],
+    "instruments": [
+      "ES",
+      "NQ",
+      "YM"
+    ],
+    "sample_period": "1998-2020 vs 2021-2025",
+    "data_frequency": "intraday",
+    "holding_period": "1 hour (02:00-03:00 ET)"
+  },
+  "reported_results": {
+    "headline": "Pre-2021 ~3.7%/yr in the 2-3am window; 2021-2025 ~0.",
+    "key_stats": [
+      "Imbalance SD 6.5% → 2.9%"
+    ]
+  },
+  "tradable_edge": "Not a strategy on its own — a kill/regime switch for any overnight-drift strategy: trade the European-open long only when closing-imbalance proxies are large (e.g. a big last-30-minute move), otherwise stay flat.",
+  "angles": [
+    "Regime switch: trade overnight long only after days with an unusually large last-30-minute move (imbalance proxy)",
+    "Report every overnight strategy pre/post 2021"
+  ],
+  "decay_risk": {
+    "level": "high",
+    "reason": "This paper documents the decay."
+  },
+  "data_fit": "ES 1-min (ETH + RTH) Dec 2013 → Sep 2026 in clean_ES_master.parquet; NQ 1-min Jul 2021 → Sep 2026. 2024+ is protected in the backtest project. Our ES data covers both regimes (2014-2020 vs 2021-2023 in development).",
+  "caveats": [
+    "Authors' blog summary of the SSRN paper; full PDF not reached.",
+    "Read by Claude in a chat session (manual run), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

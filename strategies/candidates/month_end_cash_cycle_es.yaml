@@ -1,0 +1,105 @@
+id: month_end_cash_cycle_es
+name: Month-End Cash Cycle, settlement-adjusted (ES/NQ, long only)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/dash_for_cash_monthly_market_impact_of_institutional_liquidi.md
+  papers:
+  - title: 'Dash for Cash: Monthly Market Impact of Institutional Liquidity Needs'
+    authors:
+    - Erkko Etula
+    - Kalle Rinne
+    - Matti Suominen
+    - Lauri Vaittinen
+    venue: RFS 33(1)
+    year: 2020
+  - title: Closing the Question on the Continuation of Turn-of-the-Month Effects
+    authors:
+    - Edwin D. Maberly
+    - Daniel F. Waggoner
+    venue: Atlanta Fed WP 2000-11
+    year: 2000
+finding: >-
+  Institutions sell for month-end cash at a settlement-determined day (T-4 under T+3), depressing T-8..T-4,
+  then prices reverse up T-3..T-1 (~+25 bps) and keep rising to T+3 (~+48 bps T-3..T+3), 1995-2013. The
+  naive turn-of-month window died in S&P futures after 1990.
+why: >-
+  Month-end payouts force institutions to raise cash; with T+n settlement the selling lands n+1 days before
+  month end; the price pressure reverses once selling stops and re-investment buying starts at month end.
+what_would_kill_it: >-
+  Payouts spread across the month; the pattern not shifting with settlement changes (which would undercut
+  the mechanism).
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min (daily closes)
+  session: RTH closes 16:00 ET
+  universe: ES 2014-2023, NQ 2021-07-2023-12
+direction: long_only
+entry:
+  long: >-
+    Buy at the 16:00 ET close of the peak-selling day: T-4 while US settlement was T+3 (to 2017-09-04),
+    T-3 under T+2 (2017-09-05 to 2024-05-27). T = last trading day of the month.
+  short: null
+  filters: []
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Sell at the 16:00 ET close of T+3.
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing per handoff/VOLATILITY_SIZING.md
+parameters:
+- name: exit_day
+  default: T+3
+  test_range: T-1, T+3
+  source: paper
+- name: friday_only
+  default: false
+  test_range: all, Friday month-ends only
+  source: paper (2-3x stronger)
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - Report 2014-2020 vs 2021-2023
+  - Always-long and random-direction baselines
+  - 'Required baseline: naive TOTM window (buy close T-1, sell close T+3)'
+  - >-
+    Required baseline: unshifted window (always T-4) — the settlement shift should matter if the WHY is
+    right
+data_requirements:
+- ES/NQ daily closes from 1-min bars
+- US trading calendar
+data_available: 'yes'
+expectations:
+- Settlement-adjusted window beats the unshifted and naive windows
+variants:
+- exit T-1 vs T+3; all vs Friday month-ends = 4 configs
+related_strategies:
+- month_end_rebalance_es
+notes:
+- Overlaps month_end_rebalance_es (Bogousslavsky); this version is settlement-timed and must beat it.
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 4
+    testability: 5
+    overfit_resistance: 3
+  verdict: backtest
+  reasons: >-
+    Strong, documented mechanism with a quasi-natural experiment (settlement change) that gives a sharp
+    test: the window should move with US settlement. Few trades (12/yr) and a dead naive version are the
+    risks.
+  required_changes: Pre-register the 4 configs plus both baselines; report per-month bootstrap CI.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session, 2026-11-01)
+open_questions:
+- >-
+  Did the window move with the US settlement change in Sept 2017 (T+3 → T+2), as the mechanism predicts?
+- Do Friday month-ends really show 2-3x larger moves in ES?

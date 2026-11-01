@@ -1,0 +1,74 @@
+{
+  "title": "Structural Limits of OHLCV-Based Intraday Momentum Signals in MNQ Futures: A Systematic Falsification Study",
+  "authors": [
+    "Mathias Mesfin"
+  ],
+  "year": 2026,
+  "source_url": "https://arxiv.org/abs/2605.04004",
+  "paper_type": "industry",
+  "read_mode": "full_pdf",
+  "one_line": "Testing 14 families of 5-minute OHLCV signals on MNQ (Dec 2021-Aug 2025) with walk-forward and 2-point friction, none passed: most had gross edges of 0.07-1.5 points per trade, below costs; only 60-75 minute regime-based holds cleared the bar.",
+  "findings": [
+    {
+      "statement": "No candidate signal passed all five criteria (net t ≥ 2, ≥30 OOS trades per fold, positive net, same direction 2023-2025, permutation p < 0.001).",
+      "evidence": "MNQ 5-min RTH, 947 days, walk-forward with 2023/2024/2025 OOS folds, 2.0-point round-trip friction."
+    },
+    {
+      "statement": "Eleven families had maximum gross returns of only 0.07-1.50 points per trade — below the friction floor.",
+      "evidence": "Includes volume spikes, gap fill fades, Asia range expansion, event-day trend."
+    },
+    {
+      "statement": "ORB long (bar+15) cleared costs but not significance: net +2.82 points, t = 0.88, 447 OOS trades.",
+      "evidence": "Failed t-stat and year stability."
+    },
+    {
+      "statement": "Asia range expansion and Asia liquidity-grab fade were strongly NEGATIVE (t = -11.5 and -14.1).",
+      "evidence": "Signals ran against their intended direction."
+    },
+    {
+      "statement": "Only the two 'positive controls' with 60-75 minute holds and regime detection cleared friction (OOS t = 3.1 and 4.3).",
+      "evidence": "But both have selection-bias / timing-robustness caveats (one flips sign under a 1-bar delay)."
+    }
+  ],
+  "why": {
+    "pattern": "Methodology / market efficiency: single-bar 5-minute signals from public OHLCV can't clear ~1-2 points of gross edge needed to beat costs in MNQ.",
+    "mechanism": "Competitive markets arbitrage simple short-horizon patterns below transaction costs; longer holds escape the per-trade cost ceiling."
+  },
+  "setting": {
+    "markets": [
+      "CME micro Nasdaq-100 futures",
+      "micro gold"
+    ],
+    "instruments": [
+      "MNQ",
+      "MGC"
+    ],
+    "sample_period": "Dec 2021-Aug 2025",
+    "data_frequency": "5-minute OHLCV (RTH) from NinjaTrader",
+    "holding_period": "1 bar to 75 minutes"
+  },
+  "reported_results": {
+    "headline": "0 of 14 signal families passed; most gross edges below a 2-point friction floor.",
+    "key_stats": [
+      "ORB long bar+15: net +2.82 pts, t = 0.88",
+      "Asia expansion t = -11.5 (wrong way)"
+    ],
+    "costs_included": "2.0 points round trip MNQ, fixed nominal."
+  },
+  "tradable_edge": "No new strategy. A hurdle for every intraday idea we test on NQ: average gross edge must clearly exceed ~2 NQ points per round trip, and short 5-minute single-bar signals (like the tight-range breakout and gap fades) are likely below it. Favour 60+ minute holds.",
+  "angles": [
+    "Apply the 5-criteria pass test to our NQ tests (T4 tight-range breakout, gap fades)",
+    "Report gross edge per trade in points vs cost for every NQ strategy"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "A negative/methodological result."
+  },
+  "data_fit": "Same instrument and data source family as Pablo's NQ data (NinjaTrader).",
+  "caveats": [
+    "Single independent author; earlier versions contained errors (corrected).",
+    "Continuous contract without roll adjustment; fixed nominal friction across a doubling of price.",
+    "Read by Claude in a chat session (manual run), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

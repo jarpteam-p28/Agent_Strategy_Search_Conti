@@ -1,0 +1,104 @@
+id: overnight_reversal_first_hour_es
+name: Overnight-Move Reversal in the First Hour (ES/NQ, long/short)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/nasdaq_100_index_futures_intraday_momentum_or_reversal.md
+  papers:
+  - title: 'Return Differences between Trading and Non-Trading Hours: Like Night and Day'
+    authors:
+    - Michael Cliff
+    - Michael J. Cooper
+    - Huseyin Gulen
+    venue: SSRN 1004081
+    year: 2008
+  - title: 'Nasdaq-100 Index Futures: Intraday Momentum or Reversal?'
+    authors:
+    - Susana Yu
+    - Joel Rentzler
+    - Avner Wolf
+    venue: Journal of Investment Management
+    year: 2005
+finding: >-
+  High overnight returns predict lower first-hour returns (Cliff et al.: E-mini AM -2.84 bp, t = -3.81;
+  regression of AM on lagged night return strongly negative); in NQ futures last night's return is mainly
+  followed by reversal.
+why: >-
+  Thin overnight liquidity lets prices overshoot; when full liquidity returns at the open, part of the
+  overnight move reverses.
+what_would_kill_it: >-
+  Deeper overnight liquidity (overnight share of ES volume rising); the MNQ falsification study (2026)
+  found gap-fill fades unprofitable after costs in 2021-2025.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: RTH, America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12
+direction: long_short
+entry:
+  long: >-
+    If the overnight return (prior 16:00 close → 09:30 open) is below -k × AvgRange, buy at the open of
+    the 09:31-stamped bar.
+  short: If the overnight return is above +k × AvgRange, sell at the 09:30 open.
+  filters:
+  - k = 0.10 (base), 0.20 (large moves only)
+  - AvgRange = Conti 15-session average range
+exit:
+  stop_loss: 'Variant: 0.20 × AvgRange'
+  take_profit: 'Variant: prior 16:00 close (full gap fill)'
+  time_exit: Close at 10:30 ET.
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: k
+  default: 0.1
+  test_range: 0.10, 0.20
+  source: assumption
+- name: exit
+  default: 10:30 time exit
+  test_range: 10:30; gap-fill target + stop
+  source: papers (AM window)
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - Report 2014-2020 vs 2021-2023
+  - Always-long and random-direction baselines
+  - Gross edge per trade in points vs costs (MNQ falsification hurdle ~2 NQ pts)
+  - Mondays separately
+data_requirements:
+- ES/NQ 1-min with Globex hours
+data_available: 'yes'
+expectations:
+- Weak; mostly an old-sample effect — likely fails after costs post-2021
+variants:
+- k 0.10/0.20 × 2 exits = 4 configs
+related_strategies:
+- overnight_drift
+notes:
+- >-
+  Also captures the Like Night and Day paper's reversal finding (that paper's strategy step crashed on
+  2026-10-26).
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 4
+    testability: 5
+    overfit_resistance: 3
+  verdict: refine
+  reasons: >-
+    Plausible liquidity WHY and an easy test, but the evidence is old (1993-2006, 2005) and a recent independent
+    MNQ study found gap fades below costs. Worth a quick test only as a cheap check.
+  required_changes: Run as a low-priority quick screen; must report gross points per trade vs costs.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session, 2026-11-01)
+open_questions:
+- Is the gross edge per trade larger than ~$25-38 of costs on ES?
+- Does it only work on Mondays or after large overnight moves?

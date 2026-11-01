@@ -1,0 +1,96 @@
+id: third_friday_spike_es
+name: Third-Friday Expiry Spike (ES/NQ, long Thursday close → Friday open)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/the_derivative_payoff_bias_later_retitled_the_third_friday_p.md
+  papers:
+  - title: The Derivative Payoff Bias
+    authors:
+    - Guido Baltussen
+    - Julian Terstegge
+    - Paul Whelan
+    venue: working paper / AEA 2025
+    year: 2024
+finding: >-
+  Since 2003, S&P prices rise from the Thursday close into the 3rd-Friday morning settlement (+18.2 bps
+  to the SOQ, t = 4.5; futures overnight ~14 bps) and revert by midday (SPX open-to-close -16.4 bps).
+why: >-
+  Option dealers' charm hedging of expiring a.m.-settled options forces buying into the settlement; once
+  the settlement is set the pressure disappears and prices revert.
+what_would_kill_it: >-
+  Open interest moving to p.m.-settled/0DTE contracts, settlement changes, or front-running of the overnight
+  leg after publication.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: Thursday RTH close to Friday RTH close, America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12
+direction: long_short
+entry:
+  long: 'On the Thursday before each monthly 3rd-Friday expiration: buy at the close of the 16:00 ET bar.'
+  short: 'Variant leg: sell at the Friday 09:30 ET open (after the long is closed).'
+  filters:
+  - Monthly expirations only (3rd Friday); if the Friday is an exchange holiday, skip
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: >-
+    Long: sell at the open of the Friday 09:30 ET bar (proxy for the SOQ). Short leg: cover at 12:00 ET
+    (variant 16:00).
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing per handoff/VOLATILITY_SIZING.md
+parameters:
+- name: legs
+  default: long only
+  test_range: long only, long+short
+  source: paper
+- name: short_exit
+  default: 12:00 ET
+  test_range: 12:00, 16:00
+  source: paper (reversal complete by midday)
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - Report 2014-2020 vs 2021-2023
+  - Always-long and random-direction baselines
+  - 'Small sample (~12/yr): report the bootstrap CI and t-stat, not just totals'
+  - Quarterly (witching) vs other months; pre/post 2022
+data_requirements:
+- ES/NQ 1-min including the Thursday-night Globex session
+- Expiration calendar (3rd Fridays, holidays)
+data_available: 'yes'
+expectations:
+- Long leg ~10-15 bps per expiry before costs
+- Short leg weaker after 2022 (0DTE)
+variants:
+- long only; long + short (12:00); long + short (16:00) = 3 configs
+related_strategies: []
+notes:
+- ~120 trades on ES 2014-2023 — too few for a strong verdict alone; NQ as a second market helps.
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 5
+    testability: 4
+    overfit_resistance: 4
+  verdict: backtest
+  reasons: >-
+    Mechanism is specific (charm hedging into a fixed settlement), the rule is a single scheduled trade,
+    and the paper reports a post-cost edge; main risks are the small sample and post-publication crowding.
+  required_changes: >-
+    Use the 09:30 ES open as the SOQ proxy and state it; pre-register the 3 configs; report per-trade
+    bootstrap CI.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session, 2026-11-01)
+open_questions:
+- Is the ES 09:30 open a good enough proxy for the SOQ?
+- Has the spike shrunk since publication (2023) and since 0DTE (2022)?

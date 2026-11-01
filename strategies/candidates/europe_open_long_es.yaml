@@ -1,0 +1,111 @@
+id: europe_open_long_es
+name: European-Open Overnight Long (ES/NQ, conditioned on closing selloff)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/market_return_around_the_clock_a_puzzle.md
+  papers:
+  - title: 'Market Return Around the Clock: A Puzzle'
+    authors:
+    - Oleg Bondarenko
+    - Dmitriy Muravyev
+    venue: JFQA 58(3)
+    year: 2023
+  - title: The Overnight Drift
+    authors:
+    - Nina Boyarchenko
+    - Lars C. Larsen
+    - Paul Whelan
+    venue: RFS 36(9)
+    year: 2023
+  - title: The Disappearing Overnight Drift
+    authors:
+    - Nina Boyarchenko
+    - Lars C. Larsen
+    - Paul Whelan
+    venue: Liberty Street Economics / SSRN
+    year: 2026
+finding: >-
+  ES earned essentially all its average return in the European-open window (23:30-03:30 ET; Sharpe 1.67,
+  2004-2018), concentrated in 02:00-03:00 ET, larger after US selloffs — but the 2-3am drift has averaged
+  ~0 since 2021.
+why: >-
+  Dealers absorb closing sell imbalances and are paid to carry that inventory until European liquidity
+  arrives (Boyarchenko et al.); uncertainty built up in Asian hours resolves at the European open (Bondarenko
+  & Muravyev). The premium should be largest after selloffs/large closing imbalances — and vanish when
+  imbalances are small, which explains the post-2021 decay.
+what_would_kill_it: >-
+  Small closing imbalances (finer algo slicing) as documented for 2021-2025; crowding of overnight products.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: Globex overnight, America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12
+direction: long_only
+entry:
+  long: 'Buy at the open of the 23:30 ET bar (base window 23:30-03:30 ET). Variant: 02:00-03:00 ET only.'
+  short: null
+  filters:
+  - >-
+    Conditioned version: only after a down regular session (16:00 close below 09:30 open) — proxy for
+    a closing sell imbalance
+  - >-
+    Second conditioned version: only when the last 30 minutes (15:30-16:00) moved more than its 15-day
+    average absolute move (imbalance-size proxy)
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Sell at the close of the 03:29 ET bar (or 02:59 ET for the 02:00-03:00 variant).
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing per handoff/VOLATILITY_SIZING.md
+parameters:
+- name: window
+  default: 23:30-03:30 ET
+  test_range: 23:30-03:30, 02:00-03:00
+  source: papers
+- name: condition
+  default: none
+  test_range: none, down RTH day, large last-30-min move
+  source: Boyarchenko et al.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - Report 2014-2020 vs 2021-2023
+  - Always-long and random-direction baselines
+data_requirements:
+- ES/NQ 1-min including Globex hours
+data_available: 'yes'
+expectations:
+- Positive in 2014-2020, near zero in 2021-2023 unconditionally
+- Conditioned versions should hold up better post-2021 if the inventory WHY is right
+variants:
+- 2 windows × 3 conditions = 6 configs
+related_strategies:
+- overnight_drift
+notes:
+- 'Costs: one round trip per night — ~250 trades/year; average edge per trade must clear ~$25-38 on ES.'
+review:
+  scores:
+    why_strength: 4
+    persistence: 2
+    simplicity: 5
+    testability: 5
+    overfit_resistance: 4
+  verdict: backtest
+  reasons: >-
+    Clear, well-documented WHY with two competing mechanisms that make different, testable predictions;
+    trivially simple; the decay is documented, so the test is really whether the conditioned versions
+    survive post-2021.
+  required_changes: Pre-register the 6 configs; report pre/post 2021 separately; include costs per night.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session, 2026-11-01)
+open_questions:
+- Does conditioning on a down session or a large last-30-minute move restore the edge after 2021?
+- 'Which window matters on ES now: 23:30-03:30 or 02:00-03:00 ET?'
