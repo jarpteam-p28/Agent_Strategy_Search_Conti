@@ -1,0 +1,55 @@
+{
+  "title": "Intraday Trading Invariance in the E-mini S&P 500 Futures Market",
+  "authors": [
+    "Torben G. Andersen",
+    "Oleg Bondarenko",
+    "Albert S. Kyle",
+    "Anna A. Obizhaeva"
+  ],
+  "year": 2016,
+  "source_url": "https://www.kellogg.northwestern.edu/academics-research/research/detail/2016/intraday-trading-invariance-in-the-e-mini-sp-500/",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "In E-mini S&P futures (2008-2011) return variation per transaction is log-linearly related to trade size with slope −2, across the intraday pattern and across days — a microstructure regularity, not a trading signal.",
+  "findings": [
+    {
+      "statement": "Return variation per transaction vs trade size: log-linear slope −2.",
+      "evidence": "ES, Jan 2008-Nov 2011."
+    },
+    {
+      "statement": "Holds through the intraday pattern and across days.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Market microstructure invariance."
+  },
+  "setting": {
+    "markets": [
+      "CME"
+    ],
+    "instruments": [
+      "ES"
+    ],
+    "sample_period": "2008-2011",
+    "data_frequency": "transaction",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "Invariance slope −2.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy; useful for modelling slippage vs volume by time of day.",
+  "angles": [
+    "Possible slippage model input"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Not a signal."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

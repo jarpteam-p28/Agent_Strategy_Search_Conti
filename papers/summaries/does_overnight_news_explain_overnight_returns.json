@@ -1,0 +1,59 @@
+{
+  "title": "Does Overnight News Explain Overnight Returns?",
+  "authors": [
+    "Paul Glasserman",
+    "Kriste Krstovski",
+    "Paul Laliberte",
+    "Harry Mamaysky"
+  ],
+  "year": 2025,
+  "source_url": "https://arxiv.org/html/2507.04481v1",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "In S&P 500 stocks (2000-2022) overnight returns exceed intraday by ~2.75 bps/day (~7%/yr); news topics explain much of it — removing the stocks the news model selects makes the gap small and insignificant, out of sample 2011-2022.",
+  "findings": [
+    {
+      "statement": "Overnight minus intraday ≈ 2.75 bps/day (~7.2%/yr) since 2000.",
+      "evidence": "2.4m Reuters articles, 887 firms."
+    },
+    {
+      "statement": "Without the news-selected stocks the gap is small and insignificant (out of sample 2011-2022).",
+      "evidence": ""
+    },
+    {
+      "statement": "Topic exposures persistent (year-to-year ≈ 0.94).",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Information arrival: news released outside trading hours drives the overnight premium."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500 stocks"
+    ],
+    "sample_period": "1996-2022",
+    "data_frequency": "daily open/close",
+    "holding_period": "overnight vs intraday"
+  },
+  "reported_results": {
+    "headline": "News explains much of the overnight-intraday gap.",
+    "key_stats": []
+  },
+  "tradable_edge": "No index-futures strategy; supports the information-flow WHY behind the overnight specs (vs the inventory WHY).",
+  "angles": [
+    "None for ES/NQ"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Explanatory."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,61 @@
+{
+  "title": "Do S&P500 Options Increase Market Volatility? Evidence from 0DTEs",
+  "authors": [
+    "Greg Adams",
+    "Jean-Sébastien Fontaine",
+    "Chayawat Ornthanalai",
+    "Chukwuma Dim"
+  ],
+  "year": 2025,
+  "source_url": "https://quantpedia.com/do-sp500-0dtes-options-increase-market-volatility/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "0DTE options did not raise S&P 500 volatility — index volatility was ~60 bps (annualized) lower on 0DTE days; dealers are net LONG gamma on expiration days, which predicts lower 10-minute volatility and stronger short-term reversal in E-mini order flow.",
+  "findings": [
+    {
+      "statement": "Index volatility ≈ 60 bps annualized lower on days with 0DTE trading (before daily expiries, May 2022).",
+      "evidence": "Tue/Thu natural experiment."
+    },
+    {
+      "statement": "Each 1 bp rise in hedging needs ≈ 4 bp lower realized volatility.",
+      "evidence": "Two-stage estimate."
+    },
+    {
+      "statement": "Dealers net long gamma on expiration days; higher net gamma predicts lower volatility over ~10 minutes (fades within an hour), stronger E-mini order-flow reversals and negative high-frequency momentum.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics: long-gamma dealer hedging dampens moves and produces short-term reversal.",
+    "mechanism": "Dealers holding positive gamma sell into rallies and buy dips while hedging."
+  },
+  "setting": {
+    "markets": [
+      "S&P 500 options and E-mini futures"
+    ],
+    "instruments": [
+      "SPX 0DTE",
+      "ES"
+    ],
+    "sample_period": "to 2025",
+    "data_frequency": "intraday (minutes)",
+    "holding_period": "10-60 minutes"
+  },
+  "reported_results": {
+    "headline": "0DTE dampens volatility; long dealer gamma → short-term reversal.",
+    "key_stats": []
+  },
+  "tradable_edge": "Context: since 2022 the close and intraday may be more mean-reverting; every momentum spec must report pre/post 2022 separately.",
+  "angles": [
+    "Pre/post May 2022 split in all intraday momentum tests"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Structural observation."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

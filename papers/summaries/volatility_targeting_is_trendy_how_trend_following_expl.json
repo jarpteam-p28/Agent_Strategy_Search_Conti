@@ -1,0 +1,55 @@
+{
+  "title": "Volatility Targeting Is Trendy: How Trend Following Explains Alpha in Volatility-Managed Strategies",
+  "authors": [
+    "Benjamin Hood",
+    "Cameron Raughtigan"
+  ],
+  "year": 2024,
+  "source_url": "https://mrzepczynski.blogspot.com/2024/07/volatility-targetting-is-trend.html?m=1",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Volatility targeting beats buy-and-hold in equities mainly because of the leverage effect (prices fall when volatility rises); controlling for trend following removes about two-thirds of its alpha across 14 stock indices, and the effect is absent in bonds, commodities and FX.",
+  "findings": [
+    {
+      "statement": "Controlling for trend following cuts volatility-targeting alpha by about two-thirds (14 stock indices).",
+      "evidence": ""
+    },
+    {
+      "statement": "The leverage effect and trend link are equity-specific.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Volatility targeting in equities behaves like trend following (de-risks in falling, volatile markets).",
+    "mechanism": "Leverage effect."
+  },
+  "setting": {
+    "markets": [
+      "Equity indices"
+    ],
+    "instruments": [
+      "14 stock indices"
+    ],
+    "sample_period": "not stated",
+    "data_frequency": "daily",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "~2/3 of vol-targeting alpha is trend exposure.",
+    "key_stats": []
+  },
+  "tradable_edge": "For our VOLATILITY_SIZING view: expect smoother results and smaller drawdowns, not a new edge; on ES it partly duplicates trend exposure.",
+  "angles": [
+    "Compare vol-sized vs fixed size on every strategy (already in the sizing view)"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read via a blog summary.",
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

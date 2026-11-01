@@ -1,0 +1,66 @@
+{
+  "title": "Price Drift before U.S. Macroeconomic News: Private Information about Public Announcements?",
+  "authors": [
+    "Alexander Kurov",
+    "Alessio Sancetta",
+    "Georg Strasser",
+    "Marketa Halova Wolfe"
+  ],
+  "year": 2019,
+  "source_url": "https://www.skidmore.edu/economics/documents/KSSW2017-PriceDriftBeforeUSMacroeconomicNews.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "For 9 of 20 market-moving US releases (2008-2014), ES and Treasury futures start moving the 'right' way ~30 minutes before the release, about 40% of the total move on average — consistent with leakage or proprietary nowcasting.",
+  "findings": [
+    {
+      "statement": "Pre-release drift for 9 of 20 market-moving announcements, starting ~30 minutes before.",
+      "evidence": "Second-by-second ES and ZN, Jan 2008-Mar 2014."
+    },
+    {
+      "statement": "Drift ≈ 49% of the total move for stocks, 36% for bonds; significant for ES on pending home sales, ISM non-manufacturing, ISM manufacturing, existing home sales.",
+      "evidence": "S&P coefficients ≈ 0.05-0.10 (t ≈ 2.6-6.1)."
+    },
+    {
+      "statement": "Stronger for non-government releasers and pre-released/embargoed data.",
+      "evidence": ""
+    },
+    {
+      "statement": "Weaker or absent in 2003-2007.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Informed trading before public releases (leakage / superior proprietary forecasting).",
+    "mechanism": "Some traders know or predict the number and trade before release; prices drift toward the outcome."
+  },
+  "setting": {
+    "markets": [
+      "US futures"
+    ],
+    "instruments": [
+      "ES",
+      "ZN"
+    ],
+    "sample_period": "2008-2014",
+    "data_frequency": "second-level",
+    "holding_period": "30 minutes before release"
+  },
+  "reported_results": {
+    "headline": "Pre-release drift ≈ 40% of the total move for 9 of 20 releases.",
+    "key_stats": []
+  },
+  "tradable_edge": "Not directly tradable (the direction is the surprise, unknown in advance). Possible angle: trade WITH a strong 30-minute pre-release move into ISM/home-sales releases — speculative; also a warning to avoid entries just before those releases.",
+  "angles": [
+    "Event filter: avoid new entries 30 minutes before ISM / home-sales releases"
+  ],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Release procedures tightened after 2013 (pre-release lock-ups ended)."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Strategy would need second-level data and a release calendar.",
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

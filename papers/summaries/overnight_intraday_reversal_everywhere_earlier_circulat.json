@@ -1,0 +1,61 @@
+{
+  "title": "Overnight-Intraday Reversal Everywhere (Market Closure and Short-Term Reversal)",
+  "authors": [
+    "Pasquale Della Corte",
+    "Robert Kosowski",
+    "Tianyu Wang"
+  ],
+  "year": 2016,
+  "source_url": "https://www.cxoadvisory.com/technical-trading/overnightintraday-return-reversal-trading/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "A cross-sectional strategy buying overnight losers and selling overnight winners for the next day session earned huge gross returns in US stocks (1.68%/day gross, 1993-2014), much weaker in futures including index futures, and it depends on trading right at the open.",
+  "findings": [
+    {
+      "statement": "CO-OC reversal (overnight losers beat winners intraday): 1.68%/day gross, Sharpe 24 (US stocks).",
+      "evidence": "1993-2014; gross, ~100% daily turnover."
+    },
+    {
+      "statement": "Holds across futures asset classes including index futures, but much weaker.",
+      "evidence": "Futures 1982-2014."
+    },
+    {
+      "statement": "Most profit right after the open; a one-minute delay sharply reduces returns.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Liquidity provision: market closure concentrates order imbalances that reverse when trading resumes.",
+    "mechanism": "Overnight price pressure from imbalances reverses once liquidity returns at the open."
+  },
+  "setting": {
+    "markets": [
+      "US/global stocks",
+      "futures"
+    ],
+    "instruments": [
+      "stocks",
+      "index futures"
+    ],
+    "sample_period": "1982-2014",
+    "data_frequency": "daily open/close",
+    "holding_period": "open to close"
+  },
+  "reported_results": {
+    "headline": "Overnight-to-intraday reversal everywhere, strongest in stocks.",
+    "key_stats": []
+  },
+  "tradable_edge": "Supports overnight_reversal_first_hour_es; the cross-sectional stock version needs stock data we don't have.",
+  "angles": [
+    "Single-instrument version on ES/NQ = existing spec"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Gross results; extremely sensitive to execution speed and costs."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

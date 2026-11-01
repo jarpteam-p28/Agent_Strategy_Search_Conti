@@ -1,0 +1,57 @@
+{
+  "title": "Does Academic Research Destroy Stock Return Predictability?",
+  "authors": [
+    "R. David McLean",
+    "Jeffrey Pontiff"
+  ],
+  "year": 2016,
+  "source_url": "https://www.cxoadvisory.com/big-ideas/effects-of-market-adaptation",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Across 97 published return predictors, returns were ~26% lower out of sample before publication and ~58% lower after publication; about 32% of the decline is due to publication itself, peaking 3-4 years later.",
+  "findings": [
+    {
+      "statement": "In-sample 0.58%/month; out-of-sample pre-publication 0.40% (−26%); post-publication 0.26% (−58%).",
+      "evidence": "97 predictors, to 2013."
+    },
+    {
+      "statement": "~32% decline attributable to publication; largest 3-4 years after.",
+      "evidence": ""
+    },
+    {
+      "statement": "Bigger decay for stronger in-sample results and price/volume-only signals.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Market adaptation: publication attracts arbitrage capital."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "97 anomalies"
+    ],
+    "sample_period": "1926-2013",
+    "data_frequency": "monthly",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "Expect less than half of published returns.",
+    "key_stats": []
+  },
+  "tradable_edge": "A rule for every spec: assume about half of the paper's reported edge, less after costs; price/volume signals decay most.",
+  "angles": [
+    "Haircut published numbers by ~50% when setting expectations"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

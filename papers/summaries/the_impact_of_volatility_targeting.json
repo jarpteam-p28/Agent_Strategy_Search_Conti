@@ -1,0 +1,61 @@
+{
+  "title": "The Impact of Volatility Targeting",
+  "authors": [
+    "Campbell R. Harvey",
+    "Edward Hoyle",
+    "Russell Korgaonkar",
+    "Sandy Rattray",
+    "Matthew Sargaison",
+    "Otto Van Hemert"
+  ],
+  "year": 2018,
+  "source_url": "https://www.cxoadvisory.com/equity-premium/benefits-of-volatility-targeting-across-asset-classes",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Across 60+ assets, volatility targeting raised Sharpe ratios mainly for equities and equity index futures (US stocks 0.40 → 0.48-0.51) and consistently reduced crash risk across nearly all assets.",
+  "findings": [
+    {
+      "statement": "US equities: Sharpe 0.40 → 0.48-0.51 with volatility scaling (10% target).",
+      "evidence": "Since 1927."
+    },
+    {
+      "statement": "Sharpe improved only for equity index futures among futures; crash risk fell for nearly all.",
+      "evidence": "Futures since 1988."
+    },
+    {
+      "statement": "Scaling truncates both tails.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Leverage effect in equities; volatility clustering lets you forecast risk."
+  },
+  "setting": {
+    "markets": [
+      "multi-asset"
+    ],
+    "instruments": [
+      "60+ assets"
+    ],
+    "sample_period": "1927-2017",
+    "data_frequency": "daily (5-min tested)",
+    "holding_period": "daily rebalance"
+  },
+  "reported_results": {
+    "headline": "Selective Sharpe gains, consistent crash-risk reduction.",
+    "key_stats": []
+  },
+  "tradable_edge": "Supports the volatility sizing view for ES/NQ.",
+  "angles": [
+    "Already in the sizing view"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

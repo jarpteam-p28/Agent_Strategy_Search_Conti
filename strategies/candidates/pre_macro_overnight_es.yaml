@@ -1,0 +1,96 @@
+id: pre_macro_overnight_es
+name: Pre-Announcement Overnight Long before NFP / ISM / GDP (ES/NQ)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/premium_for_heightened_uncertainty_explaining_pre_annou.md
+  papers:
+  - title: 'Premium for Heightened Uncertainty: Explaining Pre-Announcement Market Returns'
+    authors:
+    - Grace Xing Hu
+    - Jun Pan
+    - Jiang Wang
+    - Haoxiang Zhu
+    venue: JFE 145(3)
+    year: 2022
+finding: >-
+  Market returns are large overnight before nonfarm payrolls, ISM and GDP releases, with no abnormal variance
+  — a premium for 'impact uncertainty' that builds before the release and resolves just before it.
+why: >-
+  Uncertainty about how much the release will move markets builds overnight; holders are paid a premium
+  that is realised as that uncertainty resolves before the number.
+what_would_kill_it: Low uncertainty regimes (as with the pre-FOMC drift after 2015); crowding.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: Overnight before release, America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12
+direction: long_only
+entry:
+  long: >-
+    Buy at the 16:00 ET close on the trading day before an NFP (08:30), ISM Manufacturing (10:00) or GDP
+    advance (08:30) release.
+  short: null
+  filters:
+  - Release calendar from official sources (BLS, ISM, BEA)
+  - 'Variant: only when AvgRange is above its 250-day median'
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Sell 1 minute before the release (08:29 ET for NFP/GDP, 09:59 ET for ISM).
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: releases
+  default: NFP+ISM+GDP
+  test_range: each separately, all
+  source: paper
+- name: uncertainty_filter
+  default: 'off'
+  test_range: off, on
+  source: analogy to Kurov et al. 2021
+open_questions:
+- Which release carries the premium on ES since 2014?
+- Is the always-long overnight baseline (every night 16:00 → 08:29) just as good?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - Always-long and random-direction baselines
+  - Bootstrap CI per event (small samples)
+  - 'Required baseline: the same overnight window on non-release days'
+data_requirements:
+- ES/NQ 1-min with Globex hours
+- NFP/ISM/GDP release dates 2014-2023
+data_available: partial
+expectations:
+- Small positive premium vs non-release nights; may have faded like the FOMC drift
+variants:
+- 3 releases × filter off/on, plus 'all' = 8 configs
+related_strategies:
+- pre_fomc_drift_uncertainty_es
+- europe_open_long_es
+notes:
+- '~36 events a year; release dates are public but must be collected (data_available: partial).'
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 5
+    testability: 4
+    overfit_resistance: 3
+  verdict: backtest
+  reasons: >-
+    Clear uncertainty-premium WHY with JFE evidence; simple scheduled trade; must beat the plain overnight
+    baseline because overnight returns are positive anyway.
+  required_changes: >-
+    Pre-register the 8 configs and the non-release-night baseline; build the release calendar from official
+    sources.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 2, 2026-11-01)

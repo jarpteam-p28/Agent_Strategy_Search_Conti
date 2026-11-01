@@ -87,3 +87,8 @@
 ## 2026-11-01 — cost hurdle from the MNQ falsification study (Mesfin 2026)
 - 14 families of 5-minute single-bar OHLCV signals on MNQ (2021-2025) all failed walk-forward with 2-point round-trip friction; most had gross edges of 0.07-1.5 points per trade.
 - Rule for our NQ tests: report gross points per trade vs costs; prefer holds of 60+ minutes; demand net t ≥ 2 and the same sign in every out-of-sample year.
+
+## 2026-11-01 — expectations and regimes (manual session 2)
+- McLean & Pontiff (2016): published edges shrink ~26% out of sample and ~58% after publication. Plan on about half the paper's number, less after costs.
+- Rosa (2022), Adams et al. (0DTE, 2025): intraday momentum is regime- and signal-strength-dependent; dealers have been net long gamma on expiry days since 0DTE. Report every intraday momentum test pre/post 2022 and by signal strength.
+- Scheduled-event drifts (pre-FOMC, pre-NFP/ISM/GDP) scale with uncertainty; test them conditioned on volatility, not unconditionally.

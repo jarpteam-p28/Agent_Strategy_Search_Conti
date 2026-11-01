@@ -1,0 +1,53 @@
+{
+  "title": "Understanding Intraday Momentum Strategies",
+  "authors": [
+    "C. Rosa"
+  ],
+  "year": 2022,
+  "source_url": "https://ideas.repec.org/a/wly/jfutmk/v42y2022i12p2218-2234.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Intraday momentum predictability disappears in the out-of-sample period; a Markov-switching model finds two regimes, and predictability depends on signal strength — calendar-time tests can mislead when anomalies have time-varying returns.",
+  "findings": [
+    {
+      "statement": "Predictability disappears out of sample.",
+      "evidence": "Journal of Futures Markets 42(12), 2022."
+    },
+    {
+      "statement": "Two regimes; predictability depends on the strength of the signal.",
+      "evidence": "Markov-switching model."
+    }
+  ],
+  "why": {
+    "pattern": "Regime-dependent momentum (works in strong-signal / volatile regimes)."
+  },
+  "setting": {
+    "markets": [
+      "futures (journal)"
+    ],
+    "instruments": [
+      "not stated"
+    ],
+    "sample_period": "not stated",
+    "data_frequency": "intraday",
+    "holding_period": "last half hour"
+  },
+  "reported_results": {
+    "headline": "Intraday momentum gone out of sample, except in strong-signal regimes.",
+    "key_stats": []
+  },
+  "tradable_edge": "Warning for noise_area_last_half_hour_es and Dual Noise Zone: test strength-dependence (dose-response by band distance) and regimes, not just the unconditional average.",
+  "angles": [
+    "Dose-response by signal strength",
+    "Volatility-regime split"
+  ],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Out-of-sample failure reported."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,59 @@
+{
+  "title": "Gamma Fragility",
+  "authors": [
+    "Andrea Barbon",
+    "Andrea Buraschi"
+  ],
+  "year": 2021,
+  "source_url": "https://abarbon.com/papers/gamma-fragility",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Across a large panel of equity options, dealers' aggregate gamma imbalance shapes intraday returns: negative gamma → intraday momentum, positive gamma → intraday reversal, both stronger when the underlying is illiquid; gamma imbalance also relates to flash crashes.",
+  "findings": [
+    {
+      "statement": "Negative ex-ante dealer gamma → intraday momentum; positive → intraday reversal.",
+      "evidence": "Delta-hedging feedback."
+    },
+    {
+      "statement": "Effects stronger with higher illiquidity; strongest in the least liquid stocks.",
+      "evidence": ""
+    },
+    {
+      "statement": "Gamma imbalance linked to frequency and size of flash crashes.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics: dealers' delta hedging amplifies (short gamma) or dampens (long gamma) price moves.",
+    "mechanism": "Short-gamma dealers buy rallies and sell drops; long-gamma dealers do the opposite."
+  },
+  "setting": {
+    "markets": [
+      "US equity options"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "to 2021",
+    "data_frequency": "intraday",
+    "holding_period": "intraday"
+  },
+  "reported_results": {
+    "headline": "Gamma sign decides momentum vs reversal.",
+    "key_stats": []
+  },
+  "tradable_edge": "A regime switch for our momentum strategies: favour Noise Area / last-30-minute momentum when dealers are short gamma (proxy: after market drops / high volatility), and expect reversals when long gamma (quiet, rising markets).",
+  "angles": [
+    "Gamma proxy (prior-day return < 0 or AvgRange above median) as a filter on momentum specs"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "0DTE changed dealer positioning after 2022."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Abstract only; we have no dealer-gamma data, only proxies.",
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

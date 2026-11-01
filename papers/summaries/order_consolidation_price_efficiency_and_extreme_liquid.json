@@ -1,0 +1,55 @@
+{
+  "title": "Order Consolidation, Price Efficiency, and Extreme Liquidity Shocks",
+  "authors": [
+    "Michael J. Barclay",
+    "Terrence Hendershott",
+    "Charles M. Jones"
+  ],
+  "year": 2008,
+  "source_url": "https://ideas.repec.org/a/cup/jfinqa/v43y2008i01p93-121_00.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "On quarterly S&P 500 futures expirations, index arbitrage sends large, predictable, mostly informationless order flow into S&P 500 stocks; the NYSE's consolidated opening handled it far more efficiently than Nasdaq (before its 2004 opening cross).",
+  "findings": [
+    {
+      "statement": "Index-arbitrage unwinds at quarterly expirations create large, predictable, informationless order flow.",
+      "evidence": "JFQA 43(1), 2008."
+    },
+    {
+      "statement": "Consolidated opening auctions price it more efficiently.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics at expiration (settlement-related order flow).",
+    "mechanism": "Arbitrageurs unwind at the settlement print; consolidated auctions absorb it."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500 stocks"
+    ],
+    "sample_period": "pre/post Nov 2004",
+    "data_frequency": "intraday",
+    "holding_period": "expiration open"
+  },
+  "reported_results": {
+    "headline": "Witching-day order flow is large and predictable.",
+    "key_stats": []
+  },
+  "tradable_edge": "Context for third_friday_spike_es: expiration-day flows are predictable; report quarterly (witching) expirations separately.",
+  "angles": [
+    "Quarterly vs monthly expirations in the third-Friday test"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Market-structure description."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

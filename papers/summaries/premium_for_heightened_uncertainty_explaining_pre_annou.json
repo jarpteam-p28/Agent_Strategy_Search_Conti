@@ -1,0 +1,61 @@
+{
+  "title": "Premium for Heightened Uncertainty: Explaining Pre-Announcement Market Returns",
+  "authors": [
+    "Grace Xing Hu",
+    "Jun Pan",
+    "Jiang Wang",
+    "Haoxiang Zhu"
+  ],
+  "year": 2022,
+  "source_url": "https://www.nber.org/papers/w25817",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Large overnight market returns occur before nonfarm payrolls, ISM and GDP releases, similar to pre-FOMC returns and with no abnormal variance; they reflect the build-up and resolution of 'impact uncertainty' measured by VIX.",
+  "findings": [
+    {
+      "statement": "Large overnight returns before NFP, ISM and GDP announcements, similar to pre-FOMC.",
+      "evidence": "JFE 145(3), 2022."
+    },
+    {
+      "statement": "No abnormal variance in those windows.",
+      "evidence": ""
+    },
+    {
+      "statement": "Returns tied to VIX build-up before and drop at the announcement (impact uncertainty).",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Risk premium for heightened uncertainty about how much the news will move markets.",
+    "mechanism": "Uncertainty builds before scheduled news, investors demand a premium, it resolves just before the release."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500 / E-mini"
+    ],
+    "sample_period": "not stated in abstract",
+    "data_frequency": "intraday/overnight",
+    "holding_period": "overnight before release"
+  },
+  "reported_results": {
+    "headline": "Positive pre-announcement overnight returns before NFP/ISM/GDP.",
+    "key_stats": []
+  },
+  "tradable_edge": "Long ES overnight (16:00 close → 08:30/10:00 ET release) before NFP, ISM and GDP release days; stronger when uncertainty is high.",
+  "angles": [
+    "Overnight long before NFP/ISM/GDP; condition on high pre-release volatility"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Published 2022; related FOMC drift faded with low VIX."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Abstract only; needs a macro release calendar (NFP first Friday, ISM 1st business day, GDP advance).",
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

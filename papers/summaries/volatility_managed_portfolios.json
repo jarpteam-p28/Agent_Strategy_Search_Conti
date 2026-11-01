@@ -1,0 +1,54 @@
+{
+  "title": "Volatility-Managed Portfolios",
+  "authors": [
+    "Alan Moreira",
+    "Tyler Muir"
+  ],
+  "year": 2017,
+  "source_url": "https://www.nber.org/papers/22208",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Scaling factor exposure down when recent volatility is high (and up when low) produces large alphas and higher Sharpe ratios for the market, value, momentum and other factors, because volatility changes are not matched by changes in expected returns.",
+  "findings": [
+    {
+      "statement": "Volatility-managed versions of market, value, momentum, profitability, ROE, investment and carry factors produce large alphas and higher Sharpe ratios.",
+      "evidence": "Journal of Finance 72(4), 2017."
+    },
+    {
+      "statement": "Takes less risk in recessions/crises yet keeps high average returns.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Volatility doesn't predict returns proportionally, so risk-scaling raises Sharpe."
+  },
+  "setting": {
+    "markets": [
+      "US equities",
+      "FX carry"
+    ],
+    "instruments": [
+      "factor portfolios"
+    ],
+    "sample_period": "long history",
+    "data_frequency": "monthly",
+    "holding_period": "monthly rebalance"
+  },
+  "reported_results": {
+    "headline": "Large alphas from inverse-variance scaling.",
+    "key_stats": []
+  },
+  "tradable_edge": "The academic basis Conti cites for volatility sizing — already applied as the sizing view (VOLATILITY_SIZING.md).",
+  "angles": [
+    "Already in the sizing view"
+  ],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Widely replicated; later work debates out-of-sample gains."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

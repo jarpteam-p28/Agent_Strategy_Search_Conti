@@ -1,0 +1,95 @@
+id: pre_fomc_drift_uncertainty_es
+name: Pre-FOMC Drift, high-uncertainty meetings only (ES/NQ, long only)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/the_disappearing_pre_fomc_announcement_drift.md
+  papers:
+  - title: The Pre-FOMC Announcement Drift
+    authors:
+    - David O. Lucca
+    - Emanuel Moench
+    venue: Journal of Finance 70(1)
+    year: 2015
+  - title: The Disappearing Pre-FOMC Announcement Drift
+    authors:
+    - Alexander Kurov
+    - Marketa Halova Wolfe
+    - Thomas Gilbert
+    venue: Finance Research Letters 40
+    year: 2021
+finding: >-
+  S&P rose ~49 bps in the 24h before FOMC decisions (1994-2011, Sharpe ~1.1), but the drift fell to ~0.09%
+  in 2016-2019; the decline is explained by lower VIX — it remains where pre-meeting uncertainty is high.
+why: >-
+  Investors demand a premium for carrying policy uncertainty into the decision; when uncertainty (VIX)
+  is high the premium is paid in the run-up, when it is low there is little to pay.
+what_would_kill_it: Persistently low uncertainty, or Fed communication removing surprise; publication
+  crowding.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: America/New_York
+  universe: ES 2014-2023 (≈80 meetings), NQ 2021-07-2023-12
+direction: long_only
+entry:
+  long: Buy at 14:00 ET on the trading day before each scheduled FOMC decision day.
+  short: null
+  filters:
+  - >-
+    Uncertainty filter: 15-session AvgRange (Conti) on the entry day above its trailing 250-day median
+    (VIX proxy)
+  - Unfiltered version reported as the baseline
+  - Official FOMC calendar; skip unscheduled meetings
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Sell at 13:45 ET on decision day (15 minutes before the 14:00 statement).
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing (handoff/VOLATILITY_SIZING.md)
+parameters:
+- name: uncertainty_filter
+  default: AvgRange > 250-day median
+  test_range: off, on
+  source: Kurov et al. 2021
+open_questions:
+- Is AvgRange a good enough stand-in for VIX here?
+- Does the drift reappear in 2020-2023 (higher uncertainty)?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - Always-long and random-direction baselines
+  - Bootstrap CI per event (small samples)
+data_requirements:
+- ES/NQ 1-min
+- FOMC decision dates 2014-2023
+data_available: 'yes'
+expectations:
+- Unfiltered ≈ 0 after 2015; filtered positive if the uncertainty WHY holds
+variants:
+- filter off / on = 2 configs
+related_strategies:
+- pre_macro_overnight_es
+notes:
+- 'Only 8 meetings a year: ~80 trades in 2014-2023; treat any result as low-confidence.'
+review:
+  scores:
+    why_strength: 4
+    persistence: 2
+    simplicity: 5
+    testability: 4
+    overfit_resistance: 4
+  verdict: backtest
+  reasons: >-
+    Well-documented drift with a documented decay AND a documented reason (uncertainty) that gives a testable
+    condition; trivial rule; tiny sample.
+  required_changes: Pre-register both configs; report per-meeting bootstrap CI; use official FOMC dates.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 2, 2026-11-01)

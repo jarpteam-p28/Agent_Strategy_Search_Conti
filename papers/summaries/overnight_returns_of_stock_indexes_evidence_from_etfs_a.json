@@ -1,0 +1,60 @@
+{
+  "title": "Overnight Returns of Stock Indexes: Evidence from ETFs and Futures",
+  "authors": [
+    "Qingfu Liu",
+    "Yiuman Tse"
+  ],
+  "year": 2017,
+  "source_url": "https://ideas.repec.org/a/eee/reveco/v48y2017icp440-451.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "In US index ETFs and most international index futures (1999-2014), overnight returns are positive and daytime returns negative; the overnight return predicts the first half hour NEGATIVELY and the last half hour POSITIVELY, in and out of sample.",
+  "findings": [
+    {
+      "statement": "Overnight returns significantly positive, trading-hours returns negative; overnight volatility lower.",
+      "evidence": "US ETFs and most international index futures, 1999-2014 (IREF 48)."
+    },
+    {
+      "statement": "Overnight return predicts the first-half-hour return negatively (open reversal) and the last-half-hour return positively.",
+      "evidence": "In-sample and out-of-sample; no magnitudes in the abstract."
+    },
+    {
+      "statement": "Not consistent with the usual risk-return tradeoff; trading hours carry most of the risk.",
+      "evidence": "Copula VaR/ES."
+    }
+  ],
+  "why": {
+    "pattern": "Liquidity provision / inventory: overnight moves partly reverse at the open, then the day's direction carries into the close.",
+    "mechanism": "Market makers unwind overnight inventory at the open (reversal); close-related flows follow the day (last half-hour continuation)."
+  },
+  "setting": {
+    "markets": [
+      "US ETFs",
+      "international index futures"
+    ],
+    "instruments": [
+      "SPY and sector ETFs",
+      "index futures"
+    ],
+    "sample_period": "1999-2014",
+    "data_frequency": "intraday (half-hour)",
+    "holding_period": "first and last 30 minutes"
+  },
+  "reported_results": {
+    "headline": "Overnight return → first 30 min (−), last 30 min (+).",
+    "key_stats": []
+  },
+  "tradable_edge": "Supports two specs already on file: overnight_reversal_first_hour_es (fade the overnight move early) and noise_area_last_half_hour_es (last-30-minute continuation).",
+  "angles": [
+    "Use the overnight return as an extra predictor/filter in both specs"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Sample ends 2014; our ES 2015-2023 is out-of-sample."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

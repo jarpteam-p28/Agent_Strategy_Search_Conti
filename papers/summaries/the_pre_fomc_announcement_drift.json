@@ -1,0 +1,72 @@
+{
+  "title": "The Pre-FOMC Announcement Drift",
+  "authors": [
+    "David O. Lucca",
+    "Emanuel Moench"
+  ],
+  "year": 2015,
+  "source_url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr512.html",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "The S&P 500 rose ~49 bps on average in the 24 hours before scheduled FOMC announcements (t > 4.5); since 1994 these windows earned ~80% of annual excess stock returns; holding the index only then had a Sharpe of ~1.1.",
+  "findings": [
+    {
+      "statement": "Average 49 bps in the 2pm-to-2pm window ending 15 minutes before the announcement.",
+      "evidence": "t > 4.5; other 2pm-to-2pm windows < 0.5 bps."
+    },
+    {
+      "statement": "Since 1994 about 80% of realized annual excess returns came in pre-FOMC windows (3.89%/yr vs 0.88% on other days).",
+      "evidence": "Jan 1980-Mar 2011: about half."
+    },
+    {
+      "statement": "No reversal afterwards; just-before-announcement to close ≈ 0.",
+      "evidence": ""
+    },
+    {
+      "statement": "Holding only in the window: Sharpe ~1.14 post-1994, 0.92 for 1980-2011.",
+      "evidence": ""
+    },
+    {
+      "statement": "European indices show 29-52 bps pre-FOMC returns; Nikkei none; nothing before other central banks.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Unexplained premium ahead of US monetary-policy news (risk reallocation / inattention partly).",
+    "mechanism": "Authors find no single adequate explanation; volatility and liquidity declines explain only part."
+  },
+  "setting": {
+    "markets": [
+      "US equities",
+      "global indices"
+    ],
+    "instruments": [
+      "S&P 500",
+      "ES"
+    ],
+    "sample_period": "1980-2011 (strongest 1994-2011)",
+    "data_frequency": "intraday",
+    "holding_period": "24 hours before FOMC"
+  },
+  "reported_results": {
+    "headline": "≈49 bps in 24h before FOMC; ~80% of excess returns since 1994.",
+    "key_stats": [
+      "Sharpe ~1.14 (1994-2011)"
+    ]
+  },
+  "tradable_edge": "Long ES from 14:00 ET the day before a scheduled FOMC decision to 13:45 ET on decision day — but see Kurov et al. (2021): gone after 2015 except when uncertainty (VIX) is high.",
+  "angles": [
+    "Condition on high volatility (AvgRange or VIX proxy) before the meeting",
+    "Press-conference meetings only"
+  ],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Kurov, Wolfe & Gilbert (2021) show it disappeared for 2016-2019."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "FOMC calendar needed (official dates).",
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

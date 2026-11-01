@@ -1,0 +1,94 @@
+id: month_end_rebalance_pressure_es
+name: Month-End Rebalancing Pressure, signed by month-to-date stock vs bond performance (ES)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/the_unintended_consequences_of_rebalancing.md
+  papers:
+  - title: The Unintended Consequences of Rebalancing
+    authors:
+    - Campbell R. Harvey
+    - Michele G. Mazzoleni
+    - Alessandro Melone
+    venue: SSRN 5122748 / NBER w33554
+    year: 2026
+finding: >-
+  Calendar rebalancing by 60/40-type funds pushes equities down in the last ~4 trading days of a month
+  after stocks outperformed bonds (and up after underperformance); 1 SD of the signal ≈ −17 bps next-day
+  equity return; an ES/ZN front-running strategy earned Sharpe ~1.1 (1997-2023), reversing within ~6 days.
+why: >-
+  Balanced funds must restore fixed weights at month end; after equities outperform, they sell equities/buy
+  bonds in the last days of the month at predictable times, pushing ES down temporarily.
+what_would_kill_it: >-
+  Funds randomising or spreading rebalancing dates; shrinking balanced-fund AUM; crowding after publication.
+market:
+  instruments:
+  - ES
+  bar_size: 1min (daily closes)
+  session: RTH closes 16:00 ET
+  universe: ES 2014-2023
+direction: long_short
+entry:
+  long: >-
+    At the close of T-4 (T = last trading day): if month-to-date ES return minus bond return is in the
+    bottom third of its history (stocks lagged), buy ES.
+  short: If it is in the top third (stocks led), sell ES.
+  filters:
+  - >-
+    Bond return: ZN futures if added to the data; otherwise a proxy (e.g. TLT daily closes) — record which
+  - Thresholds from 2014-2018 only
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: 'Close at the 16:00 ET close of T (month end). Variant: hold to T+2 (reversal window).'
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: exit
+  default: T
+  test_range: T, T+2
+  source: paper
+open_questions:
+- Can a bond proxy stand in for ZN?
+- >-
+  How does this interact with month_end_cash_cycle_es (long into month end)? Opposite signs after strong
+  equity months.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development 2014-2023 only; 2024+ protected
+  - Always-long and random-direction baselines
+  - Bootstrap CI per event (small samples)
+  - Compare with month_end_cash_cycle_es on the same months
+data_requirements:
+- ES daily closes
+- 10-year Treasury futures or proxy (not in inventory)
+data_available: partial
+expectations:
+- Short after strong equity months should earn; long after weak months too
+variants:
+- exit T vs T+2 = 2 configs
+related_strategies:
+- month_end_cash_cycle_es
+- month_end_rebalance_es
+notes:
+- Needs bond data; ask Pablo whether to add ZN 1-min or a daily bond series.
+review:
+  scores:
+    why_strength: 5
+    persistence: 3
+    simplicity: 4
+    testability: 3
+    overfit_resistance: 4
+  verdict: backtest
+  reasons: >-
+    One of the strongest recent mechanisms (forced, calendar-timed flow, $16bn/yr cost), with a Sharpe
+    ~1.1 futures implementation; only blocker is the missing bond series.
+  required_changes: Add a bond series first; pre-register both configs; run alongside the Dash-for-Cash
+    spec.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 2, 2026-11-01)

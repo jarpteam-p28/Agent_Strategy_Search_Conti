@@ -1,4 +1,13 @@
 {
+  "a_profitable_day_trading_strategy_for_the_u_s_equity_ma": {
+    "title": "A Profitable Day Trading Strategy For The U.S. Equity Market",
+    "status": "summarized",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/a_profitable_day_trading_strategy_for_the_u_s_equity_ma.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Stocks only; ES relative-volume ORB filter idea."
+  },
   "a_profitable_day_trading_strategy_for_the_u_s_equity_market": {
     "title": "A Profitable Day Trading Strategy For The U.S. Equity Market",
     "authors": [
@@ -312,9 +321,10 @@
     "testable_on_our_data": "yes",
     "priority": 1,
     "origin": "librarian",
-    "status": "queued",
+    "status": "duplicate",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "note": "Duplicate of a paper already summarized under another slug (marked 2026-11-01)."
   },
   "can_day_trading_really_be_profitable_evidence_of_sustainable": {
     "title": "Can Day Trading Really Be Profitable? Evidence of sustainable long-term profits from opening range breakout (ORB) day trading strategy vs. benchmark in the US stock market",
@@ -447,6 +457,15 @@
     "attempts": 0,
     "added": "2026-10-20"
   },
+  "do_s_p500_options_increase_market_volatility_evidence_f": {
+    "title": "Do S&P500 Options Increase Market Volatility? Evidence from 0DTEs",
+    "status": "summarized",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/do_s_p500_options_increase_market_volatility_evidence_f.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Context: report pre/post 2022 for momentum specs."
+  },
   "do_s_p500_options_increase_market_volatility_evidence_from_0": {
     "title": "Do S&P500 Options Increase Market Volatility? Evidence from 0DTEs",
     "authors": [
@@ -476,6 +495,15 @@
     "status": "queued",
     "attempts": 0,
     "added": "2026-10-20"
+  },
+  "does_academic_research_destroy_stock_return_predictabil": {
+    "title": "Does Academic Research Destroy Stock Return Predictability?",
+    "status": "summarized",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/does_academic_research_destroy_stock_return_predictabil.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Methodology: haircut published edges ~50%."
   },
   "does_academic_research_destroy_stock_return_predictability": {
     "title": "Does Academic Research Destroy Stock Return Predictability?",
@@ -519,9 +547,14 @@
     "testable_on_our_data": "partial",
     "priority": 3,
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/does_overnight_news_explain_overnight_returns.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Explanatory; no ES/NQ strategy."
   },
   "does_overnight_return_predict_the_first_half_hour_return_for": {
     "title": "Does overnight return predict the first half-hour return for U.S. market indices?",
@@ -679,9 +712,14 @@
     "why_promising": "Finding: intraday momentum shows up when dealers are net short gamma, and reversal when they are net long gamma. The effect is stronger when the underlying is less liquid. WHY (execution mechanics of big players / forced hedgers): option market makers must delta-hedge mechanically. Short-gamma dealers trade with the move and long-gamma dealers trade against it. The edge weakens if dealer positioning becomes less concentrated or if more non-dealer liquidity absorbs the hedging flow. This is the academic root of the gamma-exposure study on our desk (note 04). Useful for deciding when to apply continuation versus reversion rules on ES and NQ. The Baltussen et al. paper on hedging demand is already known, so this adds the intraday autocorrelation side and the stock-level evidence.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-22"
+    "added": "2026-10-22",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/gamma_fragility.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Regime filter idea for momentum specs (no gamma data)."
   },
   "hedging_demand_and_market_intraday_momentum": {
     "title": "Hedging Demand and Market Intraday Momentum",
@@ -862,9 +900,14 @@
     "why_promising": "Finding: a stock's return in a given half hour predicts its return in the same half hour on following days, for about two months. WHY (Conti pattern 'liquidity constraints on large orders / execution mechanics'): big funds split a parent order over many days and trade at similar times of day, so flow is persistent and predictable. What would kill it: faster, randomized execution algorithms (VWAP/TWAP with randomization, dark pools), and lower trading costs. Decay risk: published 2010, and algorithmic execution has changed a lot since, so the out-of-sample half matters. Angle: apply to ES/NQ time-of-day returns, plus use it as a timing guide for entries.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/intraday_patterns_in_the_cross_section_of_stock_returns.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Basis/cost warning for same_slot_seasonality_es."
   },
   "intraday_price_reversals_in_the_us_stock_index_futures_marke": {
     "title": "Intraday Price Reversals in the US Stock Index Futures Market: A 15-Year Study",
@@ -895,6 +938,15 @@
     "attempts": 0,
     "added": "2026-10-26",
     "note_manual_2026_11_01": "Full text/abstract not reachable from the chat session (paywall or site block); left queued."
+  },
+  "intraday_trading_invariance_in_the_e_mini_s_p_500_futur": {
+    "title": "Intraday Trading Invariance in the E-mini S&P 500 Futures Market",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/intraday_trading_invariance_in_the_e_mini_s_p_500_futur.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Microstructure; no strategy."
   },
   "intraday_trading_invariance_in_the_e_mini_s_p_500_futures_ma": {
     "title": "Intraday Trading Invariance in the E-mini S&P 500 Futures Market",
@@ -1141,6 +1193,15 @@
     "added": "2026-10-20",
     "note_manual_2026_11_01": "Full text/abstract not reachable from the chat session (paywall or site block); left queued."
   },
+  "order_consolidation_price_efficiency_and_extreme_liquid": {
+    "title": "Order Consolidation, Price Efficiency, and Extreme Liquidity Shocks",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/order_consolidation_price_efficiency_and_extreme_liquid.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Context for third_friday_spike_es."
+  },
   "order_consolidation_price_efficiency_and_extreme_liquidity_s": {
     "title": "Order Consolidation, Price Efficiency, and Extreme Liquidity Shocks (S&P 500 futures quarterly expiration / witching days)",
     "authors": [
@@ -1167,6 +1228,15 @@
     "status": "queued",
     "attempts": 0,
     "added": "2026-10-22"
+  },
+  "overnight_intraday_reversal_everywhere_earlier_circulat": {
+    "title": "Overnight-Intraday Reversal Everywhere (Market Closure and Short-Term Reversal)",
+    "status": "summarized",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/overnight_intraday_reversal_everywhere_earlier_circulat.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Supports overnight_reversal_first_hour_es."
   },
   "overnight_intraday_reversal_everywhere_earlier_circulated_as": {
     "title": "Overnight-Intraday Reversal Everywhere (earlier circulated as 'Market Closure and Short-Term Reversal')",
@@ -1196,6 +1266,15 @@
     "status": "queued",
     "attempts": 0,
     "added": "2026-10-22"
+  },
+  "overnight_returns_of_stock_indexes_evidence_from_etfs_a": {
+    "title": "Overnight Returns of Stock Indexes: Evidence from ETFs and Futures",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/overnight_returns_of_stock_indexes_evidence_from_etfs_a.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Supports overnight_reversal_first_hour_es and noise_area_last_half_hour_es."
   },
   "overnight_returns_of_stock_indexes_evidence_from_etfs_and_fu": {
     "title": "Overnight Returns of Stock Indexes: Evidence from ETFs and Futures",
@@ -1290,6 +1369,17 @@
     ],
     "skipped_reason": null
   },
+  "premium_for_heightened_uncertainty_explaining_pre_annou": {
+    "title": "Premium for Heightened Uncertainty: Explaining Pre-Announcement Market Returns",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/premium_for_heightened_uncertainty_explaining_pre_annou.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "strategies": [
+      "pre_macro_overnight_es"
+    ]
+  },
   "premium_for_heightened_uncertainty_explaining_pre_announceme": {
     "title": "Premium for Heightened Uncertainty: Explaining Pre-Announcement Market Returns",
     "authors": [
@@ -1317,6 +1407,15 @@
     "status": "queued",
     "attempts": 0,
     "added": "2026-10-22"
+  },
+  "price_drift_before_u_s_macroeconomic_news_private_infor": {
+    "title": "Price Drift before U.S. Macroeconomic News: Private Information about Public Announcements?",
+    "status": "summarized",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/price_drift_before_u_s_macroeconomic_news_private_infor.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Not directly tradable; event-avoidance filter idea."
   },
   "price_drift_before_u_s_macroeconomic_news_private_informatio": {
     "title": "Price Drift before U.S. Macroeconomic News: Private Information about Public Announcements?",
@@ -1711,9 +1810,16 @@
     "where_to_get_it": "Paywalled at Elsevier/ScienceDirect (Finance Research Letters). Open the IDEAS/RePEc page, click the publisher link, and try institutional access. Check the authors' SSRN/university pages for a free preprint (not confirmed in search). Alternative open reading: the follow-up in Applied Economics (2024), 'The pre-FOMC announcement drift: short-lived or long-lasting?'. I did not confirm its authors from search results.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-26"
+    "added": "2026-10-26",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/the_disappearing_pre_fomc_announcement_drift.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "strategies": [
+      "pre_fomc_drift_uncertainty_es"
+    ]
   },
   "the_earnings_announcement_premium_and_trading_volume": {
     "title": "The Earnings Announcement Premium and Trading Volume",
@@ -1780,8 +1886,13 @@
     "url": "https://ssrn.com/abstract=3175538",
     "note": "transcript 01 - volatility-targeted sizing",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_impact_of_volatility_targeting.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Basis of the volatility sizing view."
   },
   "the_information_content_of_annual_earnings_announcements": {
     "title": "The Information Content of Annual Earnings Announcements",
@@ -1878,9 +1989,16 @@
     "testable_on_our_data": "yes",
     "priority": 2,
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-19"
+    "added": "2026-10-19",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/the_pre_fomc_announcement_drift.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "strategies": [
+      "pre_fomc_drift_uncertainty_es"
+    ]
   },
   "the_predictive_content_of_quarterly_earnings": {
     "title": "The Predictive Content of Quarterly Earnings",
@@ -1894,6 +2012,15 @@
     "origin": "seed",
     "status": "queued",
     "attempts": 0
+  },
+  "the_role_of_leveraged_etfs_and_option_market_imbalances": {
+    "title": "The Role of Leveraged ETFs and Option Market Imbalances on End-of-Day Price Dynamics",
+    "status": "summarized",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/the_role_of_leveraged_etfs_and_option_market_imbalances.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Supports noise_area_last_half_hour_es."
   },
   "the_role_of_leveraged_etfs_and_option_market_imbalances_on_e": {
     "title": "The Role of Leveraged ETFs and Option Market Imbalances on End-of-Day Price Dynamics (revised as: Liquidity Provision to Leveraged ETFs and Equity Options Rebalancing Flows: Evidence from End-of-Day Stock Prices; JFQA)",
@@ -1967,9 +2094,16 @@
     "why_promising": "Gives a modern, quantified WHY for month-end and quarter-end ES flows that is better than the generic 'turn of the month' story: institutional mandate/constraint (pension funds, target-date funds, balanced funds must rebalance to fixed weights on known schedules), so their trades are mechanical and predictable. Tradable idea: fade or front-run equity weakness after strong stock-vs-bond outperformance into month-end, long-only/short-only variants. Edge killers: funds randomising or smoothing rebalancing, front-runners (some pensions reportedly trade it themselves) crowding the trade. Decay risk: moderate; widely discussed by sell-side desks (month-end pension rebalance estimates) since before this paper. Needs a ZN (10-year note) series, which is not in our inventory, so mark data as partial.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-10-20"
+    "added": "2026-10-20",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/the_unintended_consequences_of_rebalancing.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "strategies": [
+      "month_end_rebalance_pressure_es"
+    ]
   },
   "trading_volume_and_arbitrage": {
     "title": "Trading volume and arbitrage",
@@ -2007,8 +2141,13 @@
     "year": 2022,
     "note": "Shows predictability weakened after 2013 and depends on volatile regimes. This is directly relevant to decay risk and regime filtering.",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/understanding_intraday_momentum_strategies.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Warning for intraday momentum specs (regime/strength dependence)."
   },
   "understanding_returns_to_short_selling_using_option_implied": {
     "title": "Understanding Returns to Short Selling Using Option-Implied Stock Borrowing Fees (Is There a Risk Premium in the Stock Lending Market? Evidence from Equity Options)",
@@ -2044,8 +2183,22 @@
     "url": "https://ssrn.com/abstract=2659431",
     "note": "transcript 01 - volatility-targeted sizing",
     "origin": "seed",
-    "status": "queued",
-    "attempts": 0
+    "status": "summarized",
+    "attempts": 0,
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/volatility_managed_portfolios.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Basis of the volatility sizing view."
+  },
+  "volatility_targeting_is_trendy_how_trend_following_expl": {
+    "title": "Volatility Targeting Is Trendy: How Trend Following Explains Alpha in Volatility-Managed Strategies",
+    "status": "summarized",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/volatility_targeting_is_trendy_how_trend_following_expl.md",
+    "updated": "2026-11-01",
+    "read_by": "claude_manual_2_2026-11-01",
+    "skipped_reason": "Informs the volatility sizing view."
   },
   "volatility_targeting_is_trendy_how_trend_following_explains": {
     "title": "Volatility Targeting Is Trendy: How Trend Following Explains Alpha in Volatility-Managed Strategies",

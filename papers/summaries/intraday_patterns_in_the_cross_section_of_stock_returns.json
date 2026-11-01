@@ -1,0 +1,62 @@
+{
+  "title": "Intraday Patterns in the Cross-section of Stock Returns",
+  "authors": [
+    "Steven L. Heston",
+    "Robert A. Korajczyk",
+    "Ronnie Sadka"
+  ],
+  "year": 2010,
+  "source_url": "https://arxiv.org/pdf/1005.3535.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "A stock's return in a given half hour predicts its return in the SAME half hour on later days (≈3 bps next day, significant for ~40 days), strongest at the open and close, but the effect is smaller than trading costs in stocks.",
+  "findings": [
+    {
+      "statement": "Same-half-hour returns persist at daily lags (13, 26, 39 half-hours...), significant for ~40 trading days.",
+      "evidence": "NYSE stocks 2001-2005, 1,715 firms."
+    },
+    {
+      "statement": "Winners-minus-losers spread ≈ 3.01 bps at the same time next day.",
+      "evidence": "Smallest t at daily lags in week 1: 9.62."
+    },
+    {
+      "statement": "Strongest in the first and last half hours; relatively stronger at the close for S&P 500 stocks.",
+      "evidence": ""
+    },
+    {
+      "statement": "After paying spreads the strategies lose money (e.g. −14 to −24 bps).",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Predictable demand for immediacy at particular times of day (fund flows, algorithms)."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "NYSE stocks"
+    ],
+    "sample_period": "2001-2005",
+    "data_frequency": "half-hour",
+    "holding_period": "one half hour"
+  },
+  "reported_results": {
+    "headline": "≈3 bps same-slot persistence; unprofitable after spreads.",
+    "key_stats": []
+  },
+  "tradable_edge": "Basis for same_slot_seasonality_es; for ES the cost per trade is much lower than for single stocks, but ~3 bps is still below ES round-trip costs — expect it to fail unless the index-level effect is bigger.",
+  "angles": [
+    "Gross vs cost check for same_slot_seasonality_es"
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Sample 2001-2005."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 2), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}
