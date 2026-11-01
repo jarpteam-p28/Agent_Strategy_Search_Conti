@@ -23,6 +23,11 @@ class RunReport:
     librarian: int = 0
 
 
+
+def _d(x):
+    """Model output sometimes returns a string where an object was expected."""
+    return x if isinstance(x, dict) else {}
+
 def _file_hash(path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
 
@@ -137,7 +142,7 @@ def process_paper(repo: Repo, llm, paper: dict, report: RunReport) -> None:
         for st in out.get("strategies", []):
             try:
                 st["review"] = agents.critique(repo, llm, st, summary)
-                verdict = st["review"].get("verdict")
+                verdict = _d(st.get("review")).get("verdict")
                 if verdict == "reject":
                     st["status"] = "rejected"
                 elif verdict == "park":
@@ -148,14 +153,15 @@ def process_paper(repo: Repo, llm, paper: dict, report: RunReport) -> None:
             repo.save_strategy(st)
             ids.append(st["id"])
             report.strategies.append({"id": st["id"], "name": st.get("name"), "origin": entry.get("title"),
-                                      "verdict": verdict, "scores": st.get("review", {}).get("scores")})
+                                      "verdict": verdict, "scores": _d(st.get("review")).get("scores")})
         entry.update(strategies=ids, skipped_reason=out.get("skipped_reason"))
         report.papers.append({"title": entry.get("title"), "read_mode": summary.get("read_mode"),
                               "summary": ref, "one_line": summary.get("one_line"),
-                              "why": summary.get("why", {}).get("pattern"), "strategies": ids,
+                              "why": (summary.get("why") if isinstance(summary.get("why"), str) else _d(summary.get("why")).get("pattern")), "strategies": ids,
                               "skipped_reason": out.get("skipped_reason")})
     except Exception as e:
         entry.update(status="failed", error=str(e)[:300], updated=today())
+        log.exception("paper failed: %s", entry.get("title"))
         report.errors.append(f"paper '{entry.get('title')}': {e}")
         log.debug(traceback.format_exc())
     idx[slug] = entry

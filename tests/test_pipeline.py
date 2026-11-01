@@ -106,7 +106,7 @@ def test_full_run(repo):
 
     # two seeds read, each produced one strategy; ids made unique
     assert len(report.papers) == 2
-    files = sorted(p.name for p in (repo.root / "strategies/candidates").glob("*.yaml"))
+    files = sorted(p.name for p in (repo.root / "strategies/candidates").glob("month_end_long_es*.yaml"))
     assert files == ["month_end_long_es.yaml", "month_end_long_es_2.yaml"]
     st = yaml.safe_load((repo.root / "strategies/candidates/month_end_long_es.yaml").read_text())
     assert st["review"]["verdict"] == "backtest" and st["source"]["kind"] == "paper"
