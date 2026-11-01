@@ -1,0 +1,55 @@
+{
+  "title": "Analyst Forecast Revisions and Market Price Formation",
+  "authors": [
+    "Cristi A. Gleason",
+    "Charles M.C. Lee"
+  ],
+  "year": 2003,
+  "source_url": "https://iro.uiowa.edu/esploro/outputs/journalArticle/Analyst-Forecast-Revisions-and-Market-Price/9984380448602771",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Prices under-react to analyst forecast revisions that carry new information (vs those that just move toward consensus); adjustment is faster for celebrity analysts and widely covered firms, and much of the delayed move happens at later earnings announcements.",
+  "findings": [
+    {
+      "statement": "Market doesn't separate high-innovation from low-innovation revisions.",
+      "evidence": "The Accounting Review 78(1)."
+    },
+    {
+      "statement": "Faster adjustment for All-Star analysts and high-coverage firms.",
+      "evidence": ""
+    },
+    {
+      "statement": "Delayed adjustment clusters around later announcements.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Slow information diffusion."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "monthly",
+    "holding_period": "months"
+  },
+  "reported_results": {
+    "headline": "Prices under-react to analyst forecast revisions that carry new information (vs those that just move toward consensus); adjustment is faster for celebrity analysts and widely covered firms, and much of the delayed move happens at later earnings announcements.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Analyst-drift effects have weakened."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Decoding Inside Information",
+  "authors": [
+    "Lauren Cohen",
+    "Christopher J. Malloy",
+    "Lukasz Pomorski"
+  ],
+  "year": 2012,
+  "source_url": "https://hbswk.hbs.edu/item/decoding-inside-information",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Separating 'routine' insiders (trade in the same month every year, ~55% of trades) from 'opportunistic' ones: opportunistic trades earn ~82 bps/month value-weighted abnormal returns, routine trades ~0.",
+  "findings": [
+    {
+      "statement": "Opportunistic-insider strategy: 82 bps/month VW abnormal return; routine ≈ 0.",
+      "evidence": "Journal of Finance 67(3), 2012."
+    },
+    {
+      "statement": "Opportunistic trades predict firm news and events.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Informed insiders."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "monthly",
+    "holding_period": "1 month"
+  },
+  "reported_results": {
+    "headline": "Separating 'routine' insiders (trade in the same month every year, ~55% of trades) from 'opportunistic' ones: opportunistic trades earn ~82 bps/month value-weighted abnormal returns, routine trades ~0.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Published 2012."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

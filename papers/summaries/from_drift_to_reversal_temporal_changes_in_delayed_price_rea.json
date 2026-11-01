@@ -1,0 +1,53 @@
+{
+  "title": "From Drift to Reversal: Temporal Changes in Delayed Price Reactions to Earnings Announcements",
+  "authors": [
+    "Greg Clinch",
+    "Wen He",
+    "Wayne R. Landsman"
+  ],
+  "year": 2025,
+  "source_url": "https://cm.hust.edu.cn/info/1696/37087.htm",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Over the past two decades, the link between this quarter's earnings news and next quarter's announcement reaction turned negative: PEAD continuation has become reversal, and a PEAD strategy earns negative returns at the next announcement after 2002 (only after positive news; stronger with aggressive trading and limits to arbitrage).",
+  "findings": [
+    {
+      "statement": "PEAD continuation replaced by reversal; negative PEAD-strategy returns at the next announcement after 2002.",
+      "evidence": "Seminar abstract; authors not listed on the page (title matches)."
+    },
+    {
+      "statement": "Reversal only after positive news; concentrated in high limits-to-arbitrage stocks.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Overreaction by aggressive traders at announcements."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "~2002-2020s",
+    "data_frequency": "quarterly",
+    "holding_period": "next announcement"
+  },
+  "reported_results": {
+    "headline": "Over the past two decades, the link between this quarter's earnings news and next quarter's announcement reaction turned negative: PEAD continuation has become reversal, and a PEAD strategy earns negative returns at the next announcement after 2002 (only after positive news; stronger with aggressive trading and limits to arbitrage).",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; together with Martineau (2021) it argues to retire the PEAD stock specs.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Documents reversal of a classic anomaly."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read from a seminar announcement abstract; author match is by title only.",
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

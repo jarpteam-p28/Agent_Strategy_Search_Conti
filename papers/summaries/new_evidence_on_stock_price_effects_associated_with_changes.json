@@ -1,0 +1,51 @@
+{
+  "title": "New Evidence on Stock Price Effects Associated with Changes in the S&P 500 Index",
+  "authors": [
+    "Anthony W. Lynch",
+    "Richard R. Mendenhall"
+  ],
+  "year": 1997,
+  "source_url": "https://ideas.repec.org/a/ucp/jnlbus/v70y1997i3p351-83.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "After S&P began pre-announcing index changes (Oct 1989), additions earned significant positive (deletions negative) abnormal returns between announcement and effective date, only partly reversed afterwards.",
+  "findings": [
+    {
+      "statement": "Significant post-announcement abnormal returns: + for additions, − for deletions.",
+      "evidence": "Journal of Business 70(3)."
+    },
+    {
+      "statement": "Only partly reversed after the effective date.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Index-demand price pressure."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500 changes"
+    ],
+    "sample_period": "post-1989",
+    "data_frequency": "daily",
+    "holding_period": "~1 week"
+  },
+  "reported_results": {
+    "headline": "After S&P began pre-announcing index changes (Oct 1989), additions earned significant positive (deletions negative) abnormal returns between announcement and effective date, only partly reversed afterwards.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; effect has since largely disappeared (Greenwood & Sammon 2025).",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Index effect has decayed."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

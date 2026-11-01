@@ -1,0 +1,55 @@
+{
+  "title": "Are Insider Trades Informative?",
+  "authors": [
+    "Josef Lakonishok",
+    "Inmoo Lee"
+  ],
+  "year": 2001,
+  "source_url": "https://ideas.repec.org/a/oup/rfinst/v14y2001i1p79-111.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Across NYSE/AMEX/Nasdaq 1975-1995, insider purchases (not sales) predict returns, mainly at small firms; insiders are contrarian and time the market better than simple contrarian rules, with little market reaction when trades are reported.",
+  "findings": [
+    {
+      "statement": "Informative signal comes from purchases; sales show no predictive ability.",
+      "evidence": "RFS 14(1), 2001."
+    },
+    {
+      "statement": "Driven by small firms.",
+      "evidence": ""
+    },
+    {
+      "statement": "Insiders as a group forecast market moves better than simple contrarian strategies.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Insider information."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1975-1995",
+    "data_frequency": "monthly",
+    "holding_period": "months"
+  },
+  "reported_results": {
+    "headline": "Across NYSE/AMEX/Nasdaq 1975-1995, insider purchases (not sales) predict returns, mainly at small firms; insiders are contrarian and time the market better than simple contrarian rules, with little market reaction when trades are reported.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; aggregate insider buying as a market-timing signal is untested here.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Old sample."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

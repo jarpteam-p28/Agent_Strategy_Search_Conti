@@ -171,6 +171,10 @@ related_strategies:
 notes:
 - The paper's headline 19.6% a year needs up to 4x leverage; judge development results unlevered
 - The authors' code is public, so crowding is a real decay risk
+- >-
+  Independent replication (github.com/VigorTas/beat-the-market-replication, 1-min Databento, micro contracts,
+  $1.75 + 0.25 pt per fill): NQ 2010-2026 +$5.35/day, t = 2.74 (mostly after 2018); ES 2013-2026 −$0.25/day,
+  t = −0.20 (nothing). Matches our ES result (PF 1.08) — edge on NQ, not on ES.
 review:
   scores:
     why_strength: 4

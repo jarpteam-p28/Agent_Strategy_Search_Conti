@@ -1,0 +1,56 @@
+{
+  "title": "Intraday Price Reversals in the US Stock Index Futures Market: A 15-Year Study",
+  "authors": [
+    "James L. Grant",
+    "Avner Wolf",
+    "Susana Yu"
+  ],
+  "year": 2005,
+  "source_url": "https://digitalcommons.montclair.edu/acctg-finance-facpubs/70",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "In US stock index futures (Nov 1987-Sep 2002), large price changes at the open are followed by highly significant intraday reversals (stronger after large up-opens), but the significance drops sharply after a bid-ask transaction-cost proxy.",
+  "findings": [
+    {
+      "statement": "Highly significant intraday reversals after large opening moves; present by year and weekday.",
+      "evidence": "Journal of Banking & Finance 29(5)."
+    },
+    {
+      "statement": "Overreaction stronger after large upward opens.",
+      "evidence": ""
+    },
+    {
+      "statement": "After transaction costs, significance falls sharply; profitability an open question.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Opening overreaction corrected intraday."
+  },
+  "setting": {
+    "markets": [
+      "US index futures"
+    ],
+    "instruments": [
+      "S&P 500 futures"
+    ],
+    "sample_period": "1987-2002",
+    "data_frequency": "intraday",
+    "holding_period": "open to close"
+  },
+  "reported_results": {
+    "headline": "In US stock index futures (Nov 1987-Sep 2002), large price changes at the open are followed by highly significant intraday reversals (stronger after large up-opens), but the significance drops sharply after a bid-ask transaction-cost proxy.",
+    "key_stats": []
+  },
+  "tradable_edge": "Supports overnight_reversal_first_hour_es (and its cost warning); test up-opens and down-opens separately.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Cost-sensitive; old sample."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

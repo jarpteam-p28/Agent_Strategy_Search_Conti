@@ -1,0 +1,52 @@
+{
+  "title": "Post-Earnings-Announcement Drift in Global Markets: Evidence from an Information Shock",
+  "authors": [
+    "Mingyi Hung",
+    "Xi Li",
+    "Shiheng Wang"
+  ],
+  "year": 2015,
+  "source_url": "https://iems.ust.hk/publications/iems-working-papers/hung-post-earnings-announcement-drift-in-global-markets-evidence-from-an-information-shock",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "When reporting quality improved sharply for non-US firms (an exogenous information shock), PEAD declined — more so where attention was less split, institutions owned more and arbitrage was easier — supporting limited attention as the cause of PEAD.",
+  "findings": [
+    {
+      "statement": "PEAD declines after the information shock.",
+      "evidence": "RFS 28(4), 2015."
+    },
+    {
+      "statement": "Decline larger with fewer concurrent announcements, more institutions, lower limits to arbitrage.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Limited attention / mispricing."
+  },
+  "setting": {
+    "markets": [
+      "Global equities"
+    ],
+    "instruments": [
+      "non-US stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "quarterly",
+    "holding_period": "months"
+  },
+  "reported_results": {
+    "headline": "When reporting quality improved sharply for non-US firms (an exogenous information shock), PEAD declined — more so where attention was less split, institutions owned more and arbitrage was easier — supporting limited attention as the cause of PEAD.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "PEAD decay."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

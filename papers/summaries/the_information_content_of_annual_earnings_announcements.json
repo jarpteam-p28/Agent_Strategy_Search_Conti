@@ -1,0 +1,51 @@
+{
+  "title": "The Information Content of Annual Earnings Announcements",
+  "authors": [
+    "William H. Beaver"
+  ],
+  "year": 1968,
+  "source_url": "https://mikenguyen13.github.io/tidy_finance_vn/32_info_earnings.html",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "Classic study (143 firms) asking whether trading volume and return volatility rise in the week of annual earnings announcements relative to each firm's normal weeks; it is cited as the first evidence that earnings releases carry new information.",
+  "findings": [
+    {
+      "statement": "Method: announcement-week squared abnormal returns and volume ratios vs the firm's non-announcement weeks.",
+      "evidence": "Journal of Accounting Research 6, 1968; 143 firms."
+    },
+    {
+      "statement": "Evidence based on visual inspection and informal statistics; sample not random (Bamber et al. 2000).",
+      "evidence": "Secondary description."
+    }
+  ],
+  "why": {
+    "pattern": "Information arrival raises volume and volatility."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1960s",
+    "data_frequency": "weekly",
+    "holding_period": "announcement week"
+  },
+  "reported_results": {
+    "headline": "Classic study (143 firms) asking whether trading volume and return volatility rise in the week of annual earnings announcements relative to each firm's normal weeks; it is cited as the first evidence that earnings releases carry new information.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy; supports event-based volatility expectations (earnings weeks).",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Classic."
+  },
+  "data_fit": "Methodological.",
+  "caveats": [
+    "Original text not reachable; read through a textbook chapter that describes the study (magnitudes not given there).",
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,48 @@
+{
+  "title": "Regression Discontinuity and the Price Effects of Stock Market Indexing",
+  "authors": [
+    "Yen-Cheng Chang",
+    "Harrison Hong",
+    "Inessa Liskovich"
+  ],
+  "year": 2015,
+  "source_url": "https://www.nber.org/papers/w19290",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Using the Russell 1000/2000 cutoff (stocks just below rank 1000 join the Russell 2000 and get index buying), the authors find price effects for both additions and deletions, isolating indexing demand from news.",
+  "findings": [
+    {
+      "statement": "Price effects for Russell 2000 additions and deletions around the cutoff.",
+      "evidence": "RFS 28(1), 2015."
+    }
+  ],
+  "why": {
+    "pattern": "Index-demand price pressure."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "Russell 1000/2000 cutoff stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "annual reconstitution",
+    "holding_period": "weeks"
+  },
+  "reported_results": {
+    "headline": "Using the Russell 1000/2000 cutoff (stocks just below rank 1000 join the Russell 2000 and get index buying), the authors find price effects for both additions and deletions, isolating indexing demand from news.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Index effects decaying."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

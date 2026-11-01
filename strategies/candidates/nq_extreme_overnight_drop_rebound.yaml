@@ -1,0 +1,103 @@
+id: nq_extreme_overnight_drop_rebound
+name: Post-Open Rebound after Extreme Overnight Drops (NQ/ES, long only, 09:35-10:00)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/does_overnight_return_predict_the_first_half_hour_return_for.md
+  papers:
+  - title: Does overnight return predict the first half-hour return for U.S. market indices?
+    authors:
+    - Yasuhiro Iwanaga
+    - Ryuta Sakemoto
+    venue: SSRN 5807282
+    year: 2025
+  - title: 'Intraday Price Reversals in the US Stock Index Futures Market: A 15-Year Study'
+    authors:
+    - James L. Grant
+    - Avner Wolf
+    - Susana Yu
+    venue: JBF 29(5)
+    year: 2005
+finding: >-
+  Overnight returns predict the first half hour negatively (NQ replication: t = −2.42), mostly in the
+  first 5 minutes and not after costs; a narrowed rule — buy at 09:35 after an extreme overnight drop
+  that bounces in the first 5 minutes, exit 10:00 — was positive out of sample on 18 trades (t = 2.49)
+  in an independent pre-registered NQ study.
+why: >-
+  After a very large overnight selloff, overnight liquidity providers carry stretched inventory; when
+  full liquidity arrives at the open and the first 5 minutes confirm buyers are stepping in, part of the
+  overnight move reverses.
+what_would_kill_it: >-
+  Deeper overnight liquidity; costs; stress-day slippage worse than modelled; the effect being an artifact
+  of a handful of crash days.
+market:
+  instruments:
+  - NQ
+  - ES
+  bar_size: 1min
+  session: RTH, America/New_York
+  universe: NQ 2021-07-2023-12, ES 2014-2023 (2024+ protected)
+direction: long_only
+entry:
+  long: >-
+    If z = (09:30 open / prior 16:00 close − 1) ÷ SD of the previous 60 daily overnight returns ≤ −2.0,
+    AND the 09:35 price is above the 09:30 open, buy at 09:35.
+  short: null
+  filters:
+  - Skip half days and contract-roll windows
+  - 'Thresholds exactly as the replication froze them (do not re-tune): z ≤ −2.0, 09:35 > 09:30 open'
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Sell at 10:00 ET.
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: z_threshold
+  default: -2.0
+  test_range: -2.0 only (frozen)
+  source: replication
+- name: instrument
+  default: NQ
+  test_range: NQ, ES
+  source: replication (NQ); ES as second market
+open_questions:
+- Does it hold on ES 2014-2023 (a market the rule was never chosen on)?
+- How many qualifying days exist in our NQ 2021-2023 window (likely < 15)?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development data only; 2024+ protected
+  - 'Baseline: same 09:35-10:00 window on all days and on all z ≤ −2 days without the bounce filter'
+  - Results without the single best and the 3 best trades
+  - Entry 1 minute late with 4-tick slippage
+data_requirements:
+- NQ/ES 1-min with prior close
+data_available: 'yes'
+expectations:
+- Very few trades; treat as a quick independent check of a published replication
+variants:
+- NQ vs ES = 2 configs
+related_strategies:
+- overnight_reversal_first_hour_es
+notes:
+- >-
+  Primary paper not reachable; rule comes from a public pre-registered replication (github.com/talalmalikllc-debug/nq-post-open-rebound).
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 5
+    testability: 3
+    overfit_resistance: 3
+  verdict: refine
+  reasons: >-
+    Clean, pre-registered rule with an out-of-sample pass, but only 18 trades and chosen from 9 candidates;
+    our ES history is a genuinely new test.
+  required_changes: Run frozen, as a quick screen; report trade count first.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 4, 2026-11-01)

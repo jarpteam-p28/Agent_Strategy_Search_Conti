@@ -1,0 +1,55 @@
+{
+  "title": "The Russell Reconstitution Effect",
+  "authors": [
+    "Ananth Madhavan"
+  ],
+  "year": 2003,
+  "source_url": "https://www.cxoadvisory.com/miscellaneous/strategies-for-exploiting-index-rebalancing/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Russell index reconstitutions (1996-2001) produced economically and statistically significant abnormal returns from temporary price pressure and permanent liquidity changes, with very high volatility on reconstitution day; later work finds the effect and its reversals weakening.",
+  "findings": [
+    {
+      "statement": "Significant abnormal returns around June reconstitution, 1996-2001.",
+      "evidence": "Financial Analysts Journal 59(4), 2003 (2001 working paper)."
+    },
+    {
+      "statement": "Additions gain on the reconstitution date rather than the announcement; deletions negative.",
+      "evidence": "Follow-up studies."
+    },
+    {
+      "statement": "Effect and reversals much smaller in recent years.",
+      "evidence": "2007 follow-up."
+    }
+  ],
+  "why": {
+    "pattern": "Index-demand price pressure."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "Russell 3000 changes"
+    ],
+    "sample_period": "1996-2001",
+    "data_frequency": "daily",
+    "holding_period": "weeks"
+  },
+  "reported_results": {
+    "headline": "Russell index reconstitutions (1996-2001) produced economically and statistically significant abnormal returns from temporary price pressure and permanent liquidity changes, with very high volatility on reconstitution day; later work finds the effect and its reversals weakening.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level. Index angle: reconstitution day (late June) brings huge closing volume — note as an event day for ES/NQ close strategies.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Decayed."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read via a review of index-rebalancing studies; magnitudes not given there.",
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

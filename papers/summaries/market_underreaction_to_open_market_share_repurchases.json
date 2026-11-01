@@ -1,0 +1,48 @@
+{
+  "title": "Market Underreaction to Open Market Share Repurchases",
+  "authors": [
+    "David L. Ikenberry",
+    "Josef Lakonishok",
+    "Theo Vermaelen"
+  ],
+  "year": 1995,
+  "source_url": "https://www.nber.org/papers/w4965",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "After open-market buyback announcements (1980-1990), stocks earned 12.1% abnormal buy-and-hold returns over four years — 45.3% for value stocks, none for glamour stocks.",
+  "findings": [
+    {
+      "statement": "4-year abnormal return 12.1% overall; 45.3% for value stocks; no drift for glamour.",
+      "evidence": "JFE 39(2-3), 1995."
+    }
+  ],
+  "why": {
+    "pattern": "Under-reaction to management's undervaluation signal."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1980-1990",
+    "data_frequency": "monthly",
+    "holding_period": "4 years"
+  },
+  "reported_results": {
+    "headline": "After open-market buyback announcements (1980-1990), stocks earned 12.1% abnormal buy-and-hold returns over four years — 45.3% for value stocks, none for glamour stocks.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Old sample."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

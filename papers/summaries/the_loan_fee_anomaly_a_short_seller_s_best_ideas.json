@@ -1,0 +1,54 @@
+{
+  "title": "The Loan Fee Anomaly: A Short Seller's Best Ideas",
+  "authors": [
+    "Joseph Engelberg",
+    "Richard B. Evans",
+    "Gregory Leonard",
+    "Adam Reed",
+    "Matthew Ringgenberg"
+  ],
+  "year": 2025,
+  "source_url": "https://counterpointfunds.com/the-loan-fee-anomaly-a-short-sellers-best-ideas/",
+  "paper_type": "academic",
+  "read_mode": "web_fetch",
+  "one_line": "Equity loan fees are the best single predictor of cross-sectional returns among 103 anomalies: highest long-short return (1.17%/month) and Sharpe (0.40/month), persistent through the sample; ~72% of it reflects short sellers' unique information.",
+  "findings": [
+    {
+      "statement": "Long-short 1.17%/month, monthly Sharpe 0.40 — top of 103 anomalies.",
+      "evidence": "Management Science 71(7), 2025."
+    },
+    {
+      "statement": "~28% explained by exposure to other strong anomalies; ~72% unique.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Informed short sellers paying to borrow."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "monthly",
+    "holding_period": "1 month"
+  },
+  "reported_results": {
+    "headline": "Equity loan fees are the best single predictor of cross-sectional returns among 103 anomalies: highest long-short return (1.17%/month) and Sharpe (0.40/month), persistent through the sample; ~72% of it reflects short sellers' unique information.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Needs loan-fee data."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

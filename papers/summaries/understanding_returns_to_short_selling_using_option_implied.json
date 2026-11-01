@@ -1,0 +1,52 @@
+{
+  "title": "Is There a Risk Premium in the Stock Lending Market? Evidence from Equity Options",
+  "authors": [
+    "Dmitriy Muravyev",
+    "Neil D. Pearson",
+    "Joshua M. Pollet"
+  ],
+  "year": 2022,
+  "source_url": "https://ideas.repec.org/a/bla/jfinan/v77y2022i3p1787-1828.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Using option-implied borrowing fees, the risk premium for borrowing-fee uncertainty is small and does not predict fee-adjusted short-selling returns — so fee risk doesn't explain short-selling returns.",
+  "findings": [
+    {
+      "statement": "Borrowing-fee risk premium is small.",
+      "evidence": "Journal of Finance 77(3), 2022."
+    },
+    {
+      "statement": "Fee risk does not predict fee-adjusted short returns.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Short-selling frictions."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks + options"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "daily",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "Using option-implied borrowing fees, the risk premium for borrowing-fee uncertainty is small and does not predict fee-adjusted short-selling returns — so fee risk doesn't explain short-selling returns.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

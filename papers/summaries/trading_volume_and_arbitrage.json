@@ -1,0 +1,51 @@
+{
+  "title": "Trading Volume and Arbitrage",
+  "authors": [
+    "Serge Darolles",
+    "Gaëlle Le Fol"
+  ],
+  "year": 2003,
+  "source_url": "https://ideas.repec.org/p/crs/wpaper/2003-46.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Builds on Lo & Wang to decompose trading volume into market-wide and stock-specific parts, with a model of 'liquidity arbitrageurs' and a screening tool for practitioners, illustrated on FTSE data 2000-2002.",
+  "findings": [
+    {
+      "statement": "Volume decomposition with a theoretical justification (liquidity arbitrageurs).",
+      "evidence": "CREST WP 2003-46."
+    },
+    {
+      "statement": "Illustrated on daily FTSE data 2000-2002.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Volume microstructure."
+  },
+  "setting": {
+    "markets": [
+      "UK equities"
+    ],
+    "instruments": [
+      "FTSE stocks"
+    ],
+    "sample_period": "2000-2002",
+    "data_frequency": "daily",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "Builds on Lo & Wang to decompose trading volume into market-wide and stock-specific parts, with a model of 'liquidity arbitrageurs' and a screening tool for practitioners, illustrated on FTSE data 2000-2002.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy; related to VWAP volume modelling.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "Not a signal.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

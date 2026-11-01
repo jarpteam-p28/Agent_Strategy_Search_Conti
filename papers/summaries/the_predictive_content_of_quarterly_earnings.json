@@ -1,0 +1,48 @@
+{
+  "title": "The Predictive Content of Quarterly Earnings",
+  "authors": [
+    "Philip Brown",
+    "Victor Niederhoffer"
+  ],
+  "year": 1968,
+  "source_url": "https://ideas.repec.org/a/ucp/jnlbus/v41y1968p488.html",
+  "paper_type": "academic",
+  "read_mode": "bibliographic_only",
+  "one_line": "Bibliographic record only (Journal of Business 41, 1968): an early study of whether quarterly (interim) earnings help predict annual earnings; no abstract or text was reachable from this session.",
+  "findings": [
+    {
+      "statement": "No abstract available on the record; full text subscription-only.",
+      "evidence": "DOI 10.1086/295141."
+    }
+  ],
+  "why": {
+    "pattern": "Information content of interim reports."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1960s",
+    "data_frequency": "quarterly",
+    "holding_period": "n/a"
+  },
+  "reported_results": {
+    "headline": "Bibliographic record only (Journal of Business 41, 1968): an early study of whether quarterly (interim) earnings help predict annual earnings; no abstract or text was reachable from this session.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Classic."
+  },
+  "data_fit": "Methodological.",
+  "caveats": [
+    "Only the bibliographic page was reachable; nothing beyond the title is claimed.",
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

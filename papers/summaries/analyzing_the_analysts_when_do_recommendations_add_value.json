@@ -1,0 +1,53 @@
+{
+  "title": "Analyzing the Analysts: When Do Recommendations Add Value?",
+  "authors": [
+    "Narasimhan Jegadeesh",
+    "Joonghyuk Kim",
+    "Susan D. Krische",
+    "Charles M.C. Lee"
+  ],
+  "year": 2004,
+  "source_url": "https://opact.sdu.edu.tr/vufind/SummonRecord/FETCH-LOGICAL-a5967-edcb61ed493d55f767fd3723877bd0dcba926898eb40bb6949376c32c17edced3",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Analysts favour glamour stocks (momentum, growth, high volume, high valuations); recommendation levels only predict returns for stocks with good quant traits (value, positive momentum), and the quarterly CHANGE in consensus is the more robust predictor.",
+  "findings": [
+    {
+      "statement": "Consensus level predicts returns only for value / positive-momentum stocks; for the rest, higher ratings → weaker returns.",
+      "evidence": "Journal of Finance 2004."
+    },
+    {
+      "statement": "Quarterly change in consensus is a robust, incremental predictor.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Analyst incentives / glamour bias."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "quarterly",
+    "holding_period": "months"
+  },
+  "reported_results": {
+    "headline": "Analysts favour glamour stocks (momentum, growth, high volume, high valuations); recommendation levels only predict returns for stocks with good quant traits (value, positive momentum), and the quarterly CHANGE in consensus is the more robust predictor.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Well known."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

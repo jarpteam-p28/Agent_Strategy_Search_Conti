@@ -1,0 +1,53 @@
+{
+  "title": "Short Interest, Returns, and Fundamentals",
+  "authors": [
+    "Ferhat Akbas",
+    "Ekkehart Boehmer",
+    "Bilal Erturk",
+    "Sorin Sorescu"
+  ],
+  "year": 2017,
+  "source_url": "https://climateinstitute.edhec.edu/publications/short-interest-returns-and-fundamentals",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Short interest predicts returns because short sellers anticipate bad news, negative earnings surprises and downward analyst revisions months ahead; controlling for that future fundamental news, the short interest-return link disappears.",
+  "findings": [
+    {
+      "statement": "Short sellers anticipate negative fundamental news months before it is public.",
+      "evidence": "Financial Management 46(2), 2017."
+    },
+    {
+      "statement": "Short interest-return relation vanishes once future news is controlled for.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Informed short sellers."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "n/a",
+    "data_frequency": "monthly",
+    "holding_period": "months"
+  },
+  "reported_results": {
+    "headline": "Short interest predicts returns because short sellers anticipate bad news, negative earnings surprises and downward analyst revisions months ahead; controlling for that future fundamental news, the short interest-return link disappears.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Well known."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 4), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}
