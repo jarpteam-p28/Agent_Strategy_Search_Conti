@@ -1,0 +1,245 @@
+id: letf_loop_gain_fade_stocks
+name: Leveraged-ETF Loop-Gain Overshoot Fade (single stocks, next-day reversal)
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/preying_on_leveraged_etfs.md
+  papers:
+  - title: Preying on Leveraged ETFs
+    authors:
+    - Yinhong Zhao
+    year: 2026
+    venue: SSRN
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7229918
+    note: >-
+      Source finding: about 75% of the first-day news response reverses by the next close when leveraged-ETF
+      rebalancing is large relative to closing-auction depth.
+  - title: >-
+      Liquidity Provision to Leveraged ETFs and Equity Options Rebalancing Flows: Evidence from End-of-Day
+      Stock Prices
+    authors:
+    - Andrea Barbon
+    - Heiner Beckmeyer
+    - Andrea Buraschi
+    - Mathis Moerke
+    year: 2022
+    venue: SSRN
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3925725
+    note: >-
+      US evidence on end-of-day rebalancing flows and reversal. Use it to build the US single-stock universe
+      and the flow measure.
+  - title: >-
+      Returns to Constant Leverage Strategies: General Principles and Application to Levered Single-Stock
+      ETFs
+    authors:
+    - Hendrik Bessembinder
+    year: 2025
+    venue: SSRN
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5369417
+    note: Candidate universe of US single-stock leveraged ETFs.
+finding: >-
+  In Samsung and SK Hynix after the Korean single-stock leveraged-ETF launch (27 May 2026, about 82 treated
+  stock-days), the close-to-close response to pre-open US news reversed by about 68-80% at the next close,
+  with 32-45% of the reversal overnight. The response then oscillated with damping over about 3 days.
+  The overshoot was already in the open price and stayed flat through the session. It scaled with shock
+  size, was stronger after down-shocks, and was absent where the 'loop gain' was low. Loop gain = closing-auction
+  impact × the total mandated rebalance capital. US single stocks other than MSTR (0.22) sat at 0.03-0.10,
+  and the paper found no reversal there.
+why: >-
+  Execution mechanics plus a liquidity constraint. Leveraged and inverse funds must trade A(L²−L)r at
+  the reference close, in the direction of the day's move. The order cannot be delayed or resized, and
+  anyone can compute it in advance. Speculators pre-position from the open, so the price overshoots fundamental
+  value. The fund then trades into the overshoot, and its order is sized on the overshot price, which
+  is the feedback loop. Deeper outside capital arrives overnight and on the next day and corrects the
+  displacement. We are the patient liquidity provider: we take the other side of a forced, price-insensitive
+  flow, but only where that flow is big compared with what the closing auction can absorb.
+market:
+  instruments:
+  - >-
+    US single stocks with large single-stock leveraged/inverse ETF complexes (e.g. MSTR, TSLA, NVDA, COIN,
+    PLTR, SMCI, AMD)
+  - 'Optional: Korea/HK/Taiwan names referencing single-stock LETFs'
+  bar_size: daily (plus closing-auction volume); 1-min optional for entry at 15:59
+  session: RTH 09:30-16:00 America/New_York; entry in or just before the closing auction
+  universe: >-
+    Stocks where mandated LETF rebalance per 1% move ≥ threshold share of 20-day average closing-auction
+    dollar volume
+direction: long_short
+entry:
+  long: >-
+    At the day-t close (MOC), buy if the day-t close-to-close return ≤ −k × its 60-day daily sigma AND
+    implied mandated rebalance flow (Σ A·(L²−L)·r_t across all LETFs on the stock) ≥ F% of the 20-day
+    average closing-auction dollar value.
+  short: >-
+    At the day-t close, short if the day-t return ≥ +k × sigma and the same flow condition holds (the
+    paper finds the short side weaker, so test it separately).
+  filters:
+  - >-
+    Universe filter: loop-gain proxy (LETF rebalance capital / closing-auction depth) in the top tier;
+    skip names whose proxy is below the threshold. The paper finds the effect is non-linear and switches
+    off at low loop gain.
+  - Skip days with a scheduled earnings release on t+1 (a news overshoot there has a different cause).
+  - One position per stock; cap the number of names held at the same time.
+exit:
+  stop_loss: >-
+    Master-signal test: no stop. Live: stop if the move extends a further 1.0 × |r_t| against the position
+    before the exit time.
+  take_profit: 'None in the base test. Variant: exit when 75% of the day-t move has been retraced.'
+  time_exit: Exit at the t+1 close (MOC). The paper's ~75% reversal is measured at the next close.
+  other:
+  - 'Variant: exit at the t+1 open to capture only the overnight part (32-45% of the reversal).'
+  - 'Do not hold past t+2: the paper shows the response swinging back toward its day-1 level by day 3.'
+position_sizing:
+  development: Equal dollar notional per trade (e.g. $100k), so trades are comparable.
+  live: >-
+    Volatility target: dollar risk per trade / (60-day daily sigma × price). Cap any single name at 2%
+    of portfolio risk.
+parameters:
+- name: shock_threshold_k_sigma
+  default: 2.0
+  source: assumption; paper shows reversal only on large-shock days
+  test_range: 1.5, 2.0, 2.5, 3.0
+- name: flow_to_auction_ratio_F
+  default: 25%
+  source: >-
+    assumption; paper reports SK Hynix mandated flow averaging 22% of daily value against an auction holding
+    about 10%
+  test_range: 10%, 25%, 50%, 100% of closing-auction value
+- name: hold
+  default: t+1 close
+  source: paper
+  test_range: t+1 open, t+1 close, t+2 close
+- name: sigma_lookback_days
+  default: 60
+  source: assumption
+  test_range: 20, 60
+open_questions:
+- >-
+  Does any US single stock actually reach the paper's oscillation threshold? Their measured US loop gains
+  are 0.03-0.10, except MSTR at 0.22. The universe may be empty for most of history.
+- >-
+  The paper's news variable is pre-open US index returns for Korean stocks. For US stocks the news and
+  the rebalance fall in the same session. Should the signal be the open gap (news) or the full close-to-close
+  move (rebalance size)?
+- >-
+  LETF AUM and leverage by date are needed to compute flow (issuer holdings files and ETF.com history).
+  Is survivorship-free history available?
+- Closing-auction volume data source (NYSE/Nasdaq closing cross prints).
+- >-
+  How do we tell this effect apart from the generic short-term reversal in high-volatility stocks? Required
+  control: the same rule on matched high-vol stocks without LETFs, plus an interaction with LETF AUM over
+  time.
+- Borrow costs and availability for the short leg on names like MSTR or SMCI.
+- >-
+  Swap-based LETF counterparties may hedge before the close, which would spread the flow across the day.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th percentile of the bootstrapped drawdown for the same number
+    of trades, or if the paper's policy fixes (two-auction or averaged reference, flexible multiple) are
+    adopted for the US products traded.
+  extra_checks:
+  - >-
+    Placebo: matched stocks without LETFs, and the same LETF names before their LETFs launched (difference-in-differences,
+    as in the paper).
+  - >-
+    Check the dose-response: the reversal should grow with the flow/auction ratio. If it does not, the
+    WHY is not shown.
+  - Split long and short; split by year and before/after the 2022 growth of single-stock LETFs.
+  - Report gross and net bps per trade against realistic MOC/MOO costs and borrow.
+data_available: 'no'
+data_requirements:
+- US single-stock daily OHLC plus closing-auction volume/price (2019+)
+- Daily LETF AUM and leverage multiple per underlying (all issuers, long and inverse)
+- Earnings calendar to exclude event days
+- 'Optional: 1-min bars to enter just before the closing auction'
+- Borrow fee data for shorts
+expectations:
+- >-
+  Next-day (t+1 close) return loads negatively on the day-t move only in the high flow/auction bucket.
+  The paper reports 68-80% reversal in Korea; expect much less in the US (McLean-Pontiff, and US loop
+  gains are lower).
+- The reversal is stronger after down-shocks, so the long side should do better.
+- >-
+  No effect in the low-loop-gain bucket. If the low bucket reverses just as much, this is generic short-term
+  reversal, not this mechanism.
+what_would_kill_it: >-
+  The edge disappears if issuers or regulators switch to a two-auction or multi-day averaged reference,
+  cap the size, or allow a flexible multiple. It also disappears if LETF AUM shrinks through outflows
+  or listing freezes, so loop gain falls below the threshold, or if crowded pre-positioning and patient
+  liquidity providers compress the overshoot. Empirically, it is dead if the reversal does not scale with
+  the flow/auction ratio.
+related_strategies:
+- overnight_reversal_first_hour_es
+- noise_area_last_half_hour_es
+variants:
+- Long-only after down-shocks
+- Exit at the t+1 open (overnight leg only)
+- Korea/HK/Taiwan universe where single-stock LETF complexes are large relative to auction depth
+- Use the open gap instead of the close-to-close move as the shock
+notes:
+- >-
+  Status 'idea': based on one episode with two treated stocks, the paper is a preliminary preprint, and
+  no P&L was tested.
+- 'Decay risk is high: regulators had already acted by July 2026.'
+why_unused: null
+review:
+  scores:
+    why_strength: 4
+    persistence: 2
+    simplicity: 3
+    testability: 2
+    overfit_resistance: 2
+  verdict: park
+  reasons:
+  - >-
+    The WHY is structural and well stated: leveraged ETFs are forced to trade A(L²−L)r at the close in
+    the direction of the day's move, and anyone can compute the order in advance. This is execution mechanics
+    plus a liquidity constraint. The kill conditions are explicit.
+  - >-
+    Fatal problem for the proposed universe: the paper itself measured US single-stock loop gains of 0.03-0.10
+    and found no reversal in the US controls, including NVDA and AMD. Only MSTR (0.22) is near the Samsung
+    level, so the tradable universe may be roughly one stock.
+  - >-
+    Evidence base is one Korean episode: 2 stocks, about 82 treated-post days over 9 weeks, confounded
+    with the AI-memory boom/crash and circuit breakers. Reversal-share CI is [0.17, 1.32]. Preliminary,
+    unreviewed preprint.
+  - >-
+    Persistence is weak: regulators acted within weeks (Korean listing freeze, HK flexible multiple, Korean
+    dispersal guidance), and decay risk is high after publication.
+  - >-
+    The signal uses the close-to-close move, while the paper uses pre-open news. This risks capturing
+    generic short-term reversal in high-volatility stocks unless the controls are made binding.
+  - >-
+    No data in inventory: single stocks, LETF AUM/leverage history by issuer, closing-auction prints,
+    earnings dates and borrow data are all missing. Building survivorship-free flow history is costly
+    for a weak expected edge.
+  - >-
+    Four tuned parameters (k, F, hold, sigma lookback) plus variants on a tiny effective universe give
+    high overfit risk.
+  - >-
+    Does not copy the paper: it reframes the mechanism onto US single stocks with its own flow/auction
+    filter and adds placebo and dose-response checks.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Pre-specify one shock definition (open gap = news, or close-to-close = rebalance size). Test the other
+    only as a frozen out-of-sample variant.
+  - >-
+    Make the dose-response a hard gate before looking at P&L: reversal must rise monotonically across
+    flow/auction buckets, and the low bucket must show no reversal.
+  - >-
+    Before any further work, compute historical loop gain or flow/auction for every US single-stock LETF
+    complex. If fewer than about 5 names or fewer than 100 qualifying events ever clear the threshold,
+    park permanently.
+  - >-
+    Fix k and F from priors (e.g. F anchored to the auction share of daily value). Tune only the hold
+    in-sample.
+  - >-
+    Require the matched non-LETF high-vol control and the before/after-launch difference-in-differences
+    to beat generic short-term reversal, net of MOC/MOO costs and borrow.
+  - >-
+    Make long-only after down-shocks the base case; treat the short side as a secondary variant because
+    of weaker evidence and borrow costs.

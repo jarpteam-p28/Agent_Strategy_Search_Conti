@@ -1,0 +1,264 @@
+id: trend_risk_timing_overlay_es
+name: >-
+  Trend as Risk Timer: does a trend filter add anything once ES is volatility-targeted? (ES daily, long
+  only, falsification test)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/does_momentum_time_risk_rather_than_returns.md
+  papers:
+  - title: Does Momentum Time Risk Rather Than Returns?
+    authors:
+    - Valeriy Zakamulin
+    year: 2026
+    venue: SSRN
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6910478
+    note: >-
+      We only read the title. The paper was not accessible, so it supplies no finding, sample or numbers.
+      This spec tests the title's hypothesis and is not a copy of the paper's rules.
+  - title: Volatility-Managed Portfolios
+    authors:
+    - Alan Moreira
+    - Tyler Muir
+    year: 2017
+    venue: Journal of Finance
+    note: Playbook background for risk timing. The vol-targeted baseline is built from it.
+  - title: The Impact of Volatility Targeting
+    authors:
+    - Campbell R. Harvey
+    - Edward Hoyle
+    - Russell Korgaonkar
+    - Sandy Rattray
+    - Matthew Sargaison
+    - Otto Van Hemert
+    year: 2018
+    note: Playbook reference for vol targeting on equity futures.
+finding: >-
+  NOT VERIFIED, because only the paper's title was read. The title asks whether time-series momentum (trend)
+  signals help mainly by timing risk (volatility, drawdown) rather than by forecasting returns. Our hypothesis
+  is that on ES, the trend state (price vs a long moving average) mostly separates calm regimes from stressed
+  ones. If so, a trend filter should add little or nothing on top of plain volatility targeting.
+why: >-
+  Proposed pattern: risk-state timing. This is our inference, not the paper's stated mechanism. Volatility
+  clusters, and it rises after declines (leverage effect). Risk-targeting funds, CTAs, risk-parity books
+  and margin- or loss-limited holders are forced to de-lever when volatility rises, which makes stressed
+  regimes persistent and keeps them aligned with downtrends. A trend filter that steps aside in downtrends
+  may therefore earn its Sharpe improvement by avoiding high-vol periods, not by predicting the mean.
+  If that is true, vol targeting captures most of the benefit, and trend only matters for avoiding drawdowns
+  that vol has not yet flagged. Two things would kill the idea. First, if trend adds nothing beyond vol
+  targeting, there is no extra edge. Second, V-shaped reversals (Mar 2020, Apr 2025) punish a trend filter
+  that exits after the drop and misses the rebound.
+market:
+  instruments:
+  - ES
+  bar_size: 1min aggregated to daily (signal on RTH close)
+  session: >-
+    Signals and fills at the RTH close 16:00 America/New_York (use the 15:59 bar close). Daily return
+    is close-to-close including overnight.
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    At the RTH close on day t, compute four arms. Each takes its position at the t close and holds to
+    the t+1 close. (A) Baseline: always long 1 ES. (B) Vol-target: always long, size = target_vol / realised_vol_20d
+    (annualised from daily close-to-close returns), capped at max_leverage. (C) Trend filter: long 1 ES
+    if close > SMA(sma_len) of daily closes, otherwise flat. (D) Trend + vol target: arm C's on/off switch
+    with arm B's sizing. The test that matters is D vs B and C vs A.
+  short: null
+  filters:
+  - >-
+    Size changes are applied only when the new target differs from the current one by more than rebalance_band
+    (e.g. 20%), to limit turnover.
+  - 'Warm-up: no positions until sma_len and the vol window are full. Document the warm-up start date.'
+  - >-
+    Diagnostic (not traded): regress the next-20-day realised vol, the next-20-day max drawdown and the
+    next-20-day return on the trend state, controlling for current realised vol. This tests the risk-vs-return
+    claim directly.
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Re-evaluated every daily close. The trend arms go flat at the close where close <= SMA.
+  other:
+  - >-
+    Contract rolls follow the continuous series. Check that roll gaps are back-adjusted so the SMA is
+    not distorted.
+position_sizing:
+  development: >-
+    Arms A and C: fixed 1 ES contract. Arms B and D: fractional notional exposure (target_vol / realised_vol,
+    capped) applied to the 1-contract P&L, so the comparison is at the same average exposure. Also report
+    B and D rescaled to the same average exposure as C.
+  live: >-
+    If it survives: vol targeting to target_vol, risking a fixed dollar amount. Contracts = (account ×
+    target_vol) / (ES notional × realised_vol_20d), rounded down, max_leverage cap. Use MES for granularity.
+parameters:
+- name: sma_len
+  default: 200
+  source: assumption (standard trend filter)
+  test_range: 50, 100, 150, 200, 250 (in-sample only; prefer a plateau to a peak)
+- name: alt_trend_signal
+  default: 12-month return > 0
+  source: assumption (TSMOM convention)
+  test_range: lookback 63, 126, 252 days
+- name: vol_window_days
+  default: 20
+  source: assumption (Moreira & Muir use the previous month)
+  test_range: 10, 20, 40, 60
+- name: target_vol_annual
+  default: 0.15
+  source: assumption
+  test_range: Sizing only; doesn't change Sharpe. Keep fixed.
+- name: max_leverage
+  default: 2.0
+  source: assumption
+  test_range: 1.0, 1.5, 2.0
+- name: rebalance_band
+  default: 0.2
+  source: assumption
+  test_range: 0.1, 0.2, 0.3
+- name: round_turn_cost_usd
+  default: 13
+  source: playbook (Conti NQ cost; conservative for ES)
+  test_range: 5-15
+open_questions:
+- >-
+  The paper was not read, so its actual signal, horizon, assets and conclusion are unknown and may be
+  the opposite. Re-spec once the text is available.
+- >-
+  Trade count is tiny: a 200-day SMA flips perhaps 10-30 times in 2014-2026. Should Monte Carlo use a
+  block bootstrap of daily returns (e.g. 20-day blocks) instead of trade reshuffling? We propose daily-return
+  block bootstrap as the primary method.
+- >-
+  The 80/20 split puts out-of-sample at roughly mid-2023 to 2026. That excludes 2022 (the key down year)
+  from OOS but includes the Apr 2025 V-reversal. Consider also reporting a 2022-only stress window.
+- >-
+  Should the signal use the RTH close or the Globex settlement? Does including overnight returns change
+  the result?
+- >-
+  Does the comparison use an equal-average-exposure normalisation or a raw Sharpe comparison? Report both.
+- >-
+  If trend does predict returns beyond vol, the title's thesis is refuted, but trend might still be usable.
+  How should that outcome be handled?
+- >-
+  Optional extension: use the trend/vol state as an on-off regime switch for our intraday strategies (noise_area_momentum_es,
+  orb_long_only). Not specified here.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Live drawdown beyond the 95th-percentile simulated drawdown (daily-return block bootstrap) over the
+    same number of days → stop and review.
+  extra_checks:
+  - >-
+    Primary test: Sharpe and max drawdown of D minus B, with a bootstrap confidence interval. Reject if
+    the CI includes 0 in-sample, or if the sign flips out of sample.
+  - >-
+    Report the C vs A Sharpe gain, decomposed into the part explained by realised-vol differences between
+    on and off days.
+  - Report results pre/post 2022 and for 2022 alone, plus Mar 2020 and Apr 2025 reversals.
+  - >-
+    Report the mean daily return in trend-on vs trend-off states. The thesis predicts similar means and
+    very different vols.
+  - 'Net of costs: report the turnover and cost drag of each arm.'
+  - Repeat on NQ 2021-2026 as a secondary check only (short sample).
+expectations:
+- >-
+  If the thesis holds: trend-off days have much higher realised vol and deeper drawdowns, but mean returns
+  are not significantly lower.
+- C beats A on Sharpe and max drawdown, but D adds little or nothing to B.
+- Vol targeting alone (B) gives most of the risk-adjusted improvement over A.
+what_would_kill_it: >-
+  D does not beat B net of costs (trend adds nothing beyond vol targeting), or neither C nor D beats a
+  vol-targeted buy-and-hold out of sample. Either way the trend overlay is not worth running. Also kill
+  it if the improvement depends entirely on one episode (e.g. 2022 or Mar 2020).
+data_requirements:
+- >-
+  ES continuous 1-min 2013-12 to 2026-09 (clean_ES_master.parquet), aggregated to daily RTH closes and
+  close-to-close returns
+- Back-adjusted roll handling
+- NQ continuous 1-min 2021-2026 for the secondary check
+data_available: 'yes'
+notes:
+- >-
+  Status is 'idea' because the source paper is unread. This is a hypothesis test inspired by the title,
+  not a replication.
+- >-
+  Low frequency and long holding times mean it is not a prop-challenge strategy. It is a portfolio overlay
+  or regime filter that could be uncorrelated with our intraday books.
+- Expect weak results after costs. McLean & Pontiff haircut applies to trend in general.
+variants:
+- Trend signal = 12-month return sign instead of SMA
+- Partial de-risk (50% exposure) in trend-off instead of flat
+- Use the trend/vol state as a switch for existing intraday strategies
+related_strategies:
+- overnight_drift_long
+- noise_area_momentum_es
+- orb_long_only
+review:
+  scores:
+    why_strength: 3
+    persistence: 4
+    simplicity: 4
+    testability: 4
+    overfit_resistance: 3
+  verdict: refine
+  reasons:
+  - >-
+    The spec is honest about its source. The paper was never read, and the spec says so plainly. It is
+    framed as a test of the title's hypothesis, not a copy of the paper's rules, so it does not copy the
+    paper. An unread paper is not a reason to reject, because the hypothesis can be tested with our own
+    data.
+  - >-
+    The WHY is plausible and has independent support. Volatility clusters, it rises after declines (the
+    leverage effect), and risk-targeted funds, CTAs and margin-limited holders are forced to de-lever
+    when it rises. Moreira & Muir and Harvey et al. back this up. That makes it a structural reason rather
+    than a pattern found in data, and it should persist because volatility clustering has held for decades.
+  - >-
+    The thesis itself predicts that trend adds no extra edge. If it holds, the tradable result is just
+    vol-targeted buy-and-hold, which is already known and in the playbook. The useful output is a decision:
+    whether a trend overlay or regime switch is worth running on top of vol targeting, including as a
+    switch for our intraday books. The decision matters, but the expected alpha is small.
+  - >-
+    Statistical power is the main weakness. ES covers 2013-2026, about 3,200 daily observations. A 200-day
+    SMA flips roughly 10-30 times, and the 80/20 split leaves an out-of-sample window (mid-2023 to 2026)
+    with almost no trend-off episodes except Apr 2025. A 'sign flips out of sample' test on that window
+    is close to meaningless.
+  - >-
+    The fills have a small look-ahead problem. The signal is computed on the 15:59 bar close and filled
+    at that same close. The rules need a computable signal time before the fill.
+  - >-
+    The parameter grid is too large for the trade count: SMA length, an alternative trend signal, vol
+    window, leverage cap, rebalance band, four arms and a diagnostic. Without a pre-registered primary
+    specification, multiple testing will inflate whatever D-vs-B difference shows up.
+  - >-
+    The data fits. ES 1-minute data from 2013 to 2026 can be aggregated to daily, and the rules are mostly
+    unambiguous. The NQ check on 2021-2026 adds almost nothing and could be dropped.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Pre-register one primary specification before any run: SMA 200, a 20-day vol window, max_leverage
+    2.0, rebalance_band 0.2 and $13 costs. The D-vs-B decision rests on that specification alone. Every
+    other parameter value and the 12-month-return signal become robustness checks, reported as a plateau
+    and not used for selection.
+  - >-
+    Fix the fill timing. Either compute the signal at the 15:45-15:50 close and fill at the 15:59 close,
+    or compute it at the 15:59 close and fill at the next session's open or the next 16:00 close. Report
+    the slippage that results.
+  - >-
+    Make the primary validation a block bootstrap of daily returns (20-day blocks) on the D-minus-B Sharpe
+    and max drawdown over the full sample, plus leave-one-year-out or anchored walk-forward results. Treat
+    the 80/20 OOS window only as a sanity check and state explicitly how few trend-off days it contains.
+  - >-
+    Model costs for the vol-targeted arms at MES granularity: the number of integer contract changes after
+    the rebalance band, plus roll costs. Do not apply them as fractional notional with no cost.
+  - >-
+    Confirm how clean_ES_master handles rolls. Build the SMA from a back-adjusted series and compute P&L
+    from unadjusted contract returns, or from back-adjusted returns that are verified to have no roll-gap
+    jumps.
+  - >-
+    Pre-specify the decision rule for the 'trend predicts returns beyond vol' outcome. For example: if
+    D beats B with a bootstrap CI that excludes 0 and the result is not driven by one episode, open a
+    separate trend-overlay spec rather than editing this one after the fact.
+  - >-
+    Re-run the paper reader once the SSRN text is available. If the paper's conclusion or signal definition
+    differs from this spec, update the spec, but keep the pre-registered primary test unchanged.

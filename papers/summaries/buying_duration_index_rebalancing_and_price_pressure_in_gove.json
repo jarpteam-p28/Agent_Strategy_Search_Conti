@@ -1,0 +1,47 @@
+{
+  "title": "Buying Duration: Index Rebalancing and Price Pressure in Government Bond Markets",
+  "authors": [
+    "Amar Soebhag",
+    "Patrick Verwijmeren",
+    "Fabio Martinetti"
+  ],
+  "year": 2026,
+  "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7601879",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "I could not open the paper (SSRN fetch failed), so this is inferred from the title only: government bond index rebalancing, such as month-end duration extensions, probably creates predictable buying pressure and temporary price effects. The size, sample and direction are unverified.",
+  "findings": [
+    {
+      "statement": "UNVERIFIED, inferred from the title only. The paper likely shows that when government bond indices rebalance (for example, when bonds enter or leave an index, or index duration changes), index-tracking investors must buy or sell predictable amounts. This likely moves prices temporarily around the rebalancing date.",
+      "evidence": "No text was accessed. The SSRN page and delivery URLs could not be fetched. I have no numbers, sample or period for this paper."
+    }
+  ],
+  "why": {
+    "pattern": "Institutional constraint / mandate, plus liquidity constraints on large orders (the mechanism is inferred, not confirmed from the paper)",
+    "mechanism": "Passive and benchmarked bond funds must hold the index. On known dates they must buy or sell the same bonds, mostly regardless of price. Dealers have limited balance sheet, so they absorb the flow only at a price concession. Prices then drift in the direction of the flow into the rebalance date and partly reverse afterwards.",
+    "who_is_forced": "Index-tracking funds and ETFs, and benchmarked active managers who need to limit tracking error. The date and size of the rebalance are public in advance. Liquidity providers and front-runners are on the other side.",
+    "why_it_persists": "Index rules are rigid and published. Passive assets keep growing. Dealer balance-sheet limits stay in place. Arbitrage capital is limited by risk and capacity.",
+    "what_would_kill_it": "Index providers smoothing or randomising rebalance dates. Funds moving to lower-tracking-error implementations, such as sampling and trading ahead. Crowded front-running competing away the premium. Central bank intervention dominating the flow.",
+    "authors_explanation_vs_ours": "I could not read the authors' explanation. The title suggests they argue for a price-pressure or demand-curve explanation. Whether the effect reverses or is permanent is unknown to me."
+  },
+  "tradable_edge": "Provisional and untested. Bond index rebalance flows are scheduled, known in advance and mechanical. Rate-futures prices may drift ahead of month-end index extension dates and then partly revert. The tradable version would be a calendar rule on Treasury or bond futures: go long (or short) in the days before a known index rebalance and exit after. The paper's actual findings must be read before any rule is written.",
+  "angles": [
+    "Calendar test on bond futures around month-end index rebalance dates. We have no bond futures data.",
+    "ES and NQ month-end flow effects as a spillover test, since risk assets can move with bond-flow days. Test pre and post 2022.",
+    "Check whether the effect is stronger when bond supply or duration extension is large.",
+    "Long-only or one-side-only variants.",
+    "Combine with other known month-end and turn-of-month seasonality findings."
+  ],
+  "caveats": [
+    "I did not read the paper. All the content above is inferred from the title and is unverified.",
+    "The fetch of the SSRN page failed, and no PDF URL was available.",
+    "Re-run the read with a working PDF before using any of this.",
+    "Do not use any numbers from this summary."
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "The paper is from 2026 and the topic is niche. Bond index rebalancing is known to institutions, and dealers and hedge funds likely already trade ahead of it. This is a guess, not based on the paper."
+  },
+  "data_fit": "Poor. The effect probably lives in government bond prices or yields, and we have no Treasury or other bond futures data (ZN, ZB and similar). We have only ES and NQ. A spillover test on ES or NQ around month-end rebalance dates is possible, but the paper's main signal cannot be tested. Index rebalancing dates and the index extension schedule are also not in the inventory.",
+  "referenced_papers_worth_reading": []
+}

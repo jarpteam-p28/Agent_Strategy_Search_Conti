@@ -268,3 +268,42 @@
   note: >-
     The original 1968 finding of drift after earnings news. It is the first of the three building blocks
     in the playbook. Cited from memory.
+- title: 'Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)'
+  authors:
+  - Carlo Zarattini
+  - Andrew Aziz
+  - Andrea Barbon
+  year: 2024
+  venue: SSRN
+  note: >-
+    Likely the original strategy being tested. This is from my background knowledge and is not confirmed
+    from the paper.
+- title: Do Leveraged ETFs Really Amplify Late-Day Returns and Volatility?
+  authors:
+  - Ivan T. Ivanov
+  - Stephen L. Lenkey
+  venue: Journal of Financial Markets
+  year: 2018
+  note: The benign US evidence; useful as the null at low loop gain for any ES/NQ late-day test.
+- title: >-
+    Liquidity Provision to Leveraged ETFs and Equity Options Rebalancing Flows: Evidence from End-of-Day
+    Stock Prices
+  authors:
+  - Andrea Barbon
+  - Heiner Beckmeyer
+  - Andrea Buraschi
+  - Mathis Moerke
+  venue: SSRN
+  year: 2022
+  url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3925725
+  note: >-
+    US end-of-day rebalancing flows and who supplies liquidity; directly relevant to a closing-flow test
+    on single stocks.
+- title: Predatory Trading
+  authors:
+  - Markus K. Brunnermeier
+  - Lasse Heje Pedersen
+  venue: Journal of Finance
+  year: 2005
+  note: >-
+    Theoretical base of the predation framing; defines the line between predatory trading and manipulation.

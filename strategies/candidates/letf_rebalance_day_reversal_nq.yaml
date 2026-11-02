@@ -1,0 +1,204 @@
+id: letf_rebalance_day_reversal_nq
+name: Leveraged-ETF Rebalance Day Reversal, falsification test (NQ/ES, close-to-next-close)
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/preying_on_leveraged_etfs.md
+  papers:
+  - title: Preying on Leveraged ETFs
+    authors:
+    - Yinhong Zhao
+    year: 2026
+    venue: SSRN
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7229918
+    note: >-
+      Predicts a null at US index loop gains (0.03-0.10). This spec tests that prediction on data we already
+      hold.
+  - title: Do Leveraged ETFs Really Amplify Late-Day Returns and Volatility?
+    authors:
+    - Ivan T. Ivanov
+    - Stephen L. Lenkey
+    year: 2018
+    venue: Journal of Financial Markets
+    note: Benign US evidence; the expected null.
+finding: >-
+  Leveraged and inverse ETFs must trade in the direction of the day's move into the close. Where that
+  flow is large relative to auction depth, the close overshoots and most of the move reverses the next
+  day. The paper shows the effect only in two Korean stocks and finds no reversal in US index complexes.
+  The Nasdaq-100 LETF complex (TQQQ/SQQQ/QLD/QID and others) grew a lot after 2020, so NQ is the US index
+  where any residual effect would be largest.
+why: >-
+  Same execution-mechanics WHY: the rebalance A(L²−L)r is forced, price-insensitive and computable in
+  advance, so it is front-run and then reverses once outside capital arrives. On index futures the flow
+  is small relative to depth, so we expect little or nothing. The test is worth running because it is
+  cheap (data we hold), it checks the paper's threshold claim, and it gives a regime monitor in case the
+  index LETF complex grows enough relative to depth.
+market:
+  instruments:
+  - NQ
+  - ES
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York for signal and entry; position held overnight to the next
+    RTH close
+  universe: null
+direction: long_short
+entry:
+  long: >-
+    At 15:59 ET on day t, buy 1 contract if the RTH return (09:30 open to 15:59) ≤ −k × its 20-day sigma
+    of RTH returns.
+  short: At 15:59 ET on day t, sell 1 contract if the RTH return ≥ +k × sigma.
+  filters:
+  - >-
+    Optional flow filter: estimated mandated flow = Σ A(L²−L) × r_t for the QQQ/SPY LETF complex, using
+    AUM where available. Trade only when it is in the top quintile of its trailing 1-year distribution.
+  - Skip if day t+1 is an FOMC, NFP or CPI day, to avoid overlap with pre_fomc and pre_macro specs.
+  - 'Warm-up: no trades until 20 sessions of sigma history exist.'
+exit:
+  stop_loss: 'Master-signal test: none. Live variant: 1.0 × the day-t RTH range beyond the entry.'
+  take_profit: null
+  time_exit: 15:59 ET on day t+1
+  other:
+  - 'Variant: exit at 09:30 ET on t+1 (overnight leg only)'
+  - 'Variant: exit at 15:59 ET on t+2'
+position_sizing:
+  development: 1 contract fixed (NQ and ES tested separately; MNQ/MES for granularity).
+  live: 'Volatility target: fixed $ risk / (20-day ATR × point value), rounded down to whole contracts.'
+parameters:
+- name: shock_threshold_k_sigma
+  default: 2.0
+  source: assumption; paper finds reversal only on large-shock days
+  test_range: 1.0, 1.5, 2.0, 2.5
+- name: sigma_lookback_days
+  default: 20
+  source: assumption
+  test_range: 20, 60
+- name: hold
+  default: t+1 15:59 ET
+  source: paper (next close)
+  test_range: t+1 09:30, t+1 15:59, t+2 15:59
+- name: flow_quintile_filter
+  default: false
+  source: assumption
+  test_range: off, top quintile, top decile
+open_questions:
+- >-
+  Without LETF AUM history we can only use |r_t| as the flow proxy. That mixes this mechanism with generic
+  daily reversal, volatility-target flows and 0DTE dealer hedging. Can we source TQQQ/SQQQ/UPRO/SPXU AUM
+  history?
+- >-
+  Index futures settle at 16:00 but trade to 17:00 ET. Should entry be at 15:59 ET, or at the 16:15 settlement-adjacent
+  price?
+- >-
+  Overlap with overnight_reversal_first_hour_es (which reverses the overnight move, not the RTH move).
+  Check the correlation of daily P&L.
+- >-
+  Regime: dealers are long gamma on 0DTE days after 2022 and LETF AUM grew. Report results before and
+  after 2022, and by NQ vs ES.
+- >-
+  NQ data starts mid-2021, which gives only ~1 year in-sample before the post-2022 regime. ES from 2013
+  carries most of the test.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th percentile of the bootstrapped drawdown over the same number
+    of trades.
+  extra_checks:
+  - >-
+    Beat the zero-intelligence baseline: a long-only close-to-close hold on all days, and on all large-move
+    days.
+  - >-
+    Report gross points per trade against about 2 points of round-trip friction. Require net t ≥ 2 and
+    the same sign in every OOS year.
+  - >-
+    Dose-response: the reversal coefficient should rise with the size of the LETF complex over time (2013
+    to 2026). A flat or falling coefficient while AUM rises refutes the mechanism.
+  - Split by up-shock and down-shock days, since the paper says down-shocks are stronger.
+data_available: partial
+data_requirements:
+- ES 1-min 2013-2026 and NQ 1-min 2021-2026 (held)
+- Daily AUM and leverage of index leveraged/inverse ETFs (not held)
+- FOMC/NFP/CPI calendar
+expectations:
+- >-
+  Prior is a null: the paper finds no reversal in US index complexes, and Ivanov & Lenkey find benign
+  effects.
+- >-
+  If there is any effect, it should be in large-shock days, stronger after down days, and stronger after
+  2020 as the LETF complex grew.
+- >-
+  A positive result that does not scale with LETF AUM should be credited to generic reversal, not to this
+  WHY.
+what_would_kill_it: >-
+  Expected to be null. If there is any effect, it dies when the index LETF complex shrinks relative to
+  futures and auction depth, or when crowded liquidity providers absorb the closing flow.
+related_strategies:
+- overnight_reversal_first_hour_es
+- noise_area_last_half_hour_es
+- noise_area_momentum_es
+- overnight_drift_long
+variants:
+- Long-only after large down days
+- Overnight leg only (15:59 → 09:30)
+- Use the last-30-minute move instead of the full RTH move as the shock
+notes:
+- This is mainly a falsification and regime-monitoring test, not an expected money-maker.
+- >-
+  Keep it if it is uncorrelated with the noise-area momentum specs. A positive result here would hedge
+  the momentum book on large-move days.
+review:
+  scores:
+    why_strength: 2
+    persistence: 2
+    simplicity: 3
+    testability: 3
+    overfit_resistance: 2
+  verdict: park
+  reasons:
+  - >-
+    The mechanism is real in the paper but, by the paper's own evidence, absent at US index loop gains
+    (0.03-0.10); Ivanov & Lenkey also benign. The spec's prior is a null, so the WHY doesn't apply to
+    these instruments.
+  - >-
+    Without leveraged-ETF AUM history, the flow filter and dose-response check (the only parts that tie
+    a result to leveraged ETFs) cannot run. The test collapses to generic 'fade large RTH moves', mixed
+    with daily reversal, vol-target flows and 0DTE hedging. A positive result couldn't be credited to
+    this WHY, and a null tells us little.
+  - >-
+    Shock window mismatch: the paper's overshoot comes from overnight news, is priced at the open and
+    measured close-to-close. The spec uses 09:30-15:59 RTH return, which excludes the overnight gap where
+    the paper says the overshoot sits.
+  - >-
+    Parameter/variant grid (4 k x 2 lookbacks x 3 holds x 3 filters = 72 combos, plus 3 variants, 2 instruments,
+    up/down split) is large for an expected-null test; any significant cell is likely a data-mined false
+    positive.
+  - >-
+    Statistical power is thin: NQ only from mid-2021, about 10-15 trades a year at 2 sigma, so the 'same
+    sign every OOS year' check is weak.
+  - >-
+    Source is a preliminary preprint with 82 treated observations in two Korean stocks; high decay, and
+    regulators have already acted.
+  - >-
+    Not a copy of the paper: the spec honestly reframes it as a falsification/regime monitor, which is
+    good practice, but that doesn't justify desk time ahead of strategies with a positive prior.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Source daily AUM and leverage for TQQQ/SQQQ/QLD/QID/UPRO/SPXU/SSO/SDS (public from issuer histories,
+    cheap to buy) and make the flow-scaled signal plus the AUM dose-response test over 2013-2026 the main
+    test. Otherwise rename the spec 'generic large-move daily reversal' and drop the leveraged-ETF WHY.
+  - >-
+    Pre-register one frozen test (k=2.0, 20-day sigma, exit at t+1 RTH close, flow filter on, no stop);
+    report the full grid only as a sensitivity table, not for selection.
+  - >-
+    Use prior RTH close to today's 15:59 (gap included) as the primary shock to match the paper's overnight-news
+    overshoot; report the gap and the 09:30-15:59 move separately.
+  - >-
+    Settle the entry/exit price (15:59 ET vs the settlement-adjacent price), apply the same rule at the
+    exit, and state how continuous-contract rolls are handled across the overnight hold.
+  - Make ES the primary test and NQ confirmatory; report pre/post-2022.
+  - >-
+    State the success criterion up front: confirmed only if (a) the flow-scaled signal beats raw |r| as
+    a predictor and (b) the reversal coefficient rises with complex AUM / futures depth. Otherwise record
+    a confirmed null and close the spec.
