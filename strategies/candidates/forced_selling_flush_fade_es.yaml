@@ -1,0 +1,246 @@
+id: forced_selling_flush_fade_es
+name: Forced-Selling Flush Fade (ES/NQ intraday, long only, time exit)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/predatory_trading.md
+  papers:
+  - title: Predatory Trading
+    authors:
+    - Markus K. Brunnermeier
+    - Lasse Heje Pedersen
+    venue: Journal of Finance
+    year: 2005
+    url: https://doi.org/10.1111/j.1540-6261.2005.00781.x
+    note: >-
+      Theory paper, read from the abstract and memory only. Predation pushes the price past fair value
+      during forced selling, and the price recovers once the forced flow stops.
+  - title: Market Liquidity and Funding Liquidity
+    authors:
+    - Markus K. Brunnermeier
+    - Lasse Heje Pedersen
+    venue: Review of Financial Studies
+    year: 2009
+    url: https://doi.org/10.1093/rfs/hhn098
+    note: Liquidity spirals. Supports conditioning on a high-volatility regime.
+finding: >-
+  This is a theory result with no empirical sample, and it was read from the abstract and memory only.
+  When a large trader is forced to sell and others can see it, rivals sell first. The price is pushed
+  below fundamental value and recovers once the forced flow is finished. The overshoot is bigger when
+  liquidity is thin, the position is large and the seller is near its margin limits.
+why: >-
+  The WHY is liquidity constraints on large orders combined with an institutional constraint. Margin calls,
+  risk limits and vol-target de-risking force sales that do not depend on price. Liquidity providers must
+  be paid to absorb them, and predators sell ahead, so the price overshoots. When the forced flow stops,
+  nothing keeps the price down and it partly recovers. We cannot see who is distressed. Our proxy is the
+  footprint of forced flow: an abnormally fast, high-volume drop compared with the normal move at that
+  time of day, followed by a sign that selling is exhausted (no new low for a few minutes). The test is
+  reversion after the flow ends. We do not fade into the flow itself, because the playbook's gamma study
+  found that faders who come in early lose.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min (signals on rolling 30-min windows)
+  session: >-
+    RTH 09:30-16:00 America/New_York (data stored in UTC, convert with DST); signals allowed 10:00-15:00
+    ET
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    Flush trigger: during 10:00-15:00 ET, the trailing 30-minute return is at or below -K × σ30. σ30 is
+    the 20-day standard deviation of 30-minute returns ending at the same clock time. Trailing 30-minute
+    volume must also be at least V × the 20-day average volume for the same clock window. After the trigger,
+    wait for exhaustion: go long at the close of the first 1-minute bar that completes X consecutive minutes
+    without a new low below the flush low. If no exhaustion occurs by 15:15 ET, there is no trade.
+  short: null
+  filters:
+  - One trade per day. After a trigger, take the first event only (cluster lockout).
+  - >-
+    Do not use the first 30 minutes after the open, so overnight-gap dynamics are excluded. Those are
+    covered by nq_extreme_overnight_drop_rebound.
+  - >-
+    Skip the 08:30/10:00 ET macro release minutes and FOMC 14:00-14:30 ET, where the drop is news repricing
+    rather than forced flow.
+  - >-
+    Variant filter: regime gate where 20-day realised volatility is above its 1-year median, i.e. a stress
+    regime where deleveraging is likely.
+exit:
+  stop_loss: Flush low minus 0.25 × the 15-session average daily ATR
+  take_profit: >-
+    Optional: retrace of R × the flush size (default 0.5, i.e. 50% of the drop). Test with no target as
+    well.
+  time_exit: 'Flat at 15:59 ET. Variant: hold to the next 09:35 ET.'
+  other:
+  - >-
+    Master-signal test first: fixed holds of 60 and 120 minutes and to the close, with no stop and no
+    target, compared with an always-long baseline over the same clock windows.
+position_sizing:
+  development: 1 contract fixed (ES; for NQ run 1 NQ or 5 MNQ separately)
+  live: >-
+    Volatility target: fixed dollar risk per trade (e.g. $2,000) ÷ (entry − stop distance × point value),
+    rounded down, with at least 1 micro
+parameters:
+- name: K_sigma_threshold
+  default: 3
+  source: assumption
+  test_range: 2.0, 2.5, 3.0, 3.5
+- name: volume_multiple_V
+  default: 2
+  source: assumption
+  test_range: 1.5, 2.0, 3.0
+- name: window_minutes
+  default: 30
+  source: 'assumption (paper angle: 15-60 min)'
+  test_range: 15, 30, 60
+- name: exhaustion_minutes_X
+  default: 5
+  source: assumption
+  test_range: 3, 5, 10
+- name: lookback_days
+  default: 20
+  source: assumption
+  test_range: 10, 20, 40
+- name: stop_atr_fraction
+  default: 0.25
+  source: assumption (transcript 03 uses ATR-fraction levels)
+  test_range: 0.15, 0.25, 0.4
+- name: retrace_target_R
+  default: 0.5
+  source: assumption
+  test_range: none, 0.38, 0.5, 0.75
+open_questions:
+- >-
+  The paper was not read. Overshoot and recovery is a model result with no empirical magnitude, so every
+  parameter is our own.
+- >-
+  Does the price impact of forced flow in deep index futures last minutes or hours? The holding period
+  has to be chosen from the post-event return profile.
+- >-
+  Is the exhaustion confirmation (no new low for X minutes) enough, or does forced flow come in waves
+  (e.g. 2020-03, 2024-08-05)? This could cause repeated stop-outs.
+- >-
+  How should we separate news-driven repricing, which is not forced and may keep going, from flow-driven
+  drops? A macro calendar is needed for the exclusion filter.
+- >-
+  Same-clock σ and volume baselines need 20 days of warm-up. Document it so early sessions don't trade
+  with filters off.
+- >-
+  NQ is only available from 2021, so NQ results come from one regime. Compare ES before and after 2022
+  (0DTE dealer gamma).
+- >-
+  How many events are there? If fewer than ~100 trades in the ES in-sample period, relax K or V before
+  judging.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop live trading if the drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - >-
+    Must beat the always-long baseline over the same clock windows on gross points per trade. Report gross
+    vs net with about $5 round trip ES and $13 NQ.
+  - Net t ≥ 2 and the same sign in every out-of-sample year (Mesfin note).
+  - >-
+    Report 2020, 2022 and Aug 2024 separately, plus results with the top 10 trades removed (outlier dependence).
+  - Split results by regime (high vs low realised volatility) and before/after 2022.
+  - >-
+    Falsification: run the mirror case (a high-volume spike up followed by a fade short). The theory predicts
+    weaker or no reversion there.
+expectations:
+- >-
+  The forward return after the exhaustion entry is positive and larger than the baseline, and larger in
+  high-volatility regimes.
+- >-
+  Without the exhaustion wait (entering right at the trigger), results are worse, i.e. continuation comes
+  first and reversion later.
+- The effect is larger in NQ than in ES if thinner and more levered flow overshoots more.
+what_would_kill_it: >-
+  Deep liquidity providers (dealers who are long gamma, as on 0DTE days) absorb forced flow so there is
+  no overshoot left to fade, or drops are mostly news repricing that keeps going. If the post-exhaustion
+  return is not above the always-long baseline after costs in-sample, reject it.
+data_requirements:
+- ES 1-min OHLCV 2013-2026 (have)
+- NQ 1-min 2021-2026 (have)
+- Macro and FOMC release calendar (must build)
+data_available: partial
+related_strategies:
+- nq_extreme_overnight_drop_rebound
+- letf_rebalance_day_reversal_nq
+- noise_area_momentum_es
+variants:
+- Hold to the next RTH open at 09:35 ET to capture the overnight recovery.
+- Regime-gated only (realised volatility above the median).
+- Stop-free master signal with fixed 60/120-min holds.
+notes:
+- >-
+  This differs from nq_extreme_overnight_drop_rebound, which trades the overnight gap at the open. This
+  spec trades intraday RTH flushes after the open window.
+- >-
+  This differs from letf_rebalance_day_reversal_nq, which trades close to next close by mechanical rebalancing.
+  Here the trigger is a volume/speed footprint at any time of day.
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 2
+    testability: 4
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    The WHY is real in principle: margin calls, risk limits and vol-target de-risking force sales that
+    don't depend on price, and liquidity providers have to be paid to absorb them. But the paper was read
+    from memory only, it is pure theory, and it gives no empirical size or time scale for the effect.
+  - >-
+    The proxy is weak. A fast drop on high volume at that clock time catches news repricing, stop cascades
+    and CTA flows just as easily as forced deleveraging. Skipping only the release minutes doesn't remove
+    the drops that follow a release. As written, this is a generic 'fade large intraday drops' rule. The
+    intraday momentum literature (and Rosa 2022 in our notes) points toward continuation, so the forced-flow
+    story is not what is being tested. It is only a label on the result.
+  - >-
+    It does not copy the paper. The paper has no rules, and the spec frames its own rules around the WHY.
+    The spec also correctly waits for exhaustion instead of fading into the flow, as the gamma-study lesson
+    says.
+  - >-
+    Seven free parameters, all assumptions, with a grid of about 3,900 combinations, plus an optional
+    target, a regime gate and two time-exit variants. This is a lot of complexity for an event that may
+    only happen tens of times per year. Data-mining risk is high.
+  - >-
+    Testability is good. ES 1-min data from 2013 covers it, NQ data is available from 2021, and only a
+    macro/FOMC calendar has to be built. The master-signal test, the always-long baseline, the mirror-case
+    falsification, the top-10-removed check and the pre/post-2022 split are all well designed.
+  - >-
+    There are coding ambiguities. (1) A trailing 30-minute window evaluated at 10:00 covers 09:30-10:00,
+    which contradicts the rule to skip the opening window. (2) Does the flush low keep updating after
+    the trigger while you wait for exhaustion? (3) The live sizing formula is garbled.
+  required_changes:
+  - >-
+    Freeze the stage-1 test to the master signal only: K=3, V=2, window=30, X=5, lookback=20. Hold fixed
+    for 60 min, 120 min and to the close, with no stop and no target. Report the event count and the post-event
+    return profile against the always-long baseline before tuning anything. Tune at most two parameters
+    (K, X) in-sample, and only if stage 1 shows an edge.
+  - >-
+    Drop the optional retrace target and the overnight-hold variant from the first pass, and use one time
+    exit chosen from the in-sample return profile.
+  - >-
+    Make the forced-flow claim testable instead of just naming it. Add a comparison where flushes are
+    split into those that start within 30-60 minutes after a scheduled release and those that don't, and
+    require the edge to sit in the no-news group. Separately, test whether the edge is stronger on high-volatility,
+    deleveraging days (realised vol above its median, or a large drawdown in the previous days). If the
+    edge doesn't concentrate where forced flow should be, the WHY isn't supported.
+  - >-
+    Fix the window definition: the first eligible trigger evaluation is at 10:30 ET, or the trailing window
+    must not include bars before 10:00 ET.
+  - >-
+    Specify how the flush low is defined: it is the running low from trigger until exhaustion, and both
+    the exhaustion count and the stop reference this low.
+  - Fix the live sizing formula to contracts = dollar risk ÷ ((entry − stop) × point value).
+  - >-
+    State the minimum event count before judging results (e.g. 100 in-sample ES events). If K or V has
+    to be relaxed to reach it, report that the trigger is no longer extreme.
+  - Verify the paper's claims against the actual text before citing them as support.
+  copies_the_paper: false

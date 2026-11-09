@@ -1,0 +1,220 @@
+id: post_surprise_overnight_long_stocks
+name: Post-Surprise Overnight Hold (single small/mid caps, close-to-open, repeated for weeks)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/a_surprise_that_keeps_you_awake_overnight_returns_after_earn.md
+  papers:
+  - title: 'A Surprise That Keeps You Awake: Overnight Returns After Earnings Announcements'
+    authors:
+    - Fabian Gamm
+    year: 2019
+    venue: SSRN working paper
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293638
+    note: Only the abstract was read. Source of the finding.
+  - title: Overnight Returns and Firm-Specific Investor Sentiment
+    authors:
+    - Aboody
+    - Even-Tov
+    - Lehavy
+    - Trueman
+    year: 2018
+    venue: Journal of Financial and Quantitative Analysis
+    note: 'Related work: overnight returns as a measure of retail sentiment. Not verified.'
+  - title: >-
+      All That Glitters: The Effect of Attention and News on the Buying Behavior of Individual and Institutional
+      Investors
+    authors:
+    - Barber
+    - Odean
+    year: 2008
+    venue: Review of Financial Studies
+    note: Basis for attention-driven retail net buying. Cited from memory.
+finding: >-
+  Abstract only. For several weeks after large earnings surprises, US single stocks earn strongly positive
+  abnormal overnight (close-to-open) returns, after both positive and negative surprises. Over the same
+  weeks, intraday (open-to-close) returns have the opposite sign, so the two cancel close-to-close. The
+  abstract says the effect appears only when retail investors are net buyers and paying attention. It
+  is stronger in high-sentiment periods and in hard-to-arbitrage firms, and weaker when holders sit on
+  gains (disposition effect). The magnitudes, sample and exact horizon were not seen.
+why: >-
+  Retail attention and order imbalance at the open. A big surprise, good or bad, puts the stock in front
+  of attention-limited retail investors. They almost only buy, because shorting is rare and costly for
+  them. Their orders pile up outside trading hours and execute at the open, which pushes the open above
+  fair value. Liquidity providers and arbitrageurs absorb the imbalance during the day, so the price slips
+  back intraday. Limits to arbitrage in small, illiquid names stop the open-auction premium from being
+  competed away. Overnight holders are effectively paid by the retail buyers at the open.
+market:
+  instruments:
+  - US single stocks (small/mid caps)
+  bar_size: daily (official open and close auction prices)
+  session: Buy at the close auction 16:00 America/New_York, sell at the open auction 09:30 America/New_York
+  universe: >-
+    US common stocks, price > $5, market cap from the 20th to 80th NYSE percentile (hard-to-arbitrage
+    but tradable), ADV > $5M
+direction: long_only
+entry:
+  long: >-
+    An event is an earnings announcement where |announcement return| (close before the announcement to
+    the first close after it, minus the market return) is in the top decile of the trailing 12 months
+    of events. As a variant, use |SUE| in the top decile when consensus data exists. Starting at the first
+    close after the reaction day (day +1), buy at the close auction and hold overnight. Repeat every trading
+    day from day +1 to day +N.
+  short: null
+  filters:
+  - Both surprise signs qualify. Also report positive and negative separately.
+  - >-
+    Optional disposition filter: skip the event if the stock is within 5% of its 52-week high on day 0
+    (a proxy for holders sitting on gains)
+  - >-
+    Optional sentiment filter: trade only when VIX is below its 1-year median (a proxy for a high-sentiment
+    regime)
+  - Skip days with another scheduled corporate event (ex-dividend date, index rebalance)
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Sell every position at the next open auction (09:30 ET). Stop re-entering after day +N.
+  other:
+  - >-
+    Abort the remaining days for a name if it releases new material news (e.g. guidance or an M&A announcement).
+    This is optional and needs a news feed.
+position_sizing:
+  development: Equal weight across all active event names each night (or a fixed $10k per name). No leverage.
+  live: >-
+    Volatility targeting per name: dollars = (risk budget per name) / (20-day stdev of that stock's overnight
+    return), with a cap of 2% of the portfolio per name and a cap on gross overnight exposure. Optional:
+    hedge market beta with an ES short overnight.
+parameters:
+- name: holding_window_days_N
+  default: 15
+  source: assumption (paper says 'several weeks')
+  test_range: 5, 10, 15, 20, 30
+- name: surprise_decile_threshold
+  default: top 10% |abnormal announcement return|
+  source: assumption
+  test_range: top 5%, 10%, 20%
+- name: start_day
+  default: 1
+  source: assumption
+  test_range: 1, 2, 3
+- name: market_cap_band
+  default: NYSE 20th-80th percentile
+  source: assumption (hard-to-arbitrage firms)
+  test_range: micro excluded; small only; small+mid; all
+expectations:
+- >-
+  Abnormal overnight return of event stocks over days +1..+N is positive for both surprise signs and exceeds
+  the overnight return of matched non-event stocks (same size and volatility bucket)
+- >-
+  The open-to-close return of event stocks over the same window is negative, and close-to-close is near
+  zero
+- >-
+  Stronger in small and illiquid names and in high-sentiment periods; weaker when the stock is near its
+  52-week high
+- Expect about half of the paper's effect after publication (McLean & Pontiff)
+what_would_kill_it: >-
+  Overnight event premium no larger than the general overnight premium of matched stocks. Or net of auction
+  spreads and fees (two trades a night) the edge goes negative. Or the effect disappears after 2019 as
+  retail flow moves into 24-hour or overnight trading venues (e.g. Robinhood 24h, Blue Ocean) and the
+  imbalance at the open shrinks.
+open_questions:
+- >-
+  Paper's horizon ('several weeks'), magnitudes, sample period and surprise definition are unknown, since
+  only the abstract was read. The full text is needed to set N and the threshold.
+- >-
+  Does the effect start on the announcement night itself, or only from day +1? We start at +1 to avoid
+  trading the surprise itself.
+- >-
+  How did the paper measure retail net buying (TAQ sub-penny, Boehmer et al.)? Can a live proxy (abnormal
+  odd-lot volume, Robinhood-style attention data) be built?
+- >-
+  Can retail-driven moves at the open be captured cheaply in open/close auctions for small caps, or do
+  auction imbalances eat the edge?
+- >-
+  Benchmark choice: abnormal against the market overnight return, or against matched stocks? The general
+  overnight premium must be removed.
+- >-
+  Is the short intraday leg (short at the open, cover at the close) a separate, cheaper trade, given borrow
+  costs?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number of trading
+    nights
+  extra_checks:
+  - >-
+    Chronological 80/20 split. Report pre-2020 vs post-2020 (retail boom) and post-2023 (24h retail trading).
+  - >-
+    Report gross vs net bps per night with realistic auction costs (assume 10-30 bps round trip for small
+    caps)
+  - Compare against an unconditional overnight hold of the same universe
+  - Check that results are not driven by a few events (top-20 event contribution)
+  - Check 2022 (down year) separately
+data_available: 'no'
+data_requirements:
+- US single-stock daily official open and close prices, survivorship-free (CRSP or similar)
+- Earnings announcement dates with timing (before the open or after the close)
+- 'Optional: I/B/E/S consensus for SUE'
+- 'Optional: retail-flow proxy (TAQ-based Boehmer-Jones-Zhang-Zhang measure)'
+- VIX daily
+notes:
+- >-
+  Uses only prices and dates in the base version, so it can be built from cheap data once earnings dates
+  are available.
+- >-
+  Related to the PEAD specs, but this one trades the overnight/intraday split, not the close-to-close
+  drift. It is the same in both surprise directions.
+related_strategies:
+- pead_long
+- pead_next_announcement
+- overnight_drift_long
+variants:
+- Positive surprises only vs negative surprises only
+- 'Market-hedged: short ES overnight against the basket'
+- 'Mirror trade: short at the open and cover at the close over the same window'
+- Europe small caps
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 3
+    testability: 2
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    WHY is believable but not proven: retail attention, mostly buy-only orders and a pile-up at the open
+    match a known pattern. Only the abstract was read, so there are no sizes, sample, period or horizon.
+    The summary itself says the general overnight premium or market-maker inventory effects could explain
+    it instead.
+  - >-
+    Persistence is weak. Berkman et al. (2012) and Lou/Polk/Skouras (tug of war) cover much the same open-vs-overnight
+    split, so it has been well known for years. Retail flow moving to 24h and overnight venues attacks
+    the exact mechanism. With McLean-Pontiff shrinkage, expect about half of a number we haven't even
+    seen.
+  - >-
+    Costs are the main risk: two auction trades a night for about 15 nights per event. At the spec's own
+    10-30 bps round trip that is 150-450 bps per event, which a per-night abnormal overnight return of
+    a few bps would not cover.
+  - >-
+    The universe contradicts the WHY: the NYSE 20th-80th percentile band is about $1B to $15B+, mid/large-ish,
+    not the hard-to-arbitrage small caps the WHY points to.
+  - >-
+    The rules leave out the condition the WHY depends on. The abstract says the effect exists only when
+    retail investors are net buyers and paying attention, but no retail or attention filter is in the
+    rules, so the strategy may be trading mostly the cases with no effect.
+  - >-
+    Too many settings for an unseen edge: 4 tuned settings (5x3x3x4 = 180 combinations) plus 3 optional
+    filters gives a lot of room for data-mining.
+  - >-
+    Day 0 is not defined for announcements before the open vs after the close, and the universe for the
+    trailing decile ranking is not specified.
+  - >-
+    No single-stock or earnings data on hand. It needs buying (CRSP plus an earnings calendar); the base
+    version only needs prices and dates. Missing data is not a reason to reject.
+  - >-
+    Not a copy of the paper: the rules are framed around the WHY, not the paper's unseen rules. But they
+    are close to the paper's own trade, and none of the angles are used in the base version.
+  copies_the_paper: false

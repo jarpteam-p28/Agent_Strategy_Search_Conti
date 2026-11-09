@@ -307,3 +307,89 @@
   year: 2005
   note: >-
     Theoretical base of the predation framing; defines the line between predatory trading and manipulation.
+- title: Leveraged and Inverse ETF Rebalancing and Market Close
+  authors:
+  - Minder Cheng
+  - Ananth Madhavan
+  year: 2009
+  venue: Financial Analysts Journal (The Dynamics of Leveraged and Inverse Exchange-Traded Funds)
+  note: >-
+    Original LETF rebalancing-flow argument. Title and venue are from memory and may not be exact. Check
+    before use.
+- title: Trading Volume Predictions and Intraday Momentum / Market Intraday Momentum
+  authors:
+  - Lei Gao
+  - Yufeng Han
+  - Sophia Zhengzi Li
+  - Guofu Zhou
+  year: 2018
+  venue: Journal of Financial Economics
+  note: >-
+    Market Intraday Momentum: the first half-hour return predicts the last half-hour return on SPY and
+    ES. It is directly usable for our data. Title is from memory.
+- title: Leveraged ETF rebalancing and late-day returns (Tuzun)
+  authors:
+  - Tugkan Tuzun
+  year: 2013
+  venue: Federal Reserve Board FEDS
+  note: Argues for LETF-driven end-of-day price effects. Title is approximate, from memory.
+- title: Leveraged ETFs and market quality / Leveraged Funds and the Shadow Cost of Leverage
+  authors:
+  - Cheng and Madhavan
+  venue: Financial Analysts Journal
+  year: 2009
+  note: >-
+    Not seen in the fetched text. The original analysis of leveraged ETF rebalancing and its end-of-day
+    price impact. I added it from my own knowledge.
+- title: Do Leveraged ETFs Rebalance at the Close? / Leveraged ETFs and Volatility (Tuzun)
+  authors:
+  - Tugkan Tuzun
+  venue: Working paper
+  year: 2013
+  note: Not seen in the fetched text. Added from my own knowledge; the title is approximate.
+- title: Market Liquidity and Funding Liquidity
+  authors:
+  - Markus K. Brunnermeier
+  - Lasse Heje Pedersen
+  venue: Review of Financial Studies
+  year: 2009
+  url: https://doi.org/10.1093/rfs/hhn098
+  note: >-
+    From memory. The companion paper on liquidity spirals, where margin constraints link funding and market
+    liquidity. It is useful for choosing stress-regime conditions.
+- title: The Limits of Arbitrage
+  authors:
+  - Andrei Shleifer
+  - Robert Vishny
+  venue: Journal of Finance
+  year: 1997
+  note: From memory. Foundational for why arbitrage capital stays limited and mispricings persist.
+- title: Front-Running Index Funds / The Price Impact of Index Reconstitution (Russell rebalancing)
+  authors:
+  - Honghui Chen
+  - Grant Noronha
+  - Vijay Singal
+  venue: Journal of Finance
+  year: 2006
+  note: >-
+    Worth checking. This is my best guess at related empirical work on trading ahead of predictable index
+    flows. The exact title and authors need verification.
+- title: Overnight Returns and Firm-Specific Investor Sentiment
+  authors:
+  - Aboody
+  - Even-Tov
+  - Lehavy
+  - Trueman
+  venue: Journal of Financial and Quantitative Analysis
+  year: 2018
+  note: >-
+    Not verified from the paper. Likely cited as related work on overnight returns and sentiment; check
+    the reference list.
+- title: >-
+    Overnight Returns and the Retail Investor / Attention papers (e.g. Barber & Odean 2008, All That Glitters)
+  authors:
+  - Barber
+  - Odean
+  venue: Review of Financial Studies
+  year: 2008
+  note: Foundation for attention-driven retail buying. Cited from memory, not confirmed from this paper.

@@ -1,0 +1,181 @@
+id: deleveraging_rebound_es_daily
+name: Multi-Day Deleveraging Rebound (ES daily, long only, N-day time exit)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/predatory_trading.md
+  papers:
+  - title: Predatory Trading
+    authors:
+    - Markus K. Brunnermeier
+    - Lasse Heje Pedersen
+    venue: Journal of Finance
+    year: 2005
+    url: https://doi.org/10.1111/j.1540-6261.2005.00781.x
+    note: >-
+      Theory paper. Forced liquidation leads to an overshoot below fair value and a later recovery. The
+      authors cite LTCM in 1998, which spread across funds over days.
+finding: >-
+  This is a model result, from memory and not verified. Forced liquidation by levered holders, spreading
+  through crowded positions, pushes prices below fundamental value over several days. Prices recover once
+  the liquidation is complete.
+why: >-
+  Margin calls, vol-target and risk-parity de-risking, and CTA stop-outs force sales spread over several
+  days, because large positions cannot be dumped in one session (liquidity constraints on large orders).
+  Predators front-run, which deepens the drop. Once realised volatility stops rising, the mechanical selling
+  ends and the price partly recovers. The proxy for 'forced selling is over' is a large multi-day drop
+  on heavy volume followed by the first up close.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: daily built from 1-min (RTH close 16:00 ET; also volume)
+  session: Daily, RTH close-to-close 16:00 America/New_York
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    Setup: the 3-day RTH close-to-close return is at or below -K × σ_daily × sqrt(3), where σ_daily is
+    the 60-day standard deviation of daily returns. The average volume over the 3 days must also be at
+    least V × the 60-day average. Entry: buy at the RTH close of the first day after the setup that closes
+    up (the exhaustion signal). The setup expires after 5 days.
+  short: null
+  filters:
+  - No new setup while a position is open.
+  - >-
+    Variant: require that 20-day realised volatility rose by at least 50% over the last 10 days (a deleveraging
+    regime).
+exit:
+  stop_loss: Close below the lowest close of the selloff minus 0.5 × the 15-day ATR
+  take_profit: None in the base test
+  time_exit: Exit at the RTH close N=5 trading days after entry
+  other: []
+position_sizing:
+  development: 1 ES contract fixed
+  live: 'Volatility target: dollar risk ÷ (stop distance × $50), so fewer contracts at high volatility'
+parameters:
+- name: K_sigma
+  default: 2.5
+  source: assumption
+  test_range: 2.0, 2.5, 3.0
+- name: volume_multiple_V
+  default: 1.3
+  source: assumption
+  test_range: 1.0, 1.3, 1.6
+- name: hold_days_N
+  default: 5
+  source: assumption
+  test_range: 3, 5, 10
+- name: lookback_days
+  default: 60
+  source: assumption
+  test_range: 40, 60, 120
+open_questions:
+- >-
+  The event count is small (maybe 20-50 from 2013-2026), so results will lean on outliers like 2020, 2022
+  and 2024. The statistics may never reach t ≥ 2, so keep this at idea status until the event count is
+  known.
+- >-
+  Is the first up close a real sign of exhaustion, or noise inside an ongoing liquidation (2008-style)?
+  There is no 2008 data in ES 1-min.
+- >-
+  Overlap with generic short-term reversal and the 'buy the dip' beta. We need a baseline of being long
+  N days after any random down day.
+- Continuous front-month back-adjustment across rolls affects the multi-day return computation.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop live trading if the drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - Compare with being long N days from a random entry, and from any day after a down close.
+  - 'Long-only beta check: report 2022 separately.'
+  - Remove the top 3 trades and re-check sign.
+expectations:
+- >-
+  The average 5-day return after a setup is above the unconditional 5-day return and above random-entry
+  long.
+- The effect is larger when the realised-volatility jump filter is on (forced deleveraging).
+what_would_kill_it: >-
+  Selloffs keep going after the first up close (liquidation in waves), or the excess return disappears
+  against a buy-any-dip baseline. Lower system leverage or central-bank backstops that remove forced selling
+  would also weaken it.
+data_requirements:
+- ES 1-min 2013-2026 aggregated to daily RTH bars with volume (have)
+- NQ 2021+ (have, short)
+data_available: 'yes'
+related_strategies:
+- forced_selling_flush_fade_es
+- trend_risk_timing_overlay_es
+- letf_rebalance_day_reversal_nq
+variants:
+- Hold 3 vs 10 days
+- Enter at the next RTH open instead of the close
+- Realised-volatility jump gate only
+notes:
+- Status is idea because the rules are speculative and the event sample is small.
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 3
+    testability: 3
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    The WHY is real and structural. Vol-target, risk-parity and CTA de-risking, plus margin calls, force
+    sales that are spread over several days because of liquidity limits. That fits the playbook's 'liquidity
+    constraints on large orders' and 'institutional constraint' patterns. Those players are still large
+    today, so the mechanism should persist.
+  - >-
+    It does not copy the paper. Brunnermeier-Pedersen is a theory paper with no rules, and the spec frames
+    its own proxy around the WHY. But the source summary was written from memory and has not been checked
+    against the text, so the paper only motivates the idea. It does not validate it.
+  - >-
+    The proxy is in the wrong place. The WHY says the selling ends when the mechanical de-risking ends,
+    which happens when realised volatility stops rising. The rules treat the realised-volatility jump
+    as an optional variant and make 'the first up close' the trigger. A first up close inside an index
+    with an upward drift is mostly noise. As written, the core rule is close to generic short-term reversal
+    or buying the dip.
+  - >-
+    The sample is too small for the tuning planned. There may be 20-50 events over 2013-2026, and the
+    spec tunes 4 parameters at 3 values each (81 combinations) plus a variant filter. An 80/20 chronological
+    split leaves about 5-10 out-of-sample trades, which cannot detect overfitting. Results will be driven
+    by 2018, 2020 and 2022.
+  - >-
+    Beta contamination is the main risk. ES rose strongly over 2013-2026, so any long-after-a-drop rule
+    will look good. The extra checks name the right baselines but do not include the one that isolates
+    the forced-flow component: the same price drop without the volume or volatility condition.
+  - >-
+    Testability is fine for ES daily from 1-min data (2013 onward). NQ adds little because it covers only
+    2021 onward and overlaps heavily with ES. Multi-day returns need a ratio-adjusted series or roll-aware
+    returns.
+  required_changes:
+  - >-
+    Make the deleveraging-regime condition part of the core setup, not a variant. Use a realised-volatility
+    jump (for example, 20-day realised volatility up at least 50% over 10 days), and/or make the entry
+    trigger 'realised volatility stops rising' (for example, 5-day realised volatility below its value
+    at the setup). Keep the first up close only as a secondary condition, or drop it.
+  - >-
+    Pre-register one parameter set (K=2.5, V=1.3, N=5, lookback=60) and do not tune it. Report only a
+    coarse sensitivity grid as a robustness check, and require the effect to have the same sign across
+    the grid rather than picking the best cell.
+  - >-
+    Add an isolating baseline: the same K-sigma 3-day drop without the volume and volatility-jump conditions,
+    entered the same way and held N days. The edge claim must be setup return minus that baseline, and
+    also minus being long N days from a random entry. Report a t-stat on the difference.
+  - >-
+    Replace the 80/20 split, which is meaningless with roughly 30 events. Count the events first, then
+    use leave-one-crisis-out or year-by-year sign consistency (2015, 2018, 2020, 2022, 2024 reported separately).
+    Set a minimum event count (for example, 30) below which the strategy is parked.
+  - >-
+    Specify how daily returns are built across rolls: a ratio back-adjusted RTH close series, or returns
+    computed within a single contract. Also handle the case where a 3-day window crosses a roll.
+  - >-
+    Define the case where the stop and the time exit fall on the same close, and define the cost assumption:
+    an ES round-turn cost and the slippage at the close in volatile regimes.
+  - Use NQ only as a confirmation run with frozen ES parameters. Do not pool it for parameter selection.
+  copies_the_paper: false

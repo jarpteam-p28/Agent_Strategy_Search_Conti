@@ -1,0 +1,260 @@
+id: letf_close_rebalance_continuation_nq
+name: >-
+  LETF/Gamma Close-Rebalance Continuation, signed by close-to-close move (NQ/ES, 15:30-16:00 ET, long/short)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/liquidity_provision_to_leveraged_etfs_and_equity_options_reb.md
+  papers:
+  - title: >-
+      Liquidity Provision to Leveraged ETFs and Equity Options Rebalancing Flows: Evidence from End-of-Day
+      Stock Prices
+    authors:
+    - Andrea Barbon
+    - Heiner Beckmeyer
+    - Andrea Buraschi
+    - Mathis Moerke
+    year: 2022
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3925725
+    venue: SSRN working paper
+    note: >-
+      Main source. Only the abstract was read: LETF rebalancing and dealer delta-hedging cause end-of-day
+      momentum and later reversal. The gamma part persists and the LETF part has faded.
+  - title: Market Intraday Momentum
+    authors:
+    - Lei Gao
+    - Yufeng Han
+    - Sophia Zhengzi Li
+    - Guofu Zhou
+    year: 2018
+    venue: Journal of Financial Economics
+    note: Baseline for last-half-hour momentum. Cited from memory.
+  - title: Dynamics of Leveraged and Inverse ETFs
+    authors:
+    - Minder Cheng
+    - Ananth Madhavan
+    year: 2009
+    note: Rebalance amount = AUM × (L² − L) × daily return. Cited from memory; the title is approximate.
+finding: >-
+  Abstract only, with no sample numbers. In individual stocks, leveraged-ETF rebalancing and the hedging
+  of short-gamma option dealers create order flow late in the day in the direction of the day's move.
+  Prices continue into the close and then partly reverse. The options (gamma) part held up across the
+  authors' whole sample. The LETF part has weakened because the flow is public and liquidity providers
+  compete to absorb it.
+why: >-
+  Execution mechanics of big players, forced by mandate and by hedging. A leveraged ETF must reset its
+  exposure every day to L times NAV. The trade it needs is proportional to (L² − L) × the close-to-close
+  return, and it is done near the close so it matches NAV. Short-gamma dealers must also buy into rallies
+  and sell into declines. Both flows point the same way as the day's close-to-close move and arrive in
+  the same late window. Liquidity providers demand a price concession, so price drifts in the move's direction
+  into 16:00. Our angle, not the paper's rule: (1) sign the signal by the CLOSE-TO-CLOSE return (prior
+  16:00 to 15:30), because that is what LETFs rebalance on. Our existing noise-area strategies use the
+  move from the open. (2) Expect the edge to be larger on NQ, because TQQQ/SQQQ dominate LETF assets.
+  (3) Expect it only where dealers are likely short gamma: high-volatility regimes and non-expiry days.
+  Since 0DTE, dealers are often long gamma, which dampens or reverses the effect.
+market:
+  instruments:
+  - NQ
+  - ES
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC; convert with DST)
+  universe: null
+direction: long_short
+entry:
+  long: >-
+    At the close of the 15:29 ET bar (entry 15:30 ET), compute S = (price_15:30 / prior RTH close at 16:00
+    ET) − 1. If S > +k × A, where A = the 14-day average absolute close-to-close RTH return, buy 1 contract.
+  short: Under the same computation, if S < −k × A, sell 1 contract.
+  filters:
+  - One trade per day at most; no re-entry.
+  - Skip half-day sessions (early 13:00 ET closes) and days with fewer than 14 days of warm-up.
+  - >-
+    Main run: all days. Report results separately for monthly opex (3rd Friday), quarterly opex and non-expiry
+    days. The hypothesis is that the edge is weaker or reversed on opex days.
+  - >-
+    Report results separately by volatility regime. Regime proxy: realized vol of the trailing 5 days
+    divided by trailing 60 days. If above 1, treat it as a likely short-gamma regime with a stronger edge.
+  - Report results separately before and after 2022, the 0DTE era (ES only, since NQ starts in 2021-07).
+exit:
+  time_exit: >-
+    Close at the 15:59 ET bar close (flat before the 16:00 settlement). Never hold overnight. The overnight
+    reversal leg is covered by letf_rebalance_day_reversal_nq.
+  stop_loss: >-
+    Master-signal test: no stop, so the exit cannot flatter the entry. Tradable version: stop at 0.3 ×
+    the 15-session average daily ATR from entry.
+  take_profit: null
+  other:
+  - >-
+    Benchmark: always long 15:30-15:59 on all days and on the same signal days. Also benchmark against
+    the open-signed noise_area_last_half_hour_es signal on the same days.
+position_sizing:
+  development: 1 contract fixed (NQ, and ES as a separate run).
+  live: >-
+    Volatility targeting: contracts = fixed $ risk ÷ (0.3 × 15-day ATR × point value), rounded down, minimum
+    1, capped at 3× base size.
+parameters:
+- name: entry_time_et
+  default: '15:30'
+  source: paper summary angle (15:00-15:45)
+  test_range: 15:00, 15:15, 15:30, 15:45
+- name: k_threshold
+  default: 1
+  source: assumption (only trade days with a meaningful rebalance)
+  test_range: 0, 0.5, 1.0, 1.5, 2.0
+- name: avg_move_lookback_days
+  default: 14
+  source: assumption, consistent with the noise-area specs
+  test_range: 10-30
+- name: stop_atr_fraction
+  default: 0.3
+  source: method notes (30% of 15-day ATR)
+  test_range: none, 0.2, 0.3, 0.5
+- name: vol_regime_ratio
+  default: 1
+  source: assumption (gamma-sign proxy)
+  test_range: 0.8-1.5
+open_questions:
+- >-
+  The full paper was not read. The paper's horizon, effect size, timing of the late window (last 15, 30
+  or 60 minutes?) and reversal horizon are unknown.
+- >-
+  The paper's evidence is on single stocks. It is unproven that the effect shows up in the index futures
+  that LETFs ultimately hedge with, or in the cash basket.
+- >-
+  Should the signal include overnight Globex moves? Using the prior 16:00 close does include them. LETF
+  rebalancing is close-to-close, so yes, but compare with the open-based signal.
+- >-
+  Without AUM data we cannot scale the rebalance in dollars. Is the size of |S| enough as a proxy, or
+  should we scale by a rough proxy for TQQQ/SQQQ AUM over time?
+- >-
+  The gamma regime is only a proxy (opex and the realized-vol ratio). There is no GEX or open-interest
+  data. Can we build NDX 0DTE gamma as in the gamma study for 2023 onward?
+- >-
+  Possible overlap with noise_area_last_half_hour_es. How correlated are the two signals' trade days?
+  If they overlap by more than 70%, this adds little.
+- Should the 15:50 closing-imbalance publication time matter? Test 15:50-16:00 as a sub-window.
+- >-
+  With an expected gross edge per trade of a few NQ points against a cost of about 1-2 points, does it
+  clear the Mesfin cost hurdle?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown over N trades exceeds the 95th-percentile drawdown from the bootstrap simulation
+    for the same N. Bench it while its drawdown is above the 75th percentile.
+  extra_checks:
+  - >-
+    Chronological 80/20 split. ES 2013-2026 is the long test. NQ 2021-2026 is short, so it gets fewer
+    trades; report its t-stat.
+  - >-
+    Report gross points per trade vs costs (about $13 per NQ round turn plus 1 tick of slippage). Require
+    net t ≥ 2 and the same sign in each out-of-sample year.
+  - Long side vs short side separately.
+  - Results by signal-strength quintile of |S|/A. The edge should be monotonic.
+  - Pre-2022 vs post-2022, opex vs non-opex, high vs low vol regime.
+  - NQ vs ES on overlapping dates. The hypothesis says NQ is stronger.
+  - Correlation of daily P&L with noise_area_last_half_hour_es and with letf_rebalance_day_reversal_nq.
+data_requirements:
+- ES 1-min 2013-2026 (have)
+- NQ 1-min 2021-07 to 2026 (have)
+- Exchange holiday and early-close calendar
+- Monthly and quarterly opex calendar (derivable)
+- 'Optional: TQQQ/SQQQ/UPRO/SPXU AUM history; NDX/SPX option open interest for gamma'
+data_available: partial
+expectations:
+- >-
+  Positive average trade in the signal's direction that grows with |S|/A, with the strongest bucket at
+  |S|/A > 1.5.
+- NQ shows a larger effect than ES.
+- The effect is weaker or reversed on monthly opex days and in low-vol regimes (dealers long gamma).
+- >-
+  Post-2022 shows a smaller effect than pre-2022 if 0DTE long gamma dominates. The gamma part persisting
+  would argue against this.
+- The always-long baseline in the same window is beaten on signal days.
+what_would_kill_it: >-
+  Liquidity providers fully front-running the predictable LETF flow (the paper already reports this effect
+  fading). Dealers moving to net long gamma, as 0DTE flow suggests, which turns continuation into reversal.
+  LETF issuers rebalancing earlier or spreading trades through the day. Shrinking LETF AUM. Changes to
+  closing-auction mechanics.
+notes:
+- >-
+  New angle versus the existing late-day strategies: the signal is signed by the close-to-close return
+  (the quantity LETFs rebalance on) rather than the move from the open, and it is conditioned on a gamma-regime
+  proxy.
+- Abstract-only source. Expect about half the paper's effect or less (McLean & Pontiff).
+variants:
+- >-
+  Rebalance-weighted signal: (L² − L) × S with L = 3, which only changes scaling. Test a convex threshold
+  instead.
+- Window 15:50-15:59 only (after the closing-imbalance publication).
+- 'Fade version on opex/low-vol days: trade against S from 15:30 to 15:59.'
+- Long-only variant, in case strong up-days continue more than down-days.
+related_strategies:
+- noise_area_last_half_hour_es
+- noise_area_momentum_es
+- letf_rebalance_day_reversal_nq
+- gamma_flip_cross
+- third_friday_spike_es
+- same_slot_seasonality_es
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 4
+    testability: 4
+    overfit_resistance: 3
+  verdict: refine
+  reasons:
+  - >-
+    Real forced-flow WHY: leveraged-ETF rebalancing is mechanical, (L²−L)×close-to-close return, executed
+    near the close; short-gamma dealer hedging points the same way. Fits the playbook's execution-mechanics
+    and mandate patterns.
+  - >-
+    Framed around the WHY rather than copied: the paper is on single stocks; signing by close-to-close
+    return, expecting a bigger effect on NQ and conditioning on gamma regime are our own angles.
+  - >-
+    Testable with ES 1-min 2013-2026 and NQ 1-min 2021-2026; opex calendar is derivable; validation plan
+    (80/20, Monte Carlo, cost hurdle, same sign in every out-of-sample year, always-long benchmark) follows
+    the playbook.
+  - >-
+    Exit timing risk: closing-auction impact prints at 16:00 when index futures settle; exiting at the
+    15:59 bar close may miss the very flow the trade targets.
+  - >-
+    Heavy overlap risk with the well-known last-half-hour momentum effect (Gao et al. 2018) and our own
+    noise_area_last_half_hour_es. The new claim is that the close-to-close sign adds information, and
+    that needs a direct incremental test, not just a correlation check.
+  - >-
+    Gamma proxy (5d/60d realized vol) is weak; together with 5 tunable parameters and many splits (opex,
+    vol regime, pre/post-2022, quintiles) there is room for data-mining unless splits stay diagnostic.
+  - >-
+    Persistence is doubtful: the paper says the leveraged-ETF part has already faded, and 0DTE has often
+    left dealers long gamma. A 30-minute hold with a few points of gross edge is near the Mesfin cost
+    hurdle.
+  - >-
+    Abstract-only source, so effect size and window are unknown; NQ history is all post-2022 with contract
+    gaps, so the 'NQ is stronger' claim will be statistically weak.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Fix the exit to capture the closing print: primary exit at the 16:00 ET settlement/bar (state the
+    exact bar and fill convention in UTC with DST), and keep 15:59 as a variant. Also report the 15:50-16:00
+    sub-window as a diagnostic.
+  - >-
+    Pre-register one primary master-signal test before any tuning: entry 15:30, k=1, 14-day lookback,
+    no stop, all days. All other parameter values are in-sample only, and the opex, vol-regime and pre/post-2022
+    splits are reports, not filters, unless a filter is chosen in-sample and then frozen.
+  - >-
+    Add a direct incremental test against the existing strategy: regress the 15:30-16:00 return on both
+    the close-to-close signal S/A and the open-signed noise-area signal (or test days where the two signs
+    disagree). If S adds nothing beyond the open-signed signal, park it as a duplicate.
+  - >-
+    Replace or support the realized-vol 'gamma' proxy with something closer to gamma sign (e.g. opex/0DTE-day
+    flags, or the NDX 0DTE gamma build from the gamma study for 2023+). Do not claim the vol ratio measures
+    dealer gamma.
+  - >-
+    State the cost hurdle up front: gross points per trade on NQ and ES vs about 1-2 points of round-trip
+    cost; drop the strategy if net t < 2 or the sign flips in any out-of-sample year.
+  - >-
+    Check how the clean_NQ 1-min series handles the missing contracts (12-21, 03-22, 03-25, 06-25, 09-25)
+    and the roll days before the NQ run; treat ES 2013-2026 as the primary evidence.

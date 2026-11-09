@@ -1,0 +1,159 @@
+id: megacap_earnings_overnight_split_nq
+name: 'Mega-Cap Earnings Attention: Overnight vs Intraday Split on NQ/ES (falsification proxy)'
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/a_surprise_that_keeps_you_awake_overnight_returns_after_earn.md
+  papers:
+  - title: 'A Surprise That Keeps You Awake: Overnight Returns After Earnings Announcements'
+    authors:
+    - Fabian Gamm
+    year: 2019
+    venue: SSRN working paper
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3293638
+    note: Abstract only. The index-level proxy is our own angle.
+finding: >-
+  In single stocks, large earnings surprises are followed by weeks of positive overnight and negative
+  intraday returns, which the abstract links to attention-driven retail buying. Our angle, not in the
+  paper: since 2020, mega-caps (NVDA, TSLA, AAPL and others) are the most retail-heavy names and make
+  up a large share of the Nasdaq-100. A big mega-cap surprise could therefore leave a measurable tilt
+  in NQ, with overnight returns above normal and intraday returns below normal in the following days.
+why: >-
+  The same retail-attention mechanism, passed through index weights. Retail buys the attention-grabbing
+  mega-cap at the open. Index arbitrage passes part of that buying into NQ futures overnight and pre-open,
+  and liquidity providers unwind it intraday. This is weak at the index level and mega-caps are the easiest
+  names to arbitrage, so the default expectation is no effect. The test exists to falsify the idea cheaply
+  with data we mostly have.
+market:
+  instruments:
+  - NQ
+  - ES
+  bar_size: 1min (aggregated to close-to-open and open-to-close legs)
+  session: >-
+    Overnight leg: 16:00 to 09:30 America/New_York (Globex). Intraday leg: RTH 09:30-16:00 America/New_York.
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    An event is an after-close or pre-open earnings release of a mega-cap (AAPL, MSFT, NVDA, AMZN, GOOGL,
+    META, TSLA, AVGO) whose abnormal reaction (stock return minus QQQ, from the close before the release
+    to the first close after it) has |value| >= X%. Starting at the 16:00 ET close of day +1, buy 1 NQ
+    at 15:59-16:00 ET. Repeat every trading night through day +N.
+  short: null
+  filters:
+  - Both surprise signs qualify. Report them separately.
+  - 'Cluster handling: if several events overlap, it is one position (no stacking)'
+  - 'Optional: VIX below its 1-year median (high-sentiment regime)'
+exit:
+  stop_loss: 'None in the base test (master-signal discipline). Variant: 1.0x 15-session average overnight
+    range.'
+  take_profit: null
+  time_exit: Exit at 09:30 ET the next morning (first RTH 1-min bar open)
+  other:
+  - Stop re-entering after day +N
+position_sizing:
+  development: 1 NQ (or 1 ES) contract fixed
+  live: >-
+    Volatility target: contracts = $ risk budget / (15-session average overnight range x point value),
+    at least 1, with a cap
+parameters:
+- name: reaction_threshold_X_pct
+  default: 5
+  source: assumption
+  test_range: 3, 5, 8
+- name: holding_window_days_N
+  default: 10
+  source: 'assumption (paper: several weeks)'
+  test_range: 3, 5, 10, 15
+- name: entry_time_ET
+  default: '16:00'
+  source: assumption
+  test_range: 15:55, 16:00, 17:00 (Globex reopen)
+expectations:
+- >-
+  Mean overnight NQ return on event nights should exceed the mean overnight return on all other nights
+  (the overnight_drift_long baseline) by a statistically significant margin. Otherwise the idea is rejected.
+- The intraday leg on event days should be below the intraday baseline
+- >-
+  Likely result: no difference, because mega-caps are heavily arbitraged and index dilution is large.
+  Treat a null result as expected.
+what_would_kill_it: >-
+  Event-night overnight returns no better than unconditional overnight nights (beat the zero-intelligence
+  baseline), or a gross edge below about 2 NQ points round trip. Also killed if the sign flips between
+  out-of-sample years.
+open_questions:
+- >-
+  Mega-cap earnings dates and reaction returns must be compiled. They are public, but not in our inventory.
+- >-
+  NQ only starts in mid-2021 and has missing contracts, so roughly 20 quarters x 8 names gives few independent
+  events with heavy clustering. ES from 2013 gives a longer but more diluted test.
+- >-
+  Does the paper's effect even exist in large, easy-to-arbitrage stocks? The abstract says it is stronger
+  in hard-to-arbitrage firms.
+- >-
+  Overlap with famous_earnings_cluster_es (pre-announcement run-up): make sure event windows are measured
+  after the release only
+- >-
+  Which overnight end point: 09:30 cash open, or the pre-open 08:30-09:30 window, when retail pre-market
+  orders hit?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown over the same number
+    of nights
+  extra_checks:
+  - >-
+    Always compare against the unconditional overnight long on the same dates (the overnight_drift_long
+    baseline)
+  - Report gross points per trade vs about $13 round-trip cost; demand net t >= 2
+  - Report pre/post 2022 and each out-of-sample year separately
+  - Report positive and negative surprises separately
+data_available: partial
+data_requirements:
+- NQ 1-min 2021-2026 and ES 1-min 2013-2026 (have)
+- Mega-cap earnings dates and release timing (need, public)
+- Mega-cap daily closes and QQQ closes for abnormal reaction (need)
+- VIX daily (need)
+notes:
+- >-
+  This is an exploratory falsification test, not a confident edge. If it fails, this desk should not pursue
+  the stock-level version without stock data.
+related_strategies:
+- overnight_drift_long
+- famous_earnings_cluster_es
+- post_surprise_overnight_long_stocks
+variants:
+- 'Mirror: short NQ intraday (09:30-16:00) on event days'
+- >-
+  Use the earnings-season weeks (top-N weeks by S&P earnings count) instead of individual mega-cap events
+review:
+  scores:
+    why_strength: 2
+    persistence: 2
+    simplicity: 4
+    testability: 3
+    overfit_resistance: 2
+  verdict: park
+  copies_the_paper: false
+  reasons: |2-
+
+    <parameter name="reasons">["The paper's WHY (retail attention buying plus limits to arbitrage) points away from this universe. The abstract says the effect is stronger in hard-to-arbitrage firms, and mega-caps are the easiest names in the market to arbitrage. Moving the effect into NQ through index weights is our own guess. It has no evidence, and the spec itself expects a null result.", "The transmission chain is loose. 'Index arbitrage passes buying into NQ overnight, then liquidity providers unwind it intraday' is not a forced-flow mechanism. Arbitrage would keep NQ priced fairly against the stocks, so a single name's overnight premium gets diluted by its index weight (about 3-9% per name). Even a strong stock-level effect would be roughly an order of magnitude smaller in NQ.", "Statistical power is poor. About 8 names x ~20 quarters on NQ, and the mega-cap reports bunch into the same 2-3 weeks of each earnings season. With N=10-day windows this leaves maybe 20 independent clusters. That is too few to separate an event effect from the strong unconditional overnight drift, the earnings-season effect, or plain noise.", "Results would be hard to separate from the related famous_earnings_cluster_es strategy and from general earnings-season overnight seasonality. A positive result would not identify the retail-attention WHY.", "The parameter grid (X in 3/5/8, N in 3/5/10/15, three entry times, optional VIX filter, positive and negative surprises reported separately) is 36+ combinations on about 20 clusters. That invites data-mining in exactly the setting where the prior is null.", "Good points: it does not copy the paper. It is framed honestly as a cheap falsification test with a zero-intelligence baseline, the 2-point cost hurdle, the net t >= 2 bar, and reporting by year and by surprise sign. Rules are mostly clear enough to code once the earnings dates are compiled.", "Overall this is a low-priority use of backtest time with an expected null. Park it behind stronger ideas. Revisit only with stock-level data, or if a cheaper earnings-season proxy shows something first."]
+  required_changes:
+  - >-
+    If revived: fix the parameters before the test (X=5%, N=10, entry 16:00 ET, no VIX filter) and run
+    one pre-registered test instead of a grid.
+  - >-
+    Use ES 2013-2026 as the main sample for power, with NQ 2021+ as a check. Use clustered standard errors
+    or block bootstrap by earnings season, not per-night t-stats.
+  - >-
+    Control for earnings-season seasonality: compare event nights against non-event nights in the same
+    earnings-season weeks, not just against all nights.
+  - >-
+    Weight the signal by index weight × abnormal reaction, so it is clear how big an NQ effect is even
+    possible. State up front the minimum NQ points effect the sample can detect.
+  - >-
+    Settle the overnight end point now (09:30 cash open). Do not try the 08:30 pre-open window as a second
+    option after seeing results.
+  - >-
+    Fix the overlap with famous_earnings_cluster_es before testing, so the two strategies are not double-counted.
