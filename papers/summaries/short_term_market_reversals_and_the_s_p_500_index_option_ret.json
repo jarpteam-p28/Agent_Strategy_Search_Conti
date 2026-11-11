@@ -1,0 +1,63 @@
+{
+  "title": "Short-term market reversals and the S&P 500 index option returns (earlier draft: Implied Variance and Market Index Reversal)",
+  "authors": [
+    "Christopher S. Jones",
+    "Sung June Pyun",
+    "Tong Wang"
+  ],
+  "year": 2025,
+  "source_url": "https://sjpyun.github.io/Rev.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "When implied variance is high, the S&P 500 index, futures and SPY show strong daily reversals, mainly after DOWN moves, strongest around the close and open; a futures rule that bets against the last 30 minutes of the day and holds until 30 minutes after the next open earned slightly over 12 bp/day gross.",
+  "findings": [
+    {
+      "statement": "Negative serial covariance rises with implied variance and is driven by reversals of negative returns.",
+      "evidence": "S&P 500 index, futures and SPY 1990-2015."
+    },
+    {
+      "statement": "Reversal strongest in prices just after the open; very short-term reversal of the last 20-60 minutes most sensitive to high implied variance.",
+      "evidence": ""
+    },
+    {
+      "statement": "Futures strategy: position opposite to (and sized by) the last-N-minute return, close → N minutes after the next open; best N = 20-60; ≈ 12 bp/day for N = 30, gross.",
+      "evidence": ""
+    },
+    {
+      "statement": "Reversal stronger when S&P 500 option open interest is high (hedging flows).",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Liquidity / fire-sale pressure at the close and option-hedging flows that unwind overnight."
+  },
+  "setting": {
+    "markets": [
+      "US index"
+    ],
+    "instruments": [
+      "S&P 500 index",
+      "ES futures",
+      "SPY"
+    ],
+    "sample_period": "1990-2015",
+    "data_frequency": "intraday/daily",
+    "holding_period": "close → next-day 10:00"
+  },
+  "reported_results": {
+    "headline": "When implied variance is high, the S&P 500 index, futures and SPY show strong daily reversals, mainly after DOWN moves, strongest around the close and open; a futures rule that bets against the last 30 minutes of the day and holds until 30 minutes after the next open earned slightly over 12 bp/day gross.",
+    "key_stats": []
+  },
+  "tradable_edge": "New spec close_reversal_overnight_es: fade the 15:30-16:00 move, hold to 10:00 next day; condition on high volatility (AvgRange top tercile as VIX proxy).",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Gross of costs; ~12 bp/day ≈ 0.7 ES points at 6,000 — cost hurdle is close."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read the 2016 working-paper version; the 2025 published title differs.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

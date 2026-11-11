@@ -1,0 +1,54 @@
+{
+  "title": "A Flow-Based Explanation for Return Predictability",
+  "authors": [
+    "Dong Lou"
+  ],
+  "year": 2012,
+  "source_url": "https://www.fmg.ac.uk/sites/default/files/publications/DP643.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "Mutual-fund flows create predictable price pressure in the stocks funds hold: flow-induced pressure earns ~5% the next year and reverses (−5.7%) in years 2-3; this explains fund performance persistence and the 'smart money' effect and part of stock momentum.",
+  "findings": [
+    {
+      "statement": "Managers cut holdings ~1:1 on outflows (0.97) but only partly add on inflows (0.62).",
+      "evidence": "RFS 25(12), US funds 1980-2006."
+    },
+    {
+      "statement": "Expected flow-induced price pressure decile spread +5.28% next year, −5.67% quarters 6-12.",
+      "evidence": ""
+    },
+    {
+      "statement": "Controlling for it cuts the momentum coefficient 25-50%.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Flow-driven demand shocks with later reversal."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1980-2006",
+    "data_frequency": "quarterly",
+    "holding_period": "1-3 years"
+  },
+  "reported_results": {
+    "headline": "Mutual-fund flows create predictable price pressure in the stocks funds hold: flow-induced pressure earns ~5% the next year and reverses (−5.7%) in years 2-3; this explains fund performance persistence and the 'smart money' effect and part of stock momentum.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ test.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Cross-sectional."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

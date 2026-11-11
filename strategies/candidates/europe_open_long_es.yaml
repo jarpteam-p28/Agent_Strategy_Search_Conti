@@ -91,6 +91,11 @@ related_strategies:
 - overnight_drift
 notes:
 - 'Costs: one round trip per night — ~250 trades/year; average edge per trade must clear ~$25-38 on ES.'
+- >-
+  Night Moves (NY Fed SR 917): 02:00-03:00 ET t = 7.1 (1998-2020); long-only loses to the spread (post-cost
+  Sharpe ≈ −0.5) but buy-the-dip after a negative closing imbalance keeps ≈ 1.1. The drift hour moves
+  with US/Europe daylight-saving gaps (shifts to 04:00-05:00 when the gap is 4 hours) — align the window
+  to the Frankfurt/London cash open, not a fixed ET clock.
 review:
   scores:
     why_strength: 4

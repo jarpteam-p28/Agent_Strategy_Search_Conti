@@ -1,0 +1,47 @@
+{
+  "title": "Post-Earnings Drift in the Point-In-Time S&P 500",
+  "authors": [
+    "(authors not retrieved)"
+  ],
+  "year": 2026,
+  "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7489700",
+  "paper_type": "academic",
+  "read_mode": "title_only",
+  "one_line": "Tests PEAD using the historical (point-in-time) S&P 500 membership to avoid survivorship bias; full abstract not reachable.",
+  "findings": [
+    {
+      "statement": "Content not retrieved beyond the title.",
+      "evidence": "SSRN blocked."
+    }
+  ],
+  "why": {
+    "pattern": "Earnings under-reaction in large caps."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500 stocks"
+    ],
+    "sample_period": "-",
+    "data_frequency": "daily",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "Tests PEAD using the historical (point-in-time) S&P 500 membership to avoid survivorship bias; full abstract not reachable.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ test.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "-"
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Title only — download the PDF into papers/inbox/ for a real read.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

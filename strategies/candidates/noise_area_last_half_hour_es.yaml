@@ -200,6 +200,9 @@ notes:
   The full-day noise-area strategy is already specced as noise_area_momentum_es. This spec is a deliberately
   narrower angle that tests the into-the-close mechanism, not a copy.
 - Fixed 30-minute holding window, following the master-signal discipline from transcript 04.
+- >-
+  Li, Sakkas & Urquhart (2022): first→last half-hour predictability is concentrated in crises and illiquid
+  periods — report results by AvgRange tercile.
 review:
   scores:
     why_strength: 4

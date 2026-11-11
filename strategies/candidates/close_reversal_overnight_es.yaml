@@ -1,0 +1,93 @@
+id: close_reversal_overnight_es
+name: Close reversal overnight (fade the last 30 minutes, hold to 10:00)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/short_term_market_reversals_and_the_s_p_500_index_option_ret.md
+  papers:
+  - title: Short-term market reversals and the S&P 500 index option returns
+    authors:
+    - Christopher S. Jones
+    - Sung June Pyun
+    - Tong Wang
+    venue: working paper
+    year: 2025
+finding: >-
+  S&P futures reverse the last 20-60 minutes of the session overnight, strongly when implied variance
+  is high and after down moves; 30-min version ≈ 12 bp/day gross (1990-2015).
+why: Closing liquidity pressure and option-hedging flows revert once fresh liquidity arrives.
+what_would_kill_it: Costs (12 bp ≈ 0.7 ES pt); low-volatility regimes; 0DTE era changing closing flows.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected)
+direction: long_short
+entry:
+  long: If the 15:30-16:00 ET return is negative, buy at the 16:00 close.
+  short: 'If it is positive, sell at the 16:00 close (variant: long side only, per the paper''s asymmetry).'
+  filters:
+  - 'Base: all days'
+  - >-
+    Conditioned: only when AvgRange (15-session) is in its top tercile (cutoffs from 2014-2018) — VIX
+    proxy
+  - 'Size filter: |last-30 return| above its 20-day median'
+exit:
+  stop_loss: None in base; variant 1 × the last-30 move beyond the 16:00 close.
+  take_profit: null
+  time_exit: 10:00 ET next session.
+  other:
+  - Variant exit 09:35 and 09:30
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: formation_minutes
+  default: 30
+  test_range: 20, 30, 60
+  source: paper
+- name: exit_time
+  default: '10:00'
+  test_range: 09:30, 09:35, 10:00
+  source: paper (N minutes after open)
+open_questions:
+- Is the edge only in the high-volatility tercile?
+- Long side vs short side?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development data only; 2024+ protected
+  - Random-direction baseline (100 runs)
+  - Split by volatility tercile, by sign, pre/post 2022
+  - 2x slippage
+data_requirements:
+- ES/NQ 1-min
+data_available: 'yes'
+expectations:
+- Daily trades; edge small vs costs except in high-vol regime
+variants:
+- 3 formation × 3 exits × 2 filters (pre-registered)
+related_strategies:
+- europe_open_long_es
+- overnight_reversal_first_hour_es
+- noise_area_last_half_hour_es
+notes:
+- >-
+  Opposite of the last-half-hour momentum idea: momentum INTO the close, reversal AFTER it — test both
+  on the same days.
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 5
+    testability: 5
+    overfit_resistance: 3
+  verdict: refine
+  reasons: Index-futures result in the paper itself; clear conditioning variable.
+  required_changes: Keep the grid to the pre-registered 18 configs.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 5, 2026-11-10)

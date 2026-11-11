@@ -1,0 +1,57 @@
+{
+  "title": "On the Performance of Volatility-Managed Portfolios",
+  "authors": [
+    "Scott Cederburg",
+    "Michael S. O'Doherty",
+    "Feifei Wang",
+    "Xuemin (Sterling) Yan"
+  ],
+  "year": 2020,
+  "source_url": "https://alphaarchitect.com/does-portfolio-timing-based-on-volatility-signals-outperform-buy-and-hold/",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "Across 103 equity strategies, volatility-managed versions show in-sample alphas but do NOT beat the unmanaged originals in real time: out of sample they earn lower Sharpe ratios and certainty-equivalent returns (only momentum, ROE and BAB avoid significant degradation) because the scaling coefficients are unstable.",
+  "findings": [
+    {
+      "statement": "75% of in-sample alphas positive, 23 significant.",
+      "evidence": "JFE 138(1) 2020."
+    },
+    {
+      "statement": "Real-time: volatility management generally lowers Sharpe vs the original strategy, market factor included.",
+      "evidence": ""
+    },
+    {
+      "statement": "Robust to window length, rolling samples and leverage limits.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "In-sample spanning regressions overstate the benefit of scaling by inverse variance."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "103 factor portfolios"
+    ],
+    "sample_period": "1926-2017",
+    "data_frequency": "monthly",
+    "holding_period": "monthly"
+  },
+  "reported_results": {
+    "headline": "Across 103 equity strategies, volatility-managed versions show in-sample alphas but do NOT beat the unmanaged originals in real time: out of sample they earn lower Sharpe ratios and certainty-equivalent returns (only momentum, ROE and BAB avoid significant degradation) because the scaling coefficients are unstable.",
+    "key_stats": []
+  },
+  "tradable_edge": "No new strategy. Confirms our rule: volatility sizing is a sizing VIEW, not a source of edge — judge strategies at 1 contract first.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Methodological."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

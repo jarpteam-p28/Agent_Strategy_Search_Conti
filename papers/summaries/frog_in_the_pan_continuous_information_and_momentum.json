@@ -1,0 +1,49 @@
+{
+  "title": "Frog in the Pan: Continuous Information and Momentum",
+  "authors": [
+    "Zhi Da",
+    "Umit G. Gurun",
+    "Mitch Warachka"
+  ],
+  "year": 2014,
+  "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1745247",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Momentum is much stronger in stocks whose past return came from many small moves ('continuous information') than from a few big jumps; investors under-react to information that arrives gradually.",
+  "findings": [
+    {
+      "statement": "Continuous-information winners/losers drive momentum; discrete-information momentum is weak.",
+      "evidence": "RFS 27(7), US stocks 1927-2007."
+    }
+  ],
+  "why": {
+    "pattern": "Limited attention to small, frequent changes."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1927-2007",
+    "data_frequency": "monthly",
+    "holding_period": "6-12 months"
+  },
+  "reported_results": {
+    "headline": "Momentum is much stronger in stocks whose past return came from many small moves ('continuous information') than from a few big jumps; investors under-react to information that arrives gradually.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level. A single-asset analogue (trend built from many small days vs a few big days) could be a filter on trend_risk_timing_overlay_es — note only.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Well known."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

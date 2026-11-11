@@ -1,0 +1,88 @@
+id: macro_announcement_day_long_es
+name: Macro announcement days long (CPI, PPI, NFP, FOMC)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/asset_returns_and_scheduled_macroeconomic_news_announcements.md
+  papers:
+  - title: How Much Do Investors Care About Macroeconomic Risk? Evidence from Scheduled Economic Announcements
+    authors:
+    - Pavel Savor
+    - Mungo Wilson
+    venue: JFQA 48(2)
+    year: 2013
+finding: >-
+  1958-2009: market excess return 11.4 bp on CPI/PPI/employment/FOMC days vs 1.1 bp on other days (t =
+  3.77).
+why: Premium for bearing macro risk resolved on announcement days.
+what_would_kill_it: >-
+  Premium earned only in the pre-release minutes (then the pre_macro_overnight spec captures it); costs;
+  post-2009 change.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected)
+direction: long_only
+entry:
+  long: >-
+    Buy at the 16:00 ET close the day before a scheduled CPI, PPI, Employment Situation (NFP) or FOMC
+    decision day; sell at the 16:00 close on the announcement day.
+  short: null
+  filters:
+  - Official release calendars (BLS, Fed)
+  - 'Variant A: RTH only (09:30 → 16:00 on the day)'
+  - 'Variant B: by announcement type'
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: 16:00 ET on the announcement day.
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: window
+  default: close-to-close
+  test_range: close-to-close, overnight only, RTH only
+  source: decomposition
+open_questions:
+- How much of the day's return is earned before 09:30 (overlap with pre_macro_overnight_es)?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development data only; 2024+ protected
+  - 'Baseline: all non-announcement days'
+  - Split by announcement type and by year
+  - Without the best 5 days
+data_requirements:
+- ES/NQ 1-min
+- BLS/Fed release dates (public calendars)
+data_available: 'yes'
+expectations:
+- ≈ 40-45 days/yr; small edge per day — check vs costs
+variants:
+- close-to-close
+- overnight only
+- RTH only
+related_strategies:
+- pre_macro_overnight_es
+- pre_fomc_drift_uncertainty_es
+- fomc_cycle_even_weeks_es
+notes: []
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 5
+    testability: 5
+    overfit_resistance: 4
+  verdict: refine
+  reasons: Long-sample risk-premium evidence; easy to decompose into overnight vs RTH on our 1-min data.
+  required_changes: Quick screen with the decomposition.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 5, 2026-11-10)

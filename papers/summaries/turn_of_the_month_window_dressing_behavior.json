@@ -1,0 +1,51 @@
+{
+  "title": "Turn-of-the-Month: Window Dressing Behavior",
+  "authors": [
+    "(authors not retrieved)"
+  ],
+  "year": 2015,
+  "source_url": "https://www.ssrn.com/abstract=2648136",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "Attributes part of the turn-of-the-month effect to institutional window dressing (buying winners / reducing risk into month-end reporting); related evidence (Rinne, Suominen & Vaittinen, 'Dash for Cash') puts the low point at T−8..T−4 and the gains at T−3..T+3 (S&P −3.4% vs +28.6% annualized).",
+  "findings": [
+    {
+      "statement": "Window dressing as a contributor to month-end / first-day returns.",
+      "evidence": "Abstract listing only."
+    },
+    {
+      "statement": "Related: holding only the 7 turn-of-month days captured the full premium with ~half the volatility (1926-2013).",
+      "evidence": "Dash for Cash, 2015."
+    }
+  ],
+  "why": {
+    "pattern": "Institutional month-end cash needs and reporting incentives."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500"
+    ],
+    "sample_period": "-",
+    "data_frequency": "daily",
+    "holding_period": "turn of month"
+  },
+  "reported_results": {
+    "headline": "Attributes part of the turn-of-the-month effect to institutional window dressing (buying winners / reducing risk into month-end reporting); related evidence (Rinne, Suominen & Vaittinen, 'Dash for Cash') puts the low point at T−8..T−4 and the gains at T−3..T+3 (S&P −3.4% vs +28.6% annualized).",
+    "key_stats": []
+  },
+  "tradable_edge": "Already covered by month_end_cash_cycle_es, month_end_rebalance_es and month_end_rebalance_pressure_es. No new spec.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Well-known calendar effect."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

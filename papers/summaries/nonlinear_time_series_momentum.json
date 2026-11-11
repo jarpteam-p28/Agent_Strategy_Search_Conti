@@ -1,0 +1,54 @@
+{
+  "title": "Nonlinear Time Series Momentum",
+  "authors": [
+    "Tobias Moskowitz",
+    "Riccardo Sabbatucci",
+    "Andrea Tamoni",
+    "Björn Uhl"
+  ],
+  "year": 2025,
+  "source_url": "https://www.cxoadvisory.com/momentum-investing/s-shaped-time-series-momentum",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "Across 53 futures (1980-2024), time-series momentum works better when position size flattens or reverses for EXTREME past returns (an S-shaped signal) than with linear weights; higher out-of-sample gross Sharpe for 21/62/260-day lookbacks.",
+  "findings": [
+    {
+      "statement": "S-shaped weights beat linear TSMOM out of sample, gross.",
+      "evidence": "53 futures incl. 8 equity index futures."
+    },
+    {
+      "statement": "Signal = past return ÷ 260-day volatility, 12% vol target.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Small/moderate trends persist; extreme moves partly reverse."
+  },
+  "setting": {
+    "markets": [
+      "global futures"
+    ],
+    "instruments": [
+      "53 futures"
+    ],
+    "sample_period": "1980-2024",
+    "data_frequency": "daily",
+    "holding_period": "weeks-months"
+  },
+  "reported_results": {
+    "headline": "Across 53 futures (1980-2024), time-series momentum works better when position size flattens or reverses for EXTREME past returns (an S-shaped signal) than with linear weights; higher out-of-sample gross Sharpe for 21/62/260-day lookbacks.",
+    "key_stats": []
+  },
+  "tradable_edge": "Variant for trend_risk_timing_overlay_es: cap the trend signal at ±1.5 SD and reduce exposure beyond ±2.5 SD. Daily, ES only (single asset ⇒ weak test).",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Gross only; multi-asset result."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

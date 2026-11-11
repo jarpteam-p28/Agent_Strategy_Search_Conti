@@ -1,0 +1,56 @@
+{
+  "title": "Who Trades at the Close? Implications for Price Discovery and Liquidity",
+  "authors": [
+    "Vincent Bogousslavsky",
+    "Dmitriy Muravyev"
+  ],
+  "year": 2023,
+  "source_url": "https://ideas.repec.org/a/eee/finmar/v66y2023ics1386418123000502.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Closing auctions grew from 3.1% (2010) to 7.5% (2018) of US stock volume, driven by indexing and ETFs; auction prices usually sit at the pre-close bid/ask and auction price deviations revert quickly and almost completely.",
+  "findings": [
+    {
+      "statement": "Closing-auction share of volume 3.1% → 7.5%, 2010-2018.",
+      "evidence": "JFM 66, 2023."
+    },
+    {
+      "statement": "Auction price deviations revert almost fully and quickly.",
+      "evidence": ""
+    },
+    {
+      "statement": "S&P 500 inclusion raises auction volume permanently.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Passive/index flows concentrate at the close."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "2010-2018",
+    "data_frequency": "intraday",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "Closing auctions grew from 3.1% (2010) to 7.5% (2018) of US stock volume, driven by indexing and ETFs; auction prices usually sit at the pre-close bid/ask and auction price deviations revert quickly and almost completely.",
+    "key_stats": []
+  },
+  "tradable_edge": "Context for letf_close_rebalance_continuation_nq and the last-30 studies: close-auction pressure tends to revert — supports the overnight reversal angle (close_reversal_overnight_es).",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Descriptive."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

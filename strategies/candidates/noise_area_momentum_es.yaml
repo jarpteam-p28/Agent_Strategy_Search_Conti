@@ -163,6 +163,11 @@ variants:
   Size up when realised vol at the open is high or after the prior 5-day decline (RSI5 low), as a sizing
   tilt only
 - Scale size on NR4/NR7 days (in-sample check only, high data-mining risk)
+- >-
+  NQ executable build per Chuk (2026): 5-min bars; entries only at :00/:30 10:00-15:30 (long close > upper
+  band AND > VWAP, short mirror); fill next bar open; resting trailing stop = nearer of band or VWAP,
+  recomputed every 5 min at bar close and active next bar; flat 15:55; 1 MNQ, $2/RT. Paper: +$10.26/day
+  2020-Jul 2026, flat 2014-2019. Stress: +1 pt slippage on every stop fill.
 related_strategies:
 - vault_break
 - vwap_trend
@@ -175,6 +180,10 @@ notes:
   Independent replication (github.com/VigorTas/beat-the-market-replication, 1-min Databento, micro contracts,
   $1.75 + 0.25 pt per fill): NQ 2010-2026 +$5.35/day, t = 2.74 (mostly after 2018); ES 2013-2026 −$0.25/day,
   t = −0.20 (nothing). Matches our ES result (PF 1.08) — edge on NQ, not on ES.
+- >-
+  Chuk (2026, SSRN 7609644): pre-registered NQ adaptation survives costs (Sharpe 1.14, CI excludes 0)
+  but needs ~$150K prop account at 1 MNQ for drawdown; edge mostly 2021-2024. Our NQ window 2021-07-2023-12
+  sits inside their best years — expect it to look good; that is not independent confirmation.
 review:
   scores:
     why_strength: 4

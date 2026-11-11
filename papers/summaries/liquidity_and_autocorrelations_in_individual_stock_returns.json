@@ -1,0 +1,49 @@
+{
+  "title": "Liquidity and Autocorrelations in Individual Stock Returns",
+  "authors": [
+    "Doron Avramov",
+    "Tarun Chordia",
+    "Amit Goyal"
+  ],
+  "year": 2006,
+  "source_url": "https://users.nber.org/~confer/2004/mmsu04/goyal.pdf",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Short-term (weekly) stock return reversals are concentrated in high-turnover, illiquid stocks — the reversal is a compensation for providing liquidity, not an inefficiency; profits largely vanish after costs.",
+  "findings": [
+    {
+      "statement": "Reversal strongest among high-turnover, low-liquidity stocks.",
+      "evidence": "JF 61(5)."
+    }
+  ],
+  "why": {
+    "pattern": "Liquidity provision premium."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1993-2002",
+    "data_frequency": "weekly",
+    "holding_period": "1 week"
+  },
+  "reported_results": {
+    "headline": "Short-term (weekly) stock return reversals are concentrated in high-turnover, illiquid stocks — the reversal is a compensation for providing liquidity, not an inefficiency; profits largely vanish after costs.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; supports treating index reversal rules as liquidity premia that need tight cost modelling.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Costs."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

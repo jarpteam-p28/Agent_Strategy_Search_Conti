@@ -1,0 +1,47 @@
+{
+  "title": "Earnings Persistence Cliff and Post-Earnings-Announcement Drift",
+  "authors": [
+    "(authors not retrieved)"
+  ],
+  "year": 2026,
+  "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7116238",
+  "paper_type": "academic",
+  "read_mode": "title_only",
+  "one_line": "PEAD study (2026) linking drift to a sharp drop ('cliff') in how persistent earnings surprises are; full abstract not reachable.",
+  "findings": [
+    {
+      "statement": "Content not retrieved beyond the title.",
+      "evidence": "SSRN blocked."
+    }
+  ],
+  "why": {
+    "pattern": "Under-reaction to earnings persistence."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "-",
+    "data_frequency": "quarterly",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "PEAD study (2026) linking drift to a sharp drop ('cliff') in how persistent earnings surprises are; full abstract not reachable.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ test.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "-"
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Title only — download the PDF into papers/inbox/ for a real read.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

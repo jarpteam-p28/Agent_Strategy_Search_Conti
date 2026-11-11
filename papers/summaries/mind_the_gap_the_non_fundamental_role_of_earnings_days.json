@@ -1,0 +1,52 @@
+{
+  "title": "Mind the Gap: The Non-Fundamental Role of Earnings Days",
+  "authors": [
+    "Azi Ben-Rephael",
+    "Steffen Hitzemann",
+    "Yuanyuan Xiao"
+  ],
+  "year": 2024,
+  "source_url": "https://haslam.utk.edu/wp-content/uploads/2024/11/Ben-Rephael-Paper.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "The part of an earnings-day return not explained by the earnings surprise (Return-Earnings Gap) is largely non-fundamental: it reverses — about 21% within a year and ~54% within three years — and distorts later analyst forecasts and anomaly returns.",
+  "findings": [
+    {
+      "statement": "REG long-short earns 10.4% on the announcement day (DGTW-adjusted).",
+      "evidence": "228,266 announcements, 1985-2018."
+    },
+    {
+      "statement": "Reversal 9.9% of the day-t move within 21 days, 21.4% at 1 year, 54.5% at 3 years.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Earnings days amplify non-fundamental moves as well as correcting mispricing."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1985-2018",
+    "data_frequency": "daily",
+    "holding_period": "months-years"
+  },
+  "reported_results": {
+    "headline": "The part of an earnings-day return not explained by the earnings surprise (Return-Earnings Gap) is largely non-fundamental: it reverses — about 21% within a year and ~54% within three years — and distorts later analyst forecasts and anomaly returns.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; slow reversal, not tradable on ES/NQ.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "-"
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

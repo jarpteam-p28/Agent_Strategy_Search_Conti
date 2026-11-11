@@ -1,0 +1,56 @@
+{
+  "title": "Intraday 0DTE Option Order Flow and S&P 500 Downside Risk",
+  "authors": [
+    "Maceo Maurer",
+    "Mirko Müller"
+  ],
+  "year": 2026,
+  "source_url": "https://ssrn.com (posted 25 Aug 2026)",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "On 1,027 days (May 2022-Jun 2026), a put-heavy gamma-weighted 0DTE put-call ratio at the open predicts weaker next-hour S&P returns and a higher chance of a down hour, but not the DEPTH of declines (vanishes in severe sell-offs), and out of sample a trading rule on it earns nothing significant before or after costs.",
+  "findings": [
+    {
+      "statement": "Put-heavy opening gamma-weighted PCR → weaker next-hour return, higher P(negative hour).",
+      "evidence": "SPX 0DTE, 1,027 days."
+    },
+    {
+      "statement": "Link to downside depth fades as declines get larger; absent in severe sell-offs.",
+      "evidence": ""
+    },
+    {
+      "statement": "Out-of-sample trading rule / probability forecast: no significant profit, no gain over baselines.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Opening 0DTE flow reflects short-term sentiment/hedging demand."
+  },
+  "setting": {
+    "markets": [
+      "US index options"
+    ],
+    "instruments": [
+      "SPX 0DTE"
+    ],
+    "sample_period": "2022-05 to 2026-06",
+    "data_frequency": "intraday",
+    "holding_period": "1 hour"
+  },
+  "reported_results": {
+    "headline": "On 1,027 days (May 2022-Jun 2026), a put-heavy gamma-weighted 0DTE put-call ratio at the open predicts weaker next-hour S&P returns and a higher chance of a down hour, but not the DEPTH of declines (vanishes in severe sell-offs), and out of sample a trading rule on it earns nothing significant before or after costs.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy: negative out-of-sample result and needs 0DTE order-flow data we do not have. Useful as evidence that options-flow signals are a risk filter at best.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Negative result."
+  },
+  "data_fit": "Needs 0DTE order-flow data (not available).",
+  "caveats": [
+    "Read from an AI-generated search summary Pablo supplied, not the paper itself; the extra 'framework' text in that file is generic advice, not from the paper, and was ignored.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10) from a file Pablo supplied."
+  ],
+  "referenced_papers_worth_reading": []
+}

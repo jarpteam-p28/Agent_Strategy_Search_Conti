@@ -1,0 +1,88 @@
+id: fomc_cycle_even_weeks_es
+name: FOMC-cycle even weeks (hold ES only in weeks 0, 2, 4, 6)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/stock_returns_over_the_fomc_cycle.md
+  papers:
+  - title: Stock Returns over the FOMC Cycle
+    authors:
+    - Anna Cieslak
+    - Adair Morse
+    - Annette Vissing-Jorgensen
+    venue: JF 74(5)
+    year: 2019
+finding: >-
+  1994-2013: the whole equity premium came in even FOMC-cycle weeks; staying out in odd weeks doubled
+  the Sharpe ratio (0.4 → 0.8).
+why: Fed information flow and policy news cluster bi-weekly after each scheduled meeting.
+what_would_kill_it: >-
+  Pattern published 2015 and reportedly weaker since 2016; FOMC calendar changes; costs of ~8 round trips
+  per cycle are small, so decay is the main risk.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected)
+direction: long_only
+entry:
+  long: >-
+    Day 0 = scheduled FOMC decision day. Hold ES from the 16:00 close of day −2 to the 16:00 close of
+    day 3 (week 0), and likewise for weeks 2 (days 9-13), 4 (19-23), 6 (29-33), counting TRADING days.
+    Flat otherwise.
+  short: null
+  filters:
+  - Scheduled meetings only (public FOMC calendar)
+  - If the next meeting arrives before week 6 ends, restart the count
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: End of each even week (16:00 ET).
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: weeks_held
+  default: 0,2,4,6
+  test_range: fixed (paper)
+  source: paper
+open_questions:
+- Does it survive 2014-2023, i.e. after publication?
+- Is it just week 0 (pre-FOMC drift)? Report each week separately.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development data only; 2024+ protected
+  - 'Baseline: buy-and-hold ES and odd-weeks-only'
+  - Report each even week separately and by year
+  - 'Variant: short odd weeks (paper''s Strategy D)'
+data_requirements:
+- ES/NQ daily closes from 1-min
+- FOMC scheduled-meeting dates (public calendar)
+data_available: 'yes'
+expectations:
+- Few trades (≈ 32/yr), low cost; judge on Sharpe vs buy-and-hold, not PF
+variants:
+- long even weeks
+- long even / short odd
+related_strategies:
+- pre_fomc_drift_uncertainty_es
+- macro_announcement_day_long_es
+notes: []
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 5
+    testability: 5
+    overfit_resistance: 4
+  verdict: refine
+  reasons: Simple, calendar-based, published with a clear out-of-sample test available (2014-2023).
+  required_changes: Quick screen; report post-2016 separately.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 5, 2026-11-10)

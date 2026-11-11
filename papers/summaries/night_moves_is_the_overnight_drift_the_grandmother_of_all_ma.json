@@ -1,0 +1,60 @@
+{
+  "title": "Night Moves: Is the Overnight Drift the Grandmother of All Market Anomalies?",
+  "authors": [
+    "Nina Boyarchenko",
+    "Lars C. Larsen",
+    "Paul Whelan"
+  ],
+  "year": 2022,
+  "source_url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr917.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "ES futures earn a large, very significant return between 02:00 and 03:00 ET as European cash markets open (1.48 bp/day, t = 7.1, 1998-2020), larger after US closing sell imbalances; long-only the hour loses to the spread, but a 'buy-the-dip' version (only after a negative closing imbalance) keeps a post-cost Sharpe ≈ 1.1.",
+  "findings": [
+    {
+      "statement": "02:00-03:00 ET mean 1.48 bp/day (≈ 3.7%/yr), t = 7.1; the only hour surviving multiple-testing adjustment.",
+      "evidence": "ES mid-quotes 1998-2020."
+    },
+    {
+      "statement": "Negative signed volume 15:15-16:15 predicts the drift (coefficient −17.5); reversal after sell-offs much stronger than after rallies; larger when VIX is high.",
+      "evidence": "Volume data 2007-2020."
+    },
+    {
+      "statement": "Long the hour: pre-cost Sharpe 1.1, post-cost ≈ −0.5; 01:30-03:30 window ≈ 0.3 post-cost; buy-the-dip ≈ 1.1 post-cost.",
+      "evidence": "Strategies 2004-2020."
+    },
+    {
+      "statement": "Positive in 20 of 23 years; shifts with daylight-saving time differences between US and Europe.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Dealer inventory: US-close selling leaves dealers long; they need compensation until European liquidity arrives."
+  },
+  "setting": {
+    "markets": [
+      "US index futures"
+    ],
+    "instruments": [
+      "ES"
+    ],
+    "sample_period": "1998-2020",
+    "data_frequency": "1-minute",
+    "holding_period": "1 hour overnight"
+  },
+  "reported_results": {
+    "headline": "ES futures earn a large, very significant return between 02:00 and 03:00 ET as European cash markets open (1.48 bp/day, t = 7.1, 1998-2020), larger after US closing sell imbalances; long-only the hour loses to the spread, but a 'buy-the-dip' version (only after a negative closing imbalance) keeps a post-cost Sharpe ≈ 1.1.",
+    "key_stats": []
+  },
+  "tradable_edge": "Already covered by europe_open_long_es (its conditioned 'after a down session' and 'large last-30-min move' variants are the buy-the-dip version). Added the DST note to that spec.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Same authors later documented the drift disappearing after 2021 ('The Disappearing Overnight Drift')."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

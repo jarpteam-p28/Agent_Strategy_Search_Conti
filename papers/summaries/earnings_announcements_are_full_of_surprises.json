@@ -1,0 +1,50 @@
+{
+  "title": "Earnings Announcements are Full of Surprises",
+  "authors": [
+    "Michael W. Brandt",
+    "Runeet Kishore",
+    "Pedro Santa-Clara",
+    "Mohan Venkatachalam"
+  ],
+  "year": 2008,
+  "source_url": "http://ssrn.com/abstract=909563",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "The stock's abnormal return around the announcement (EARS) predicts drift better than the accounting surprise (SUE); EARS drift is larger, persists, and survived after the SUE drift shrank.",
+  "findings": [
+    {
+      "statement": "Return-based surprise drift larger and more persistent than SUE drift.",
+      "evidence": "US stocks 1987-2004 (Quantpedia summary)."
+    }
+  ],
+  "why": {
+    "pattern": "Investor under-reaction to the information in the market's own reaction."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1987-2004",
+    "data_frequency": "daily",
+    "holding_period": "60 days"
+  },
+  "reported_results": {
+    "headline": "The stock's abnormal return around the announcement (EARS) predicts drift better than the accounting surprise (SUE); EARS drift is larger, persists, and survived after the SUE drift shrank.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; covered conceptually by pead_* specs.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "PEAD has decayed."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,15 +1,15 @@
-# ADDENDUM to ALL_STRATEGIES_BUNDLE_2026-11-06 — added 2026-11-10
+# ADDENDUM to ALL_STRATEGIES_BUNDLE_2026-11-06 — updated 2026-11-10 (all 125 papers read)
 
-Same rules as the main bundle (quick screen first, scoreboard line after each, ES 2014-2023 / NQ 2021-07-2023-12, never 2024+).
+Same rules as the main bundle (quick screen first, scoreboard line after each, ES 2014-2023 / NQ 2021-07-2023-12, never 2024+). Public FOMC/BLS release calendars are approved.
 
 ## TIER 4 — studies already written (run after Tiers 1-3)
 - A) `incoming_specs/ORB_TARGET_STATS_STUDY.md` — ORB 15/30/60-min hit-probability tables, rebuilt Deepcharts Protection / Ext. Avg / Ext. Std-1 levels, Crabel stretch, 13 fixed strategies per instrument.
 - B) `incoming_specs/VOLATILITY_BREAKOUT_RESEARCH_TESTS.md` — T1-T7 (NR4/NR7, squeeze, tight-range breakout, ORB by volatility regime, Market Profile value area).
-- C) Dual Noise Zone (`noise_area_momentum_es`) FULL VALIDATION on NQ 2021-07-2023-12 — it works on NQ, not ES (independent replication agrees: NQ t = 2.74).
+- C) Dual Noise Zone (`noise_area_momentum_es`) FULL VALIDATION on NQ 2021-07-2023-12 — it works on NQ, not ES (independent replication: NQ t = 2.74). ALSO run the Chuk (2026) executable NQ build: 5-min bars; entries only at :00/:30 from 10:00 to 15:30 (long if close > upper band AND > VWAP, short mirror); fill next bar open; resting trailing stop = the nearer of band or VWAP, recomputed every 5 minutes at the bar close and active from the next bar; flat at 15:55; 1 MNQ, $2 per round trip. Paper: +$10.26/day net 2020-Jul 2026, Sharpe 1.14, flat 2014-2019. Report the +1-point stop-slippage stress and the 3-year bootstrap max drawdown vs a $2,500 EOD limit. Our NQ window sits in the paper's best years — not independent confirmation.
 - D) `incoming_specs/pd_rejection/PD_REJECTION_FILTER_STUDY.md` — only if not already finished in results/.
 - E) Overnight Bias ORB — confirm all 3 overnight start times (18:00, 00:00, 01:00 ET) were run.
 
-- Not testable (no data): megacap_earnings_overnight_split_nq (needs per-stock earnings reactions), post_surprise_overnight_long_stocks and other single-stock specs.
+- Not testable (no data): megacap_earnings_overnight_split_nq, dividend payment-day effect (needs S&P pay-date calendar), 0DTE/gamma-flow ideas, single-stock specs.
 
 ---
 ## TIER 5 — new research ideas from the 2026-11-09 agent run (quick screen)
@@ -58,3 +58,64 @@ Same rules as the main bundle (quick screen first, scoreboard line after each, E
 - **Extra checks:** Chronological 80/20 split. ES 2013-2026 is the long test. NQ 2021-2026 is short, so it gets fewer trades; report its t-stat.; Report gross points per trade vs costs (about $13 per NQ round turn plus 1 tick of slippage). Require net t ≥ 2 and the same sign in each out-of-sample year.; Long side vs short side separately.; Results by signal-strength quintile of |S|/A. The edge should be monotonic.; Pre-2022 vs post-2022, opex vs non-opex, high vs low vol regime.; NQ vs ES on overlapping dates. The hypothesis says NQ is stronger.; Correlation of daily P&L with noise_area_last_half_hour_es and with letf_rebalance_day_reversal_nq.
 - **Data needs:** ES 1-min 2013-2026 (have); NQ 1-min 2021-07 to 2026 (have); Exchange holiday and early-close calendar; Monthly and quarterly opex calendar (derivable); Optional: TQQQ/SQQQ/UPRO/SPXU AUM history; NDX/SPX option open interest for gamma
 - **Notes:** New angle versus the existing late-day strategies: the signal is signed by the close-to-close return (the quantity LETFs rebalance on) rather than the move from the open, and it is conditioned on a gamma-regime proxy.; Abstract-only source. Expect about half the paper's effect or less (McLean & Pontiff).
+
+---
+## TIER 6 — from the last 27 papers read 2026-11-10 (quick screen)
+
+### 28. `fomc_cycle_even_weeks_es` — FOMC-cycle even weeks (hold ES only in weeks 0, 2, 4, 6)
+- **Spec:** `strategies/candidates/fomc_cycle_even_weeks_es.yaml` · verdict: refine · data: yes
+- **Finding:** 1994-2013: the whole equity premium came in even FOMC-cycle weeks; staying out in odd weeks doubled the Sharpe ratio (0.4 → 0.8).
+- **Why:** Fed information flow and policy news cluster bi-weekly after each scheduled meeting.
+- **Market:** instruments: ES; NQ; bar_size: 1min; session: America/New_York; universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected) · direction: long_only
+- **Entry long:** Day 0 = scheduled FOMC decision day. Hold ES from the 16:00 close of day −2 to the 16:00 close of day 3 (week 0), and likewise for weeks 2 (days 9-13), 4 (19-23), 6 (29-33), counting TRADING days. Flat otherwise.
+- **Entry short:** —
+- **Filters:** Scheduled meetings only (public FOMC calendar); If the next meeting arrives before week 6 ends, restart the count
+- **Exit:** stop: — · target: — · time: End of each even week (16:00 ET).
+- **Parameters:** weeks_held=0,2,4,6 (test fixed (paper))
+- **Variants (pre-registered):** long even weeks; long even / short odd
+- **Extra checks:** Development data only; 2024+ protected; Baseline: buy-and-hold ES and odd-weeks-only; Report each even week separately and by year; Variant: short odd weeks (paper's Strategy D)
+- **Data needs:** ES/NQ daily closes from 1-min; FOMC scheduled-meeting dates (public calendar)
+
+### 29. `macro_announcement_day_long_es` — Macro announcement days long (CPI, PPI, NFP, FOMC)
+- **Spec:** `strategies/candidates/macro_announcement_day_long_es.yaml` · verdict: refine · data: yes
+- **Finding:** 1958-2009: market excess return 11.4 bp on CPI/PPI/employment/FOMC days vs 1.1 bp on other days (t = 3.77).
+- **Why:** Premium for bearing macro risk resolved on announcement days.
+- **Market:** instruments: ES; NQ; bar_size: 1min; session: America/New_York; universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected) · direction: long_only
+- **Entry long:** Buy at the 16:00 ET close the day before a scheduled CPI, PPI, Employment Situation (NFP) or FOMC decision day; sell at the 16:00 close on the announcement day.
+- **Entry short:** —
+- **Filters:** Official release calendars (BLS, Fed); Variant A: RTH only (09:30 → 16:00 on the day); Variant B: by announcement type
+- **Exit:** stop: — · target: — · time: 16:00 ET on the announcement day.
+- **Parameters:** window=close-to-close (test close-to-close, overnight only, RTH only)
+- **Variants (pre-registered):** close-to-close; overnight only; RTH only
+- **Extra checks:** Development data only; 2024+ protected; Baseline: all non-announcement days; Split by announcement type and by year; Without the best 5 days
+- **Data needs:** ES/NQ 1-min; BLS/Fed release dates (public calendars)
+
+### 30. `close_reversal_overnight_es` — Close reversal overnight (fade the last 30 minutes, hold to 10:00)
+- **Spec:** `strategies/candidates/close_reversal_overnight_es.yaml` · verdict: refine · data: yes
+- **Finding:** S&P futures reverse the last 20-60 minutes of the session overnight, strongly when implied variance is high and after down moves; 30-min version ≈ 12 bp/day gross (1990-2015).
+- **Why:** Closing liquidity pressure and option-hedging flows revert once fresh liquidity arrives.
+- **Market:** instruments: ES; NQ; bar_size: 1min; session: America/New_York; universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected) · direction: long_short
+- **Entry long:** If the 15:30-16:00 ET return is negative, buy at the 16:00 close.
+- **Entry short:** If it is positive, sell at the 16:00 close (variant: long side only, per the paper's asymmetry).
+- **Filters:** Base: all days; Conditioned: only when AvgRange (15-session) is in its top tercile (cutoffs from 2014-2018) — VIX proxy; Size filter: |last-30 return| above its 20-day median
+- **Exit:** stop: None in base; variant 1 × the last-30 move beyond the 16:00 close. · target: — · time: 10:00 ET next session. · other: Variant exit 09:35 and 09:30
+- **Parameters:** formation_minutes=30 (test 20, 30, 60); exit_time=10:00 (test 09:30, 09:35, 10:00)
+- **Variants (pre-registered):** 3 formation × 3 exits × 2 filters (pre-registered)
+- **Extra checks:** Development data only; 2024+ protected; Random-direction baseline (100 runs); Split by volatility tercile, by sign, pre/post 2022; 2x slippage
+- **Data needs:** ES/NQ 1-min
+- **Notes:** Opposite of the last-half-hour momentum idea: momentum INTO the close, reversal AFTER it — test both on the same days.
+
+### 31. `expiration_pin_es` — Expiration-day pinning (descriptive + fade toward the round strike)
+- **Spec:** `strategies/candidates/expiration_pin_es.yaml` · verdict: refine · data: partial
+- **Finding:** S&P futures are pulled toward the at-the-money strike on futures-option expiration days; hedge unwinding moves index futures in the 30 minutes before expiration.
+- **Why:** Dealer delta-hedge decay and unwinding into expiration.
+- **Market:** instruments: ES; NQ; bar_size: 1min; session: America/New_York; universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected) · direction: long_short
+- **Entry long:** Monthly ES-option expiration days (3rd Friday; variant: every weekly Friday). At 14:30 ET, find the nearest 25-point strike K. If price is more than 0.15 × AvgRange BELOW K, buy.
+- **Entry short:** If more than 0.15 × AvgRange ABOVE K, sell.
+- **Filters:** Step 1 (descriptive, no P&L): distribution of |16:00 close − nearest 25-pt strike| on expiration vs non-expiration days, and 15:30-16:00 range
+- **Exit:** stop: 0.30 × AvgRange · target: Touch of K · time: 16:00 ET
+- **Parameters:** strike_grid=25 (test 25 (ES); 100 (NQ))
+- **Variants (pre-registered):** monthly vs weekly expirations
+- **Extra checks:** Development data only; 2024+ protected; Placebo: same rule on non-expiration Fridays and on random strike offsets (e.g., K + 12.5); Pre/post 2022
+- **Data needs:** ES/NQ 1-min; Expiration calendar
+- **Notes:** Proxy strikes only; real pinning studies use open interest.

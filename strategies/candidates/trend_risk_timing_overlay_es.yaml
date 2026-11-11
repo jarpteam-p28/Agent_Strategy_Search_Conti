@@ -186,6 +186,9 @@ notes:
   Low frequency and long holding times mean it is not a prop-challenge strategy. It is a portfolio overlay
   or regime filter that could be uncorrelated with our intraday books.
 - Expect weak results after costs. McLean & Pontiff haircut applies to trend in general.
+- >-
+  Nonlinear TSMOM (Moskowitz et al. 2025): S-shaped signal beats linear out of sample — variant: cap the
+  trend z-score at ±1.5 and cut exposure in half beyond ±2.5.
 variants:
 - Trend signal = 12-month return sign instead of SMA
 - Partial de-risk (50% exposure) in trend-off instead of flat

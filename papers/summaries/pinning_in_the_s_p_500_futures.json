@@ -1,0 +1,56 @@
+{
+  "title": "Pinning in the S&P 500 Futures",
+  "authors": [
+    "Benjamin Golez",
+    "Jens Carsten Jackwerth"
+  ],
+  "year": 2012,
+  "source_url": "https://ideas.repec.org/a/eee/jfinec/v106y2012i3p566-585.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "S&P 500 futures are pulled toward the at-the-money strike on days when serial options on the futures expire ('pinning'), and pushed away from it just before S&P 500 index options expire ('anti-cross-pinning'); the hedging-driven shift is at least $115 million notional per expiration.",
+  "findings": [
+    {
+      "statement": "Pinning toward the nearest strike on futures-option expiration days.",
+      "evidence": "JFE 106(3) 2012."
+    },
+    {
+      "statement": "Anti-cross-pinning before index-option expiration.",
+      "evidence": ""
+    },
+    {
+      "statement": "Mechanism: delta-hedge rebalancing by market makers as hedges decay, and retail reselling of in-the-money options.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Dealer delta-hedge decay into expiration pulls price toward heavily-held strikes."
+  },
+  "setting": {
+    "markets": [
+      "US index futures"
+    ],
+    "instruments": [
+      "ES"
+    ],
+    "sample_period": "1990s-2000s",
+    "data_frequency": "intraday",
+    "holding_period": "afternoon of expiration"
+  },
+  "reported_results": {
+    "headline": "S&P 500 futures are pulled toward the at-the-money strike on days when serial options on the futures expire ('pinning'), and pushed away from it just before S&P 500 index options expire ('anti-cross-pinning'); the hedging-driven shift is at least $115 million notional per expiration.",
+    "key_stats": []
+  },
+  "tradable_edge": "New quick-screen spec expiration_pin_es: on monthly/weekly ES option expiration afternoons, does price close nearer a round strike (25-pt multiple) than on other days, and does a fade-toward-strike rule pay? Strike open interest is not available — round numbers are the proxy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "0DTE growth changed expiration dynamics after 2022."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project). Needs options positioning / open-interest data we do not have; ES/NQ price data only allows proxies.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -1,0 +1,49 @@
+{
+  "title": "The High-Volume Return Premium",
+  "authors": [
+    "Simon Gervais",
+    "Ron Kaniel",
+    "Dan H. Mingelgrin"
+  ],
+  "year": 2001,
+  "source_url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=146468",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Stocks with unusually high trading volume over a day or week tend to rise over the following month (visibility raises demand); unusually low volume predicts lower returns.",
+  "findings": [
+    {
+      "statement": "High-volume winners and losers both outperform over the next month.",
+      "evidence": "JF 56(3), NYSE stocks 1963-1996."
+    }
+  ],
+  "why": {
+    "pattern": "Visibility / investor recognition."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "NYSE stocks"
+    ],
+    "sample_period": "1963-1996",
+    "data_frequency": "daily/weekly",
+    "holding_period": "1 month"
+  },
+  "reported_results": {
+    "headline": "Stocks with unusually high trading volume over a day or week tend to rise over the following month (visibility raises demand); unusually low volume predicts lower returns.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level. Index-level version (ES volume surprise) already explored in vwap_cross_volume_surprise; no new spec.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "-"
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

@@ -75,6 +75,9 @@ variants:
 related_strategies: []
 notes:
 - ~120 trades on ES 2014-2023 — too few for a strong verdict alone; NQ as a second market helps.
+- >-
+  Garcia-Ares et al. (2026): hedge unwinding of expiring cash-settled SPX options moves index futures
+  in the 30 minutes before expiration — add a descriptive 15:30-16:00 look on PM expirations (see expiration_pin_es).
 review:
   scores:
     why_strength: 4

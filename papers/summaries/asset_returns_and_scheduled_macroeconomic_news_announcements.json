@@ -1,0 +1,59 @@
+{
+  "title": "How Much Do Investors Care About Macroeconomic Risk? Evidence from Scheduled Economic Announcements",
+  "authors": [
+    "Pavel Savor",
+    "Mungo Wilson"
+  ],
+  "year": 2013,
+  "source_url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2012/04/Draft20111128p_edited.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "Excess market returns averaged 11.4 bp on CPI/PPI, employment and FOMC announcement days vs 1.1 bp on other days (difference t = 3.77, 1958-2009): over 60% of the equity premium is earned on ~13% of days, with volatility only ~5% higher.",
+  "findings": [
+    {
+      "statement": "Announcement days 11.4 bp vs 1.1 bp other days; difference 10.3 bp, t = 3.77; non-announcement returns not different from zero.",
+      "evidence": "JFQA 48(2), 1958-2009."
+    },
+    {
+      "statement": "Sharpe ratio on announcement days ≈ 10× other days.",
+      "evidence": ""
+    },
+    {
+      "statement": "Effect holds for each announcement type and survives controls for the size of the surprise.",
+      "evidence": ""
+    },
+    {
+      "statement": "T-bill yields fall and long bonds earn more on announcement days (precautionary demand).",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Risk premium for bearing macro 'state variable' risk that is resolved on announcement days."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "CRSP VW index"
+    ],
+    "sample_period": "1958-2009",
+    "data_frequency": "daily",
+    "holding_period": "1 day"
+  },
+  "reported_results": {
+    "headline": "Excess market returns averaged 11.4 bp on CPI/PPI, employment and FOMC announcement days vs 1.1 bp on other days (difference t = 3.77, 1958-2009): over 60% of the equity premium is earned on ~13% of days, with volatility only ~5% higher.",
+    "key_stats": []
+  },
+  "tradable_edge": "New spec macro_announcement_day_long_es: hold ES on CPI/PPI/NFP/FOMC days (prior close → day close, plus RTH-only variant). Complements pre_macro_overnight_es (the night before) and pre_fomc_drift_uncertainty_es.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Old sample; part of the FOMC piece is the pre-FOMC drift that weakened after 2015."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

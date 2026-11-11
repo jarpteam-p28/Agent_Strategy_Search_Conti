@@ -1,0 +1,92 @@
+id: expiration_pin_es
+name: Expiration-day pinning (descriptive + fade toward the round strike)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/pinning_in_the_s_p_500_futures.md
+  papers:
+  - title: Pinning in the S&P 500 Futures
+    authors:
+    - Benjamin Golez
+    - Jens Carsten Jackwerth
+    venue: JFE 106(3)
+    year: 2012
+  - title: The Price Impact of Hedging Expiring Index Options
+    authors:
+    - Pedro Angel Garcia-Ares
+    - Aurelio Vasquez
+    - Neil D. Pearson
+    - Diego Amaya
+    venue: AEA 2026
+    year: 2026
+finding: >-
+  S&P futures are pulled toward the at-the-money strike on futures-option expiration days; hedge unwinding
+  moves index futures in the 30 minutes before expiration.
+why: Dealer delta-hedge decay and unwinding into expiration.
+what_would_kill_it: >-
+  No open-interest data — round numbers may not be where open interest sits; 0DTE daily expirations dilute
+  the monthly effect.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected)
+direction: long_short
+entry:
+  long: >-
+    Monthly ES-option expiration days (3rd Friday; variant: every weekly Friday). At 14:30 ET, find the
+    nearest 25-point strike K. If price is more than 0.15 × AvgRange BELOW K, buy.
+  short: If more than 0.15 × AvgRange ABOVE K, sell.
+  filters:
+  - >-
+    Step 1 (descriptive, no P&L): distribution of |16:00 close − nearest 25-pt strike| on expiration vs
+    non-expiration days, and 15:30-16:00 range
+exit:
+  stop_loss: 0.30 × AvgRange
+  take_profit: Touch of K
+  time_exit: 16:00 ET
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: strike_grid
+  default: 25
+  test_range: 25 (ES); 100 (NQ)
+  source: listed strike spacing / round numbers
+open_questions:
+- Is there any closing pull toward 25-pt strikes on our data at all (step 1)?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development data only; 2024+ protected
+  - 'Placebo: same rule on non-expiration Fridays and on random strike offsets (e.g., K + 12.5)'
+  - Pre/post 2022
+data_requirements:
+- ES/NQ 1-min
+- Expiration calendar
+data_available: partial
+expectations:
+- Step 1 decides whether step 2 is worth running
+variants:
+- monthly vs weekly expirations
+related_strategies:
+- third_friday_spike_es
+notes:
+- Proxy strikes only; real pinning studies use open interest.
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 4
+    testability: 3
+    overfit_resistance: 3
+  verdict: refine
+  reasons: Mechanism documented in futures; our test uses a proxy, so start descriptive.
+  required_changes: Run step 1 first; stop if no pull.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 5, 2026-11-10)

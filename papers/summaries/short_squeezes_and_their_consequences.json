@@ -1,0 +1,50 @@
+{
+  "title": "Short Squeezes and Their Consequences",
+  "authors": [
+    "Paul Schultz"
+  ],
+  "year": 2024,
+  "source_url": "https://www.evidenceinvestor.com/post/the-consequences-of-short-squeezes",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "Short squeezes (lenders recalling shares) are rare except in high-utilization, high-fee stocks, where they cost short sellers 56-73 bp a month and eat more than two-thirds of the −1.29%/month return of those stocks.",
+  "findings": [
+    {
+      "statement": "At ≥ 90% utilization, a squeeze roughly every 11 days; at ≤ 25%, once in 40 years.",
+      "evidence": "IHS Markit lending data 2006-2019, JFQA."
+    },
+    {
+      "statement": "Squeeze costs 0.87-1.04%/month vs −1.29%/month excess return for high-utilization stocks.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Limits to arbitrage via recall risk."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "2006-2019",
+    "data_frequency": "daily",
+    "holding_period": "monthly"
+  },
+  "reported_results": {
+    "headline": "Short squeezes (lenders recalling shares) are rare except in high-utilization, high-fee stocks, where they cost short sellers 56-73 bp a month and eat more than two-thirds of the −1.29%/month return of those stocks.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ test.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "-"
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 5, 2026-11-10), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}
