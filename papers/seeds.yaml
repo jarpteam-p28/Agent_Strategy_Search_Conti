@@ -393,3 +393,45 @@
   venue: Review of Financial Studies
   year: 2008
   note: Foundation for attention-driven retail buying. Cited from memory, not confirmed from this paper.
+- title: Are Leveraged and Inverse ETFs the New Portfolio Insurers?
+  authors:
+  - Tugkan Tuzun
+  venue: Federal Reserve Board FEDS working paper
+  year: 2013
+  note: >-
+    Later work, from memory. Links leveraged ETF rebalancing to late-day return autocorrelation and volatility.
+- title: Path-Dependence of Leveraged ETF Returns
+  authors:
+  - Marco Avellaneda
+  - Stanley Zhang
+  venue: SIAM Journal on Financial Mathematics
+  year: 2010
+  note: >-
+    Related. Explains the compounding and volatility drag, which could give a decay-based short-leveraged-ETF
+    idea (not testable with our data).
+- title: Dynamics of Leveraged and Inverse Exchange-Traded Funds
+  authors:
+  - Minder Cheng
+  - Ananth Madhavan
+  venue: Journal of Investment Management
+  year: 2009
+  note: >-
+    Derives the same rebalancing formula and links aggregate LETF rebalancing to end-of-day S&P 500 returns;
+    the direct source for the last-hour rebalancing claim.
+- title: The Impact of Leveraged and Inverse ETFs on Underlying Stock Returns
+  authors:
+  - Qing Bai
+  - Scott A. Bond
+  - Brian Hatch
+  venue: University of Cincinnati Working Paper
+  year: 2012
+  note: Finds end-of-day price pressure and extra volatility from 6 LETFs on 63 real estate stocks.
+- title: Large Bets and Stock Market Crashes
+  authors:
+  - Albert S. Kyle
+  - Anna Obizhaeva
+  venue: University of Maryland Working Paper
+  year: 2012
+  note: >-
+    Source of the price-impact (microstructure invariance) formula used to size the flow impact; related
+    to market impact of large forced sellers in crashes.

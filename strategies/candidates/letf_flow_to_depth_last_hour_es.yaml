@@ -1,0 +1,242 @@
+id: letf_flow_to_depth_last_hour_es
+name: LETF Flow-to-Depth Last Hour Continuation (ES/NQ, 15:00-15:59 ET, long/short)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/leveraged_etf_rebalancing_and_late_day_returns_tuzun.md
+  papers:
+  - title: Are Leveraged and Inverse ETFs the New Portfolio Insurers?
+    authors:
+    - Tugkan Tuzun
+    venue: Federal Reserve FEDS discussion paper 2013-48
+    year: 2013
+    url: https://www.federalreserve.gov/pubs/feds/2013/201348/201348abs.html
+    note: >-
+      Main source. Gives the rebalancing formula AUM x d x (d-1) x r, the last-hour timing, and a late-day
+      price effect that is scaled by flow relative to volume.
+  - title: Dynamics of Leveraged and Inverse Exchange-Traded Funds
+    authors:
+    - Minder Cheng
+    - Ananth Madhavan
+    venue: Journal of Investment Management
+    year: 2009
+    note: Original derivation of the rebalancing formula and the link to end-of-day S&P returns.
+finding: >-
+  Tuzun studied US stocks from 2006 to 2011. Late-day returns (15:00-16:00 ET) rise with the leveraged/inverse
+  ETF (LETF) rebalancing flow implied by the index return from the prior close to 15:00, measured relative
+  to average daily volume (ADV). Coefficients on flow/ADV run from 0.83 to 4.16 and stay significant after
+  controlling for the return to 15:00. Closing-hour variance also rises with |flow|, and the effect is
+  largest when the flow is large relative to liquidity and in high-volatility regimes. Leveraged and inverse
+  funds both trade in the direction of the move, so they never offset each other. The size of the trade
+  is a known formula: AUM x d x (d-1) x r.
+why: >-
+  The pattern is execution mechanics combined with a mandate. Funds with a daily leverage target (and
+  the swap dealers hedging them) must buy after up days and sell after down days near the close, whatever
+  the price. The price impact should depend on the size of that forced flow relative to the depth available
+  in the last hour, not on the index move alone. LETF AUM on the S&P 500 and Nasdaq-100 (TQQQ/SQQQ/UPRO/SPXL
+  and others) has grown many times since 2011 and swings with past performance. That makes the flow-to-depth
+  ratio vary over time in a way the plain '% move by 15:00' signal cannot see. Our angle is a test of
+  exactly this. The existing letf_close_rebalance_continuation_nq signs the trade by the day's move only.
+  Here the trade is gated by the estimated dollar flow divided by last-hour futures depth, and the entry
+  is at 15:00, the start of the window the paper uses.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: >-
+    RTH 09:30-16:00 America/New_York (data stored in UTC; convert with DST handling). Signal at 15:00
+    ET, trade 15:01-15:59 ET
+  universe: null
+direction: long_short
+entry:
+  long: >-
+    At the 15:00 ET bar close, r = price(15:00)/prior RTH close(16:00 ET) - 1 > 0 and Q = F/D >= Q_threshold.
+    F = sum over index LETFs on the traded index of AUM_i(prior day) x d_i x (d_i - 1) x r. D = 20-session
+    median of the 15:00-16:00 ET notional volume of the future. Buy at the 15:01 bar open.
+  short: Same rule with r < 0 and |Q| >= Q_threshold. Sell short at the 15:01 bar open.
+  filters:
+  - Q_threshold is set as a percentile of trailing 250-session |Q|, using no future data
+  - Skip early-close sessions (half days)
+  - At most one trade per day
+  - >-
+    Variant flag only, not in the base rule: skip monthly options-expiry Fridays and quarterly futures
+    roll weeks
+exit:
+  stop_loss: 0.35 x ATR(14 daily, RTH) against the entry price
+  take_profit: null
+  time_exit: Flat at the 15:59 ET bar close (before the 16:00 closing print)
+  other:
+  - No re-entry after a stop
+position_sizing:
+  development: 1 contract fixed (ES or NQ; MES/MNQ equivalent)
+  live: >-
+    Volatility targeting: contracts = fixed $ risk / (stop distance in points x point value), with the
+    stop based on ATR
+parameters:
+- name: Q_threshold_percentile
+  default: 80
+  source: assumption (the paper's effect is concentrated in large-flow days)
+  test_range: 60, 70, 80, 90
+- name: stop_atr_fraction
+  default: 0.35
+  source: assumption (Conti-style vol-scaled level)
+  test_range: 0.25-0.6, plus no stop
+- name: entry_time_ET
+  default: '15:00'
+  source: paper (the flow is measured to 15:00)
+  test_range: 14:30, 15:00, 15:30
+- name: depth_lookback_sessions
+  default: 20
+  source: assumption
+  test_range: 10, 20, 60
+- name: leverage_set
+  default: all index LETFs with |d| in {1,2,3} (d=-1 included, d(d-1)=2)
+  source: paper formula
+  test_range: 2x/3x only vs all
+data_requirements:
+- ES 1-min 2013-12 onward (have)
+- NQ 1-min 2021-07 onward (have)
+- >-
+  Daily AUM/shares outstanding x NAV history for S&P 500 LETFs (SSO, UPRO, SPXL, SDS, SPXU, SPXS, SH)
+  and Nasdaq-100 LETFs (QLD, TQQQ, QID, SQQQ, PSQ) - NOT in inventory; source from issuer sites, ETF.com
+  or Bloomberg
+- Exchange holiday/half-day calendar
+data_available: partial
+expectations:
+- >-
+  Q-gated trades should show higher gross points per trade than a matched-frequency gate on |r|/sigma
+  alone (the incremental test of the WHY)
+- The edge should be larger in 2020-2026 than in 2014-2019, because LETF AUM grew
+- >-
+  The edge should be larger in high-vol regimes (VIX top tercile); |15:00-16:00 range| should rise with
+  |Q|
+- The paper reports a slightly stronger long side on up days
+- >-
+  Expect roughly half the paper's large-cap impact (~3 bp per 1% S&P move) or less; it may not clear costs
+  on ES
+what_would_kill_it: >-
+  The edge is dead if gating on Q adds nothing over the plain move-size gate, or if net gross per trade
+  stays under ~2x round-trip costs out of sample. The mechanism is undermined if issuers move to spread-out/MOC
+  execution that is absorbed in the closing auction, if dealers net the flow internally, or if front-running
+  moves the whole impact before 15:00. 0DTE dealer long gamma damping the close since 2022 would also
+  hurt it.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - 'Baseline: always long 15:01-15:59, and the |r|/sigma-gated version at the same trade count'
+  - >-
+    Report gross points/trade vs ~$13 (ES) / ~$19 (NQ) round-turn; require net t >= 2 and the same sign
+    in every OOS year
+  - Split pre/post 2022, by side, and by VIX tercile
+  - Check 2022 (down year) separately for the long side
+  - >-
+    Check overlap and daily-P&L correlation with letf_close_rebalance_continuation_nq and noise_area_last_half_hour_es
+variants:
+- >-
+  Fallback without AUM data: proxy AUM with a step function from annual year-end AUM (clearly labelled
+  as approximate)
+- Long-only on up days
+- 15:30 entry (to compare with the existing strategy) vs 15:00 entry
+- >-
+  Use the 15:00-16:00 |Q| as a risk filter that widens stops/reduces size for other strategies holding
+  into the close
+related_strategies:
+- letf_close_rebalance_continuation_nq
+- letf_rebalance_day_reversal_nq
+- noise_area_last_half_hour_es
+- noise_area_momentum_es
+notes:
+- >-
+  The new element vs existing specs is a flow-to-depth gate built from actual LETF AUM, and the 15:00
+  start. If the incremental test fails, merge into letf_close_rebalance_continuation_nq and park this
+  one.
+- >-
+  The paper's next-day reversal (measured close to 15:00) is already covered by letf_rebalance_day_reversal_nq,
+  so it is not repeated here.
+- >-
+  Prior RTH close for ES = 16:00 ET price (not the 16:15 Globex settle); state this in the code header.
+open_questions:
+- >-
+  Does AUM data with daily granularity exist cheaply for 2013-2026, and should swap exposure (not NAV)
+  be used?
+- Should flows from S&P and Nasdaq LETFs both feed the ES signal, given cross-hedging by dealers?
+- >-
+  Is futures last-hour notional volume the right depth measure, or should SPY/QQQ plus futures be combined?
+- >-
+  Should the reference price be the prior 16:00 close or the LETF NAV close (identical in practice, but
+  check DST and half days)?
+- >-
+  Do issuers now rebalance mostly via MOC orders at 16:00? If so, the impact lands in the closing print,
+  which futures cannot capture before 15:59.
+- 'What is the right threshold form: percentile of |Q| vs an absolute $ flow / depth ratio?'
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 3
+    testability: 3
+    overfit_resistance: 3
+  verdict: refine
+  reasons:
+  - >-
+    The WHY is real. Daily-reset LETFs and the dealers hedging them have to trade in the direction of
+    the day's move near the close, the trade size follows a known formula, and it doesn't care about price.
+    That is the playbook's 'execution mechanics + mandate' pattern, and the spec says clearly what would
+    kill it.
+  - >-
+    The spec doesn't copy the paper. The paper is a regression study on 2006-2011 stocks. This spec turns
+    it into its own index-futures rule and asks a sharp incremental question: does flow-to-depth add anything
+    over plain move size? That is the right way to test the WHY and to keep this from duplicating letf_close_rebalance_continuation_nq.
+  - >-
+    Persistence is mixed. LETF AUM has grown a lot, which helps. Against that: the paper's index-level
+    effect is small (large caps ~2-3% of last-hour volume), heavy front-running probably pulls the impact
+    before 15:00, and 0DTE dealer long gamma since 2022 may damp the close. Plan on about half the paper's
+    effect at most. It may not clear ES costs.
+  - >-
+    Timing problem: LETF and swap-dealer hedging is now largely done through MOC orders. If so, the impact
+    lands at the 16:00 print and after the 15:50 imbalance publication. Exiting at the 15:59 bar close
+    can miss it. ES and NQ keep trading past 16:00 ET, so futures can capture that print. The spec wrongly
+    assumes they cannot.
+  - >-
+    Testability depends on daily AUM data. The fallback (step function from year-end AUM) leaves Q ≈ r
+    / last-hour volume within each year. That turns it into a move-size/volume gate and breaks the incremental
+    test the strategy exists to run.
+  - >-
+    There are too many knobs for a thin edge: Q percentile, stop fraction, entry time, depth lookback
+    and leverage set, plus variants. A stop inside a 59-minute hold mixes the exit into the entry evaluation.
+  - >-
+    The NQ sample is short (2021-07 onward, with missing contracts in the tick files). With an 80th-percentile
+    gate it gives only ~250 trades, almost all after 2022, so the pre/post-2022 split can't be done on
+    NQ.
+  required_changes:
+  - >-
+    Run a master-signal test first: fixed hold from 15:01 to the exit, no stop, no target. Compare against
+    the always-long baseline and against an |r|/sigma gate with the same trade count. Add the ATR stop
+    only after the gate shows incremental gross edge in-sample.
+  - >-
+    Add an exit variant that holds through the cash close: exit at the 16:00 ET close price, or at the
+    first bar after 16:00 (e.g. 16:01-16:10 ET) in futures. Report how much of the move happens 15:50-16:00
+    versus earlier. This settles the MOC open question with our own data.
+  - >-
+    Commit to a daily AUM source (issuer shares outstanding × NAV, or a paid ETF database) before backtesting.
+    If only year-end AUM is available, relabel the test as a volume-scaled move gate and drop the claim
+    that it tests the flow-to-depth WHY.
+  - >-
+    Freeze most parameters: depth lookback = 20, leverage set = all, entry = 15:00. Tune only the Q percentile
+    (and the stop fraction if a stop is kept), in-sample only.
+  - >-
+    Define r for the continuous futures series without roll contamination: compute it within the same
+    contract on roll days, or use the front contract's own prior 16:00 ET close. State the 250-session
+    warm-up for the percentile and that no trades are taken before it is complete.
+  - >-
+    Treat ES (2013-2026) as the primary test, with the pre/post-2022 and VIX-tercile splits. Treat NQ
+    as a confirmation out-of-sample instrument and don't tune on it.
+  - >-
+    Decide now whether ES uses only S&P LETF flow or S&P plus Nasdaq LETF flow. Pick one for the base
+    rule and keep the other as a single labelled variant, to avoid a garden-of-forking-paths search.
+  copies_the_paper: false

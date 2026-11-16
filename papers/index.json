@@ -558,6 +558,33 @@
     ],
     "skipped_reason": null
   },
+  "can_investors_profit_from_the_prophets_consensus_analyst_rec": {
+    "title": "Can Investors Profit from the Prophets? Consensus Analyst Recommendations and Stock Returns",
+    "authors": [
+      "Brad M. Barber",
+      "Reuven Lehavy",
+      "Maureen F. McNichols",
+      "Brett Trueman"
+    ],
+    "year": 2001,
+    "venue": "Journal of Finance 56(2), 531-563; SSRN 137400 (August 1998 working paper)",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=137400",
+    "pdf_url": null,
+    "access": "ssrn_free_download",
+    "priority": 2,
+    "testable_on_our_data": "no",
+    "instruments": [
+      "US single stocks"
+    ],
+    "where_to_get_it": "SSRN abstract page 137400, then click 'Download This Paper' (free). The published version is at https://doi.org/10.1111/0022-1082.00336 and is paywalled. A Stanford GSB working paper page (No. 1541) is a second source for the abstract.",
+    "what_it_should_contain": "Portfolios long the most-favorable and short the least-favorable consensus analyst recommendations, with daily rebalancing and with delays in acting on changes. It should show abnormal returns (reported at more than 4% a year gross) and how they fade with less frequent rebalancing or delay. It should include turnover and transaction-cost analysis, which the authors say gives abnormal net returns not reliably above zero. The sample is more than 360,000 recommendations from 269 brokerages, 1986-1996. Needs analyst recommendation histories (I/B/E/S) and stock returns, which we do not hold.",
+    "why_promising": "FINDING: stocks with the best consensus ratings outperform and the worst underperform, but the strategy needs very high turnover. The paper reports that net abnormal returns after costs were not reliably above zero. WHY: slow information diffusion, with analysts as an information channel. The edge is concentrated in the days right after a rating change, which is where it meets the revision-drift item on the focus list. KILL: faster dissemination (algorithmic news trading) and Reg FD. DECAY: old (1998 and 2001), so expect little left. The cost result teaches us to ask for a net-of-costs test, as our cost-hurdle notes do. Read as background; the already-known 'Analyzing the Analysts' is related. Companion papers are listed on the SSRN author page: 'Prophets and Losses' (1996-2000) and 'Ratings Changes, Ratings Levels, and the Predictive Value of Analysts' Recommendations'.",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
+  },
   "closing_the_question_on_the_continuation_of_turn_of_the_mont": {
     "title": "Closing the Question on the Continuation of Turn-of-the-Month Effects: Evidence from the S&P 500 Index Futures Contract",
     "authors": [],
@@ -610,6 +637,35 @@
     ],
     "skipped_reason": null
   },
+  "conditional_volatility_targeting": {
+    "title": "Conditional Volatility Targeting",
+    "authors": [
+      "Dion Bongaerts",
+      "Xiaowei Kang",
+      "Mathijs van Dijk"
+    ],
+    "year": 2020,
+    "venue": "Financial Analysts Journal",
+    "url": "https://www.tandfonline.com/doi/full/10.1080/0015198X.2020.1790853",
+    "pdf_url": "https://repub.eur.nl/pub/130215/Bongaerts-Kang-van-Dijk-Conditional-volatility-targeting-2020-FAJ.pdf",
+    "access": "open_pdf",
+    "priority": 1,
+    "instruments": [
+      "ES",
+      "NQ",
+      "equity index futures"
+    ],
+    "testable_on_our_data": "yes",
+    "note": "A direct complement to Harvey et al. (2018) and Moreira-Muir, both known. It tests whether Conti's live sizing rule (risk a fixed dollar amount, contracts = risk / volatility) actually works on equity index futures.",
+    "why_promising": "Finding: conventional volatility targeting does not consistently improve Sharpe ratios in international equity index futures, and it can increase maximum drawdowns and overshoot the volatility target. The proposed conditional version scales exposure only in extreme-high and extreme-low volatility states. The CFA summary reports it raises Sharpe ratios in every market, with lower turnover and leverage, and cuts max drawdown by about 6.6% on average. WHY: volatility clusters and the benefit is concentrated in high-volatility states, so you de-risk only where the payoff is. What kills it: volatility spikes that arrive faster than the estimator reacts, or a regime where high volatility is followed by strong returns. Use it to choose the live sizing rule: simple 1/ATR sizing vs sizing that changes only in extreme volatility states. Parameters to test in-sample only: look-back window for the volatility estimate, and the percentile cutoffs for 'extreme' states.",
+    "what_it_should_contain": "Tables comparing buy-and-hold, conventional volatility targeting and conditional volatility targeting in about 10 equity markets built from index futures, plus US equity factors. Columns should be Sharpe ratio, max drawdown, expected shortfall (99%), turnover, leverage and volatility-target overshoot. It should also give return patterns by volatility state and the definition of the extreme-volatility triggers. Tested on ES daily returns (we have 12+ years) and on NQ from 2021. These are daily-level tests, so our 1-min bars aggregate directly. A strategy-level analogue is to scale our own backtest trades by trailing volatility.",
+    "where_to_get_it": "Direct open PDF from the Erasmus University repository (repub.eur.nl link in pdf_url). The tandfonline page is the journal version, and a CFA Institute Research & Policy Center summary page also exists.",
+    "track": "index_futures",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
+  },
   "dash_for_cash_monthly_market_impact_of_institutional_liquidi": {
     "title": "Dash for Cash: Monthly Market Impact of Institutional Liquidity Needs",
     "authors": [
@@ -643,6 +699,34 @@
     "strategies": [
       "month_end_cash_cycle_es"
     ]
+  },
+  "days_to_cover_and_stock_returns": {
+    "title": "Days to Cover and Stock Returns",
+    "authors": [
+      "Harrison G. Hong",
+      "Frank Weikai Li",
+      "Sophie Xiaoyan Ni",
+      "José A. Scheinkman",
+      "Philip Yan"
+    ],
+    "year": 2015,
+    "venue": "NBER Working Paper w21166 / SSRN 2607356",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2607356",
+    "pdf_url": "https://www.nber.org/system/files/working_papers/w21166/w21166.pdf",
+    "access": "open_pdf",
+    "priority": 1,
+    "testable_on_our_data": "no",
+    "instruments": [
+      "US single stocks (NYSE/AMEX/Nasdaq)"
+    ],
+    "where_to_get_it": "Direct free PDF from NBER at the pdf_url. SSRN abstract 2607356 has 'Download This Paper'. A related SSRN version is abstract 2568768 (August 2016, Australasian Finance and Banking Conference).",
+    "what_it_should_contain": "Monthly Fama-MacBeth regressions and decile portfolios sorted on days-to-cover (short interest / average daily turnover) versus the plain short ratio. It should report long-short returns (reported around 1.2% per month gross), the 2008 short-sale-ban episode, a comparison with stock loan fees, and decimalization instrument tests. A search-result summary of the 2015 draft gives the sample as 1988-2012. Needs monthly short interest, shares outstanding, daily volume and, ideally, loan fees. None of that is in our NinjaTrader inventory.",
+    "why_promising": "FINDING: high days-to-cover stocks underperform, and DTC predicts better than the raw short ratio. WHY: liquidity constraint and crowded exits. Arbitrageurs who short illiquid names need a premium, and DTC is the cost of exiting the position. This is the 'liquidity constraints on large orders' pattern turned into a cross-sectional signal. KILL: a large drop in the cost of shorting or more liquidity, or short interest becoming too stale or noisy. The paper reports short-side losses in the 2008 ban, so squeeze and borrow risk are real. DECAY: moderate (2015). Angles: long-only 'avoid or underweight' filter on high-DTC names, and a squeeze-risk filter for the gap-and-go ideas on the list. Borrow fees and short-squeeze items on the focus list are covered with this paper plus the already-known loan fee papers.",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
   },
   "decoding_inside_information": {
     "title": "Decoding Inside Information",
@@ -691,6 +775,18 @@
     "updated": "2026-11-09",
     "strategies": [],
     "skipped_reason": "Paper not read (SSRN/PDF inaccessible; all findings from memory, unverified). It is a critique arguing LETF rebalancing flow is too small to drive late-day returns, so it removes a WHY rather than supplying one. The residual idea (open/prior-close to 15:30 ET return predicting 15:30-16:00 on ES/NQ, fixed hold, split pre/post-2022) is already covered by noise_area_last_half_hour_es (and noise_area_momentum_es), and the LETF-flow mechanism itself is already under falsification in letf_rebalance_day_reversal_nq. Recommended: attach this paper as a caveat to those specs (LETF WHY contested; treat late-day continuation as regime-dependent), and separately fetch and read Gao, Han, Li & Zhou (2018 JFE, Market Intraday Momentum) for a possible distinct first-half-hour -> last-half-hour spec."
+  },
+  "do_leveraged_etfs_rebalance_at_the_close_leveraged_etfs_and": {
+    "title": "Do Leveraged ETFs Rebalance at the Close? / Leveraged ETFs and Volatility (Tuzun)",
+    "authors": [
+      "Tugkan Tuzun"
+    ],
+    "venue": "Working paper",
+    "year": 2013,
+    "note": "Not seen in the fetched text. Added from my own knowledge; the title is approximate.",
+    "origin": "seed",
+    "status": "queued",
+    "attempts": 0
   },
   "do_s_p500_options_increase_market_volatility_evidence_from_0": {
     "title": "Do S&P500 Options Increase Market Volatility? Evidence from 0DTEs",
@@ -1049,6 +1145,20 @@
     "read_by": "claude_manual_4_2026-11-01",
     "skipped_reason": "Stock-level; together with Martineau (2021) it argues to retire the PEAD stock specs."
   },
+  "front_running_index_funds_the_price_impact_of_index_reconsti": {
+    "title": "Front-Running Index Funds / The Price Impact of Index Reconstitution (Russell rebalancing)",
+    "authors": [
+      "Honghui Chen",
+      "Grant Noronha",
+      "Vijay Singal"
+    ],
+    "venue": "Journal of Finance",
+    "year": 2006,
+    "note": "Worth checking. This is my best guess at related empirical work on trading ahead of predictable index flows. The exact title and authors need verification.",
+    "origin": "seed",
+    "status": "queued",
+    "attempts": 0
+  },
   "gamma_fragility": {
     "title": "Gamma Fragility",
     "authors": [
@@ -1244,6 +1354,31 @@
     ],
     "skipped_reason": null
   },
+  "intra_day_momentum": {
+    "title": "Intra-Day Momentum",
+    "authors": [
+      "Oleg Komarov"
+    ],
+    "year": 2017,
+    "venue": "SSRN Working Paper 2905713 (25 Jan 2017)",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2905713",
+    "pdf_url": null,
+    "access": "ssrn_free_download",
+    "priority": 2,
+    "testable_on_our_data": "no",
+    "instruments": [
+      "US single stocks (cross-section)",
+      "index time series (comparison)"
+    ],
+    "where_to_get_it": "SSRN abstract page 2905713, then click 'Download This Paper' (free).",
+    "what_it_should_contain": "Cross-sectional sorts on morning (or other intraday) returns against last-half-hour returns for US stocks. It should show that time-series predictability at the index level does not translate into economic profit, while cross-sectional sorts do (reported around 15.6% and 19.4% annualized for the extreme morning losers and winners). It should also cover robustness to stock characteristics, day-of-week, formation and holding windows, and sample-period dependence. Needs single-stock intraday bars (minute or half-hour), which we do not have. The index-level time-series part can be compared with our ES/NQ data.",
+    "why_promising": "FINDING: single stocks that won or lost the most in the morning earn abnormal returns in the last half-hour, while time-series index predictability alone is not economically profitable after costs. This matches our own cost-hurdle notes (Mesfin 2026: gross edges too small for MNQ friction). WHY: it builds on Heston et al. (2010) intraday seasonality and on institutional trading and hedging that is concentrated at the close. KILL: closing-auction migration and the growth of closing-period flows (leveraged ETFs, options hedging). DECAY: the abstract itself reports sample-period dependence, so check by subperiod. Angle: compare the single-stock cross-section against the index-futures version we can already test, and use it as the single-stock 'stocks in play' companion. Priority 2 because it is a working paper with a modest download count and needs data we lack.",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
+  },
   "intraday_0dte_option_order_flow_and_s_p_500_downside_risk": {
     "title": "Intraday 0DTE Option Order Flow and S&P 500 Downside Risk",
     "authors": [
@@ -1274,6 +1409,31 @@
     "summary": "papers/summaries/intraday_0dte_option_order_flow_and_s_p_500_downside_risk.md",
     "read_by": "claude_manual_5_2026-11-10",
     "skipped_reason": "No strategy: negative out-of-sample result and needs 0DTE order-flow data we do not have. Useful as evidence that options-flow signals are a risk filter at best."
+  },
+  "intraday_microstructure_dynamics_of_e_mini_s_p_500_futures_v": {
+    "title": "Intraday Microstructure Dynamics of E-mini S&P 500 Futures: Volatility Regimes, Liquidity Decay, and Long Memory in Realized Volatility",
+    "authors": [
+      "Max Brown"
+    ],
+    "year": 2026,
+    "venue": "SSRN working paper",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6847024",
+    "pdf_url": null,
+    "access": "ssrn_free_download",
+    "priority": 3,
+    "instruments": [
+      "ES"
+    ],
+    "testable_on_our_data": "yes",
+    "note": "Background only. It is a 2024-2026 sample of 529 sessions, a single-author descriptive paper, and the same type of OHLCV source as our own data. Use it as a checklist of volatility and liquidity-by-time-of-day facts to reproduce on our 12-year ES data, not as evidence of an edge.",
+    "why_promising": "Finding (from the abstract): ES intraday liquidity decays through the session. Mean bar range falls 44% from 4.78 points in the first 30 minutes to 2.69 points in the last 30 minutes. Daily realized volatility is strongly persistent (lag-1 autocorrelation 0.71, still significant at lag 21), and mean bar range is a near-sufficient statistic for session realized volatility (r = 0.975). WHY: the open absorbs overnight information and order collisions, so range and activity concentrate there. Its practical value is for sizing. A 1-minute bar range is an adequate volatility proxy, which supports range-width or ATR-based volatility targeting. Persistence also supports using yesterday's range or ATR as the sizing input. What kills it: nothing structural; it is descriptive. Replicate on ES 2013-2026 by half-hour and by year, and check whether the first-30-minute range share of the day has shifted since 0DTE (2022).",
+    "what_it_should_contain": "Tables of mean 1-minute and 30-minute bar range by time of day (first vs last 30 minutes), volatility-regime classification, the autocorrelation function of daily realized volatility (lags 1-21), and a tariff-shock episode (April 2025). All of this can be rebuilt from ES 1-min bars (we have 2013-12 to 2026-09). Time zone: our files are UTC, so convert to ET before slicing by RTH half-hours.",
+    "where_to_get_it": "Open the SSRN abstract page (abstract_id=6847024) and click 'Download This Paper'. It is a recent posting, so check that the PDF is available.",
+    "track": "index_futures",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
   },
   "intraday_momentum_the_first_half_hour_return_predicts_the_la": {
     "title": "Intraday Momentum: The First Half-Hour Return Predicts the Last Half-Hour Return",
@@ -1450,6 +1610,61 @@
     "read_by": "claude_manual_3_2026-11-01",
     "skipped_reason": "Stock-level; PEAD has since disappeared for large caps (Martineau)."
   },
+  "leveraged_and_inverse_etf_rebalancing_and_market_close": {
+    "title": "Leveraged and Inverse ETF Rebalancing and Market Close",
+    "authors": [
+      "Minder Cheng",
+      "Ananth Madhavan"
+    ],
+    "year": 2009,
+    "venue": "Journal of Investment Management (JOIM), Vol. 7, No. 4, Fourth Quarter 2009 (SSRN posted Jan 2010)",
+    "note": "Original LETF rebalancing-flow argument. Title and venue are from memory and may not be exact. Check before use.",
+    "origin": "seed",
+    "status": "summarized",
+    "attempts": 1,
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1539120",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/leveraged_and_inverse_etf_rebalancing_and_market_close.md",
+    "updated": "2026-11-16",
+    "strategies": [],
+    "skipped_reason": "Cheng & Madhavan (2009) only measures the leveraged/inverse ETF rebalancing flow (same sign as the day's move, near the close, ≈ leverage × (leverage − 1) × fund size × daily return). It has no backtested rule, and I read only the abstract. The edge built from it is already covered. letf_close_rebalance_continuation_nq goes with the day's move from 15:30 to 16:00 ET on NQ/ES, with a size threshold and a pre/post-2022 split. noise_area_last_half_hour_es and noise_area_momentum_es cover late-day momentum in the same window, and same_slot_seasonality_es covers the first-half-hour benchmark. letf_rebalance_day_reversal_nq and close_reversal_overnight_es cover the reversal angle. The remaining angles are refinements, not new strategies, and belong as variants of letf_close_rebalance_continuation_nq: (a) scale the signal by the estimated flow, using public TQQQ/SQQQ/UPRO/SPXU fund-size series that are not in our inventory; (b) test other windows (15:45-16:00, the last 5 minutes, 15:00-15:30 for traders who get in ahead of the flow) and each side separately. Suggest adding the flow formula and these variants to that spec's notes instead."
+  },
+  "leveraged_etf_rebalancing_and_late_day_returns_tuzun": {
+    "title": "Leveraged ETF rebalancing and late-day returns (Tuzun)",
+    "authors": [
+      "Tugkan Tuzun"
+    ],
+    "year": 2013,
+    "venue": "Federal Reserve Board, FEDS Working Paper 2013-48",
+    "note": "Argues for LETF-driven end-of-day price effects. Title is approximate, from memory.",
+    "origin": "seed",
+    "status": "summarized",
+    "attempts": 1,
+    "url": "https://www.federalreserve.gov/pubs/feds/2013/201348/201348abs.html",
+    "pdf_url": "http://www.federalreserve.gov/pubs/feds/2013/201348/201348pap.pdf",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/leveraged_etf_rebalancing_and_late_day_returns_tuzun.md",
+    "updated": "2026-11-16",
+    "strategies": [
+      "letf_flow_to_depth_last_hour_es"
+    ],
+    "skipped_reason": null
+  },
+  "leveraged_etfs_and_market_quality_leveraged_funds_and_the_sh": {
+    "title": "Leveraged ETFs and market quality / Leveraged Funds and the Shadow Cost of Leverage",
+    "authors": [
+      "Cheng and Madhavan"
+    ],
+    "venue": "Journal of Investment Management (JOIM), Vol. 7, No. 4 (Q4/Winter 2009); SSRN posted Jan 2010",
+    "year": 2009,
+    "note": "Not seen in the fetched text. The original analysis of leveraged ETF rebalancing and its end-of-day price impact. I added it from my own knowledge.",
+    "origin": "seed",
+    "status": "failed",
+    "attempts": 1,
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1539120",
+    "error": "'str' object has no attribute 'get'",
+    "updated": "2026-11-16"
+  },
   "limited_attention_and_the_earnings_announcement_returns_of_p": {
     "title": "Limited Attention and the Earnings Announcement Returns of Past Stock Market Winners",
     "authors": [
@@ -1537,6 +1752,32 @@
     ],
     "skipped_reason": null
   },
+  "lovers_by_night_strangers_by_day_an_investigation_of_simple": {
+    "title": "Lovers by Night, Strangers by Day? An Investigation of Simple Overnight Trading Strategies",
+    "authors": [
+      "Chrilly Donninger"
+    ],
+    "year": 2014,
+    "venue": "SSRN working paper",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2495490",
+    "pdf_url": null,
+    "access": "ssrn_free_download",
+    "priority": 2,
+    "instruments": [
+      "ES",
+      "NQ"
+    ],
+    "testable_on_our_data": "partial",
+    "note": "Not on the known list. The known overnight papers (Boyarchenko, Hendershott, Bondarenko-Muravyev, Lou-Polk-Skouras) are mostly zero-cost. This one tests the overnight strategy on both ES and NQ with realistic costs, which suits our cost-hurdle rule.",
+    "why_promising": "Finding (abstract only): overnight returns are positively correlated with market turmoil, and a simple overnight strategy looks attractive before costs. Under realistic assumptions, trading S&P E-mini futures is clearly worse than buy-and-hold SPY, while Nasdaq-100 E-minis look more promising. WHY (our reading): the overnight edge is a risk and liquidity premium, so it rises with turmoil; the open question is whether it clears friction. The paper's ES vs NQ contrast is an immediate angle to test on our data. What kills it: costs, and the fading of the overnight drift documented in 'The Disappearing Overnight Drift'. Decay risk: the sample is old (pre-2014), so out-of-sample is mostly our 2014-2026 ES data. Test the NQ result 2021-2026 only, since NQ before mid-2021 is not in our inventory. Test conditioned on a volatility regime, as the abstract suggests.",
+    "what_it_should_contain": "Overnight (close-to-open or Globex-session) vs daytime returns for ES and NQ futures, with and without trading costs. Details we can only confirm from the full text: the turmoil conditioning variable (probably VIX or recent volatility), the cost assumptions, and the sample dates. Backtestable on ES 1-min (2013-12 to 2026-09) and NQ 1-min (2021-07 onward). The paper's own NQ sample before 2021 cannot be reproduced.",
+    "where_to_get_it": "Open the SSRN abstract page (abstract_id=2495490) and click 'Download This Paper'. I could not check from the search results whether the PDF is free, so confirm on the page.",
+    "track": "index_futures",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
+  },
   "market_intraday_momentum": {
     "title": "Market Intraday Momentum",
     "authors": [
@@ -1557,6 +1798,20 @@
     "updated": "2026-11-01",
     "read_by": "claude_manual_2026-11-01",
     "skipped_reason": "Covered by noise_area_last_half_hour_es (baseline B2)."
+  },
+  "market_liquidity_and_funding_liquidity": {
+    "title": "Market Liquidity and Funding Liquidity",
+    "authors": [
+      "Markus K. Brunnermeier",
+      "Lasse Heje Pedersen"
+    ],
+    "venue": "Review of Financial Studies",
+    "year": 2009,
+    "url": "https://doi.org/10.1093/rfs/hhn098",
+    "note": "From memory. The companion paper on liquidity spirals, where margin constraints link funding and market liquidity. It is useful for choosing stress-regime conditions.",
+    "origin": "seed",
+    "status": "queued",
+    "attempts": 0
   },
   "market_return_around_the_clock_a_puzzle": {
     "title": "Market Return Around the Clock: A Puzzle",
@@ -1659,6 +1914,32 @@
     "updated": "2026-11-10",
     "read_by": "claude_manual_5_2026-11-10",
     "skipped_reason": "Stock-level; slow reversal, not tradable on ES/NQ."
+  },
+  "momentum_strategies": {
+    "title": "Momentum Strategies",
+    "authors": [
+      "Louis K.C. Chan",
+      "Narasimhan Jegadeesh",
+      "Josef Lakonishok"
+    ],
+    "year": 1996,
+    "venue": "Journal of Finance 51(5); NBER WP w5375 / SSRN 225438",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=225438",
+    "pdf_url": null,
+    "access": "ssrn_free_download",
+    "priority": 1,
+    "testable_on_our_data": "no",
+    "instruments": [
+      "US single stocks (NYSE/AMEX/Nasdaq)"
+    ],
+    "where_to_get_it": "Open the SSRN abstract page (abstract_id=225438) and click 'Download This Paper'. The NBER working paper w5375 is a second source. The published version is at https://doi.org/10.1111/j.1540-6261.1996.tb05222.x and is paywalled.",
+    "what_it_should_contain": "Portfolios sorted on past 6-month return and on earnings surprise, measured three ways: standardized unexpected earnings, announcement-window abnormal return, and analyst forecast revisions. It should show double sorts that separate price momentum from earnings momentum, holding-period returns out to about 1 year with little reversal, and a test of sluggish analyst forecast revisions. The sample is US stocks from the 1970s to 1993 and uses I/B/E/S data. Needs single-stock prices, earnings dates, SUE and I/B/E/S estimates, none of which we hold.",
+    "why_promising": "FINDING: past return and past earnings surprise each predict large drifts after controlling for the other, with little reversal. A search-result summary says about 41% of the 6-month price-momentum premium is earned around earnings announcement dates. WHY: slow information diffusion plus sluggish analyst revisions (the PEAD/analyst-drift pattern). KILL: heavy analyst coverage and faster earnings processing, or momentum crashes. DECAY: published in 1996 and widely known, so plan on roughly half the paper's number. It is one of the few papers that ties the momentum, PEAD and analyst-revision items on the focus list together, which fits the Conti 'combine findings' approach. The earnings-window concentration points to an angle: hold momentum names through their announcement dates only.",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
   },
   "nasdaq_100_index_futures_intraday_momentum_or_reversal": {
     "title": "Nasdaq-100 Index Futures: Intraday Momentum or Reversal?",
@@ -1970,6 +2251,34 @@
     "read_by": "claude_manual_2_2026-11-01",
     "skipped_reason": "Supports overnight_reversal_first_hour_es."
   },
+  "overnight_returns_and_firm_specific_investor_sentiment": {
+    "title": "Overnight Returns and Firm-Specific Investor Sentiment",
+    "authors": [
+      "Aboody",
+      "Even-Tov",
+      "Lehavy",
+      "Trueman"
+    ],
+    "venue": "Journal of Financial and Quantitative Analysis",
+    "year": 2018,
+    "note": "Not verified from the paper. Likely cited as related work on overnight returns and sentiment; check the reference list.",
+    "origin": "seed",
+    "status": "queued",
+    "attempts": 0
+  },
+  "overnight_returns_and_the_retail_investor_attention_papers_e": {
+    "title": "Overnight Returns and the Retail Investor / Attention papers (e.g. Barber & Odean 2008, All That Glitters)",
+    "authors": [
+      "Barber",
+      "Odean"
+    ],
+    "venue": "Review of Financial Studies",
+    "year": 2008,
+    "note": "Foundation for attention-driven retail buying. Cited from memory, not confirmed from this paper.",
+    "origin": "seed",
+    "status": "queued",
+    "attempts": 0
+  },
   "overnight_returns_of_stock_indexes_evidence_from_etfs_and_fu": {
     "title": "Overnight Returns of Stock Indexes: Evidence from ETFs and Futures",
     "authors": [
@@ -2122,6 +2431,32 @@
     "read_by": "claude_manual_4_2026-11-01",
     "skipped_reason": "Stock-level; no ES/NQ strategy."
   },
+  "post_earnings_announcement_drift_in_the_uk": {
+    "title": "Post-Earnings-Announcement Drift in the UK",
+    "authors": [
+      "Wei Liu",
+      "Norman Strong",
+      "Xinzhong Xu"
+    ],
+    "year": 1999,
+    "venue": "European Financial Management; SSRN abstract 249959",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=249959",
+    "pdf_url": null,
+    "access": "unknown",
+    "priority": 3,
+    "testable_on_our_data": "no",
+    "instruments": [
+      "UK single stocks (LSE)"
+    ],
+    "where_to_get_it": "Try SSRN abstract page 249959 ('Download This Paper'). The SSRN link and author list came from a Quantpedia reference list in search results, not from the SSRN page itself, so Pablo should confirm the title and authors on that page. If there is no free download, the journal version is in European Financial Management on Wiley (probably paywalled).",
+    "what_it_should_contain": "Out-of-US evidence of earnings-surprise drift. It should compare surprise definitions (random walk versus analyst-forecast based) and show post-announcement abnormal returns in the UK, a non-US market. A Quantpedia summary says it concludes the UK market is inefficient with respect to public earnings information. Needs UK earnings dates, EPS surprises and prices. None of this is in our data.",
+    "why_promising": "FINDING: PEAD exists in the UK, giving out-of-sample confirmation beyond the US. Another search result (an Aalto thesis on European PEAD) mentions Gerard (2012) for continental Europe and notes stronger effects with lower analyst coverage. This supports the Conti 'different universe' angle (Europe, with lower coverage and liquidity). WHY: slow diffusion of information and liquidity constraints in less-covered stocks. KILL: improved reporting and more analyst coverage. A related paper (Hung, Li and Wang, RFS 2015, already on our known list) finds that PEAD declined after IFRS adoption. DECAY: old, so use as a starting point only for a modern Europe-specific test with a fresh sample. Priority 3 because the author details need confirming and the data is not ours; it is the Europe starting-point paper for the PEAD focus area.",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
+  },
   "post_earnings_announcement_drift_the_role_of_revenue_surpris": {
     "title": "Post-Earnings Announcement Drift: The Role of Revenue Surprises",
     "authors": [
@@ -2163,6 +2498,31 @@
     "updated": "2026-11-10",
     "read_by": "claude_manual_5_2026-11-10",
     "skipped_reason": "Stock-level; no ES/NQ test."
+  },
+  "pre_earnings_announcement_over_extrapolation": {
+    "title": "Pre-Earnings Announcement Over-Extrapolation",
+    "authors": [
+      "Peter Kelly",
+      "Robert C. Stoumbos"
+    ],
+    "year": 2016,
+    "venue": "SSRN 2720573 (working paper; later published as 'Earnings announcement return extrapolation' by Ertan, Karolyi, Kelly and Stoumbos, Review of Accounting Studies)",
+    "url": "https://www.researchgate.net/publication/314626337_Pre-Earnings_Announcement_Over-Extrapolation",
+    "pdf_url": "https://mendoza.nd.edu/wp-content/uploads/2019/01/2016_spring_finance_seminar_series_peter_kelly_paper_updated_3_22_2016.pdf",
+    "access": "open_pdf",
+    "priority": 1,
+    "testable_on_our_data": "no",
+    "instruments": [
+      "US single stocks"
+    ],
+    "where_to_get_it": "Free working-paper PDF at the pdf_url (Notre Dame seminar copy, March 2016). The SSRN page is DOI 10.2139/ssrn.2720573; search that ID on SSRN for 'Download This Paper'. The published version is on Springer: https://link.springer.com/article/10.1007/s11142-021-09593-w (check for open access).",
+    "what_it_should_contain": "A measure of extrapolated expectations built from a stock's history of past earnings-announcement returns. Daily abnormal returns in the 5 days before and after the announcement, split by high versus low extrapolation. Long-short pre-EA and post-EA portfolio returns (a summary reports about 16 bps per day pre-EA and about 18 bps per day post-EA, five-factor). Individual and institutional trade data showing who buys before the announcement. Needs stock daily returns, earnings announcement dates and past announcement-window returns. We hold none of these.",
+    "why_promising": "FINDING: stocks with strong recent earnings-day reactions run up in the days before the next announcement and then reverse afterwards. This addresses the 'pre-earnings run-up' and 'earnings-day fade' items on the focus list directly. WHY: behavioral order flow. Retail and some institutional investors over-extrapolate past earnings-day returns and buy ahead of the print, pushing the price up and then paying for it. This is a predictable-trading-flow pattern, with an attention component. KILL: the retail attention premium shrinking or earnings-timing changes. DECAY: a Paperswithbacktest note says the strategy has faded since 2020, so treat it as possibly decayed and test post-2020 separately. Angle: a short holding window (about 5 days before the print, exit at the open before or on announcement). Useful as a companion to the already-known earnings announcement premium papers.",
+    "track": "stocks",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
   },
   "predatory_trading": {
     "title": "Predatory Trading",
@@ -2439,6 +2799,34 @@
     "updated": "2026-11-01",
     "read_by": "claude_manual_3_2026-11-01",
     "skipped_reason": "Cross-sectional; index cousin = morning trend / afternoon mean reversion, already partly in specs."
+  },
+  "rolling_over_equity_futures_a_study_in_four_countries": {
+    "title": "Rolling Over Equity Futures: A Study in Four Countries",
+    "authors": [
+      "Ronald T. Slivka",
+      "Han Qin",
+      "Kai Ye"
+    ],
+    "year": 2020,
+    "venue": "SSRN working paper",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3514204",
+    "pdf_url": null,
+    "access": "ssrn_free_download",
+    "priority": 2,
+    "instruments": [
+      "ES",
+      "S&P 500 futures calendar spread"
+    ],
+    "testable_on_our_data": "partial",
+    "note": "This covers the futures-roll focus area. Our known list has expiry and settlement papers (Golez-Jackwerth, Baltussen et al., Order Consolidation) but nothing on index-futures roll mechanics. The data note matters for us: our continuous ES/NQ series splice contracts, so roll handling affects every backtest.",
+    "why_promising": "Finding (abstract only): near expiry, participants must roll positions, and the calendar spread is the dominant order type for rolling. The paper compares two common rollover strategies using 2016 daily calendar-spread data for the US, UK, India and China. WHY: rolling is a forced, calendar-fixed flow from holders who must move before expiry; their need to transact is predictable, and execution quality is the issue. What kills it: electronic rolling, bigger roll liquidity and arbitrage of the spread. Roll-day volume spikes and gaps are a known contaminant for intraday research. The useful output for us is the right roll window (CME customary roll date is the Monday before the third Friday). Use it to flag roll days in our continuous series and test whether intraday patterns (ORB, VWAP pullback) behave differently on roll week.",
+    "what_it_should_contain": "A comparison of two rollover strategies (probably roll-early vs roll-late, or via the spread vs outright legs) using calendar-spread prices, with costs per roll and the spread's behaviour in the days before expiry. Needs front/second contract spread data. We only partly have this: the ES raw per-quarter 1-min files (2013-12 to 2021-06) and ES ticks (2021-06 to 2023-06) allow us to build the spread, while the NQ tick files miss several contracts (12-21, 03-22, 03-25, 06-25, 09-25).",
+    "where_to_get_it": "Open the SSRN abstract page (abstract_id=3514204) and click 'Download This Paper'. I could not check from the search results whether the PDF is free.",
+    "track": "index_futures",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
   },
   "seasonal_fluctuations_in_aggregate_returns_seasonality_in_th": {
     "title": "Seasonal Fluctuations in Aggregate Returns / Seasonality in the Cross-Section of Stock Returns",
@@ -2894,6 +3282,34 @@
     "read_by": "claude_manual_3_2026-11-01",
     "skipped_reason": "Stock-level; same uncertainty WHY as the pre-FOMC / pre-macro specs."
   },
+  "the_fomc_announcement_reversal": {
+    "title": "The FOMC Announcement Reversal",
+    "authors": [
+      "Tommaso Baglioni",
+      "Ruy Ribeiro"
+    ],
+    "year": 2022,
+    "venue": "SSRN working paper (revised Feb 2025)",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4182628",
+    "pdf_url": "https://papers.ssrn.com/sol3/Delivery.cfm/4182628.pdf?abstractid=4182628&mirid=1",
+    "access": "ssrn_free_download",
+    "priority": 1,
+    "instruments": [
+      "ES",
+      "S&P 500 index"
+    ],
+    "testable_on_our_data": "partial",
+    "note": "Not on the already-known list. It is the natural follow-on to the pre-FOMC drift papers we already hold: the drift has gone, and this paper reports a reversal instead.",
+    "why_promising": "Finding: on scheduled FOMC days, the E-mini return before the announcement is strongly negatively related to the return after it. The authors trade this as a reversal: buy E-mini just before the announcement if the pre-announcement return was negative, sell if positive, and close at the end of the day. They report Sharpe ratios more than 2.5x those of the Lucca-Moench drift over 1997-2020, and say the reversal strengthened after 2011 while the drift vanished. WHY (our reading of the paper's own explanation): the run-up before the announcement is an overreaction, driven by newswatchers interacting with momentum traders, and it is corrected when the uncertainty resolves. Their reversal conditions on uncertainty and credit, which fits our rule of testing scheduled-event effects by volatility regime. What kills it: the same crowding that killed the drift, or less pre-announcement trend-following. Decay risk: published 2022, so test pre/post publication. Angles: NQ vs ES, hold to 16:00 vs a fixed N-minute time exit, vol-targeted sizing.",
+    "what_it_should_contain": "E-mini S&P 500 cumulative intraday returns around about 180 scheduled FOMC announcements (1997-2020). The pre-announcement window is the prior 24 hours. It should also give the reversal strategy's Sharpe ratio and average return per meeting in bps, split by magnitude of the pre-announcement return, by uncertainty/credit conditions and by previous-meeting news. Needs an FOMC date/time calendar (Fed website), which is not in our data. Our ES 1-min covers about 100 meetings from 2013-12 and NQ about 45 from 2021-07, so the sample is small; read this as a check, not a full replication.",
+    "where_to_get_it": "Open the SSRN abstract page (abstract_id=4182628) and click 'Download This Paper' (the free PDF button). A ResearchGate copy and a paperswithbacktest strategy page also exist.",
+    "year_note": null,
+    "track": "index_futures",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
+  },
   "the_high_volume_return_premium": {
     "title": "The High Volume Return Premium",
     "authors": [
@@ -2992,6 +3408,19 @@
     "updated": "2026-11-10",
     "read_by": "claude_manual_5_2026-11-10",
     "skipped_reason": "No strategy (options data). Context only."
+  },
+  "the_limits_of_arbitrage": {
+    "title": "The Limits of Arbitrage",
+    "authors": [
+      "Andrei Shleifer",
+      "Robert Vishny"
+    ],
+    "venue": "Journal of Finance",
+    "year": 1997,
+    "note": "From memory. Foundational for why arbitrage capital stays limited and mispricings persist.",
+    "origin": "seed",
+    "status": "queued",
+    "attempts": 0
   },
   "the_loan_fee_anomaly_a_short_seller_s_best_ideas": {
     "title": "The Loan Fee Anomaly: A Short Seller's Best Ideas",
@@ -3155,6 +3584,34 @@
       "expiration_pin_es"
     ]
   },
+  "the_price_impact_of_institutional_trades_on_s_p_500_index_fu": {
+    "title": "The Price Impact of Institutional Trades on S&P 500 Index Futures",
+    "authors": [
+      "Alex Frino",
+      "Andrew Lepone",
+      "George H. K. Wang"
+    ],
+    "year": 2007,
+    "venue": "SSRN working paper",
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1009071",
+    "pdf_url": "https://papers.ssrn.com/sol3/Delivery.cfm/SSRN_ID1009071_code362404.pdf?abstractid=1009071&mirid=1",
+    "access": "ssrn_free_download",
+    "priority": 3,
+    "instruments": [
+      "ES",
+      "S&P 500 futures"
+    ],
+    "testable_on_our_data": "no",
+    "note": "Background reading for the institutional execution/liquidity WHY. It tests institutional order flow in S&P futures, a different WHY from the VWAP/TWAP papers we already hold. We cannot replicate it, since it uses CME trade-level data that classify trades by buyer/seller and institutional (CTR) type.",
+    "why_promising": "Finding: on CME S&P 500 futures over Jan 1994 - Jun 2004, buyer-initiated institutional trades have larger permanent price effects than seller-initiated ones overall. This reverses in bear markets, where sales have the larger permanent effect, and the paper attributes the asymmetry to contemporaneous market conditions. WHY: large orders must be worked over time, so the information content and price impact of institutional flow depends on the market regime. Use: a prompt to condition intraday momentum or VWAP-cross rules on the trend/regime (e.g. above/below a long moving average, or by year), and to check long vs short asymmetry by regime in our tests. What kills it: pre-electronic sample (1994-2004), when floor and pit trading mattered; it is old and impact is much lower in today's E-mini market.",
+    "what_it_should_contain": "Price-impact regressions and permanent/temporary impact estimates for buyer- vs seller-initiated institutional trades, split into bull and bear market subsamples, using CME Customer Type Indicator (CTR) data on ES from 1994 to 2004. Needs CME CTR trade-level data. We have no such data. A rough proxy on our ticks (signed volume from last/bid/ask, ES 2021-06 to 2023-06 and NQ 2021-07 onward) can test the regime asymmetry, but not the institutional-vs-retail split.",
+    "where_to_get_it": "Open the SSRN abstract page (abstract_id=1009071) and click 'Download This Paper'; the direct delivery link is in pdf_url.",
+    "track": "index_futures",
+    "origin": "librarian",
+    "status": "queued",
+    "attempts": 0,
+    "added": "2026-11-16"
+  },
   "the_role_of_leveraged_etfs_and_option_market_imbalances_on_e": {
     "title": "The Role of Leveraged ETFs and Option Market Imbalances on End-of-Day Price Dynamics (revised as: Liquidity Provision to Leveraged ETFs and Equity Options Rebalancing Flows: Evidence from End-of-Day Stock Prices; JFQA)",
     "authors": [
@@ -3284,6 +3741,24 @@
     "updated": "2026-11-01",
     "read_by": "claude_manual_3_2026-11-01",
     "skipped_reason": "No strategy."
+  },
+  "trading_volume_predictions_and_intraday_momentum_market_intr": {
+    "title": "Trading Volume Predictions and Intraday Momentum / Market Intraday Momentum",
+    "authors": [
+      "Lei Gao",
+      "Yufeng Han",
+      "Sophia Zhengzi Li",
+      "Guofu Zhou"
+    ],
+    "year": 2018,
+    "venue": "Journal of Financial Economics, 129(2), 394-414",
+    "note": "Market Intraday Momentum: the first half-hour return predicts the last half-hour return on SPY and ES. It is directly usable for our data. Title is from memory.",
+    "origin": "seed",
+    "status": "failed",
+    "attempts": 1,
+    "url": "https://doi.org/10.1016/j.jfineco.2018.05.009",
+    "error": "'str' object has no attribute 'get'",
+    "updated": "2026-11-16"
   },
   "turn_of_the_month_window_dressing_behavior": {
     "title": "Turn-of-the-Month: Window Dressing Behavior",
