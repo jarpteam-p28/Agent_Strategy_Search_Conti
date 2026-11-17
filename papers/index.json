@@ -465,6 +465,20 @@
       "macro_announcement_day_long_es"
     ]
   },
+  "atr_as_state_not_signal_multiscale_forecasting_of_extreme_in": {
+    "title": "ATR as State, Not Signal: Multiscale Forecasting of Extreme Intraday Risk in Equity Index Futures",
+    "authors": [
+      "José Enrique Delgado"
+    ],
+    "year": 2026,
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7558660",
+    "origin": "manual",
+    "status": "queued",
+    "attempts": 0,
+    "priority": 1,
+    "where_to_get_it": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7558660",
+    "testable_on_our_data": "yes"
+  },
   "beat_the_market_an_effective_intraday_momentum_strategy_for": {
     "title": "Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)",
     "authors": [
@@ -2544,6 +2558,22 @@
     "read_by": "claude_manual_5_2026-11-10",
     "skipped_reason": "No new strategy. Confirms our rule: volatility sizing is a sizing VIEW, not a source of edge — judge strategies at 1 contract first."
   },
+  "opening_range_breakout_structure_in_e_mini_nasdaq_100_future": {
+    "title": "Opening Range Breakout Structure in E-Mini NASDAQ-100 Futures",
+    "authors": [
+      "Georgi Yordanov"
+    ],
+    "year": 2026,
+    "url": "https://researchpaperfilteropen.vercel.app/",
+    "origin": "manual",
+    "status": "summarized",
+    "read_mode": "web_fetch",
+    "summary": "papers/summaries/opening_range_breakout_structure_in_e_mini_nasdaq_100_future.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "No new spec. Adds two pre-registered checks to ORB_TARGET_STATS_STUDY Part 1: (a) P(reach 0.5R | price closed back through the OR mid first) vs unconditional, (b) second-breakout hit rates. Note his 0.5R hit rate (71%) matches the Deepcharts 'Protection' level idea.",
+    "attempts": 0
+  },
   "order_consolidation_price_efficiency_and_extreme_liquidity_s": {
     "title": "Order Consolidation, Price Efficiency, and Extreme Liquidity Shocks (S&P 500 futures quarterly expiration / witching days)",
     "authors": [
@@ -3138,6 +3168,20 @@
     "skipped_reason": "Stock-level, China.",
     "attempts": 0
   },
+  "regime_dependent_opening_range_breakout_returns_in_nasdaq_10": {
+    "title": "Regime-dependent opening range breakout returns in Nasdaq-100 futures: a pre-registered study with a complete negative-result registry",
+    "authors": [
+      "Justin Chuk"
+    ],
+    "year": 2026,
+    "url": null,
+    "origin": "manual",
+    "status": "queued",
+    "attempts": 0,
+    "priority": 1,
+    "where_to_get_it": "Companion to SSRN 7609644 (Chuk); search SSRN/academia.edu for the title.",
+    "testable_on_our_data": "yes"
+  },
   "regression_discontinuity_and_the_price_effects_of_stock_mark": {
     "title": "Regression Discontinuity and the Price Effects of Stock Market Indexing",
     "authors": [
@@ -3477,6 +3521,20 @@
     "strategies": [
       "fomc_cycle_even_weeks_es"
     ]
+  },
+  "stop_distance_exit_methodology_and_signal_preservation_in_in": {
+    "title": "Stop Distance, Exit Methodology, and Signal Preservation in Intraday Value Area Breakouts: Evidence from E-mini S&P 500 Futures",
+    "authors": [
+      "Theo Howard"
+    ],
+    "year": 2026,
+    "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6350238",
+    "origin": "manual",
+    "status": "queued",
+    "attempts": 0,
+    "priority": 1,
+    "where_to_get_it": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6350238",
+    "testable_on_our_data": "yes"
   },
   "structural_limits_of_ohlcv_based_intraday_signals_in_mnq_fut": {
     "title": "Structural Limits of OHLCV-Based Intraday Signals in MNQ Futures: A Systematic Falsification Study",

@@ -44,6 +44,10 @@ Regular session 09:30-16:00 ET. Skip half days.
    break time (before/after 11:00), weekday, pre/post 2022 (0DTE), and Crabel stretch vs R.
 6. Crabel check: P(price trades 1 × stretch beyond the open) and what happens next (continuation in R).
 
+7. **Failed-retest check** (Yordanov 2026, NQ): P(reach 0.5 R | price CLOSED back through the OR mid before reaching 0.5 R) vs the
+   unconditional rate (his NQ numbers: 23% vs 71%). Also hit rates for the SECOND breakout of the day (his: 77% reach 0.5 R).
+   His sample is inside our protected period — use it only as the question, not to set any level.
+
 ## Part 2 — fixed strategies (pre-registered; N = 3 OR lengths × 4 exits = 12 per instrument)
 - Entry: first 1-minute close beyond the OR (both directions), enter next bar open; one trade per day; until 15:00.
 - Stop: OR mid (base). Variant noted below.

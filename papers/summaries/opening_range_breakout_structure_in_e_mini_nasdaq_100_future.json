@@ -1,0 +1,63 @@
+{
+  "title": "Opening Range Breakout Structure in E-Mini NASDAQ-100 Futures",
+  "authors": [
+    "Georgi Yordanov"
+  ],
+  "year": 2026,
+  "source_url": "https://researchpaperfilteropen.vercel.app/",
+  "paper_type": "industry",
+  "read_mode": "web_fetch",
+  "one_line": "On NQ (Sep 2025-Apr 2026, 159 days, MBO data), with a 09:30-10:05 ET range defined by its 70% volume value area, 71% of breakout days reach 0.5 × the range beyond the break; if price first falls back through the range mid before reaching 0.5×, follow-through drops to 23%; second breakouts reach 0.5× 77% of the time.",
+  "findings": [
+    {
+      "statement": "Base rate: 71.1% of breakout days reach 0.5× the filter range (stable as the sample grew 78 → 159 days).",
+      "evidence": "NQ MBO, 159 days."
+    },
+    {
+      "statement": "'Cross + miss': falling back through the range mid before 0.5× → only 22.7% follow-through (−48 pp).",
+      "evidence": ""
+    },
+    {
+      "statement": "Second breakout of the day reaches 0.5× 76.5%.",
+      "evidence": ""
+    },
+    {
+      "statement": "Positive opening delta 75% vs negative 67.5% (gap narrowing); down-breaks reach 2.0× more often than up-breaks (numbers inconsistent in the paper).",
+      "evidence": ""
+    },
+    {
+      "statement": "No costs, entries, stops or sizing modelled; single short period, no out-of-sample.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Opening-range breakouts carry short continuation; a failed retest of the mid signals the break has no follow-through."
+  },
+  "setting": {
+    "markets": [
+      "US index futures"
+    ],
+    "instruments": [
+      "NQ"
+    ],
+    "sample_period": "2025-09 to 2026-04",
+    "data_frequency": "tick/MBO",
+    "holding_period": "intraday"
+  },
+  "reported_results": {
+    "headline": "71% reach 0.5R; 23% after a cross-and-miss of the mid",
+    "key_stats": []
+  },
+  "tradable_edge": "No new spec. Adds two pre-registered checks to ORB_TARGET_STATS_STUDY Part 1: (a) P(reach 0.5R | price closed back through the OR mid first) vs unconditional, (b) second-breakout hit rates. Note his 0.5R hit rate (71%) matches the Deepcharts 'Protection' level idea.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "Short sample inside our protected period."
+  },
+  "data_fit": "ES/NQ 1-min allow the price version (not the volume-profile range or delta). Sample lies in the protected 2024+ period — use only as an idea, never to set parameters.",
+  "caveats": [
+    "Practitioner study, internally inconsistent numbers in places.",
+    "Read by Claude in a chat session (manual run 7, 2026-11-17)."
+  ],
+  "referenced_papers_worth_reading": []
+}
