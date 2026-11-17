@@ -221,36 +221,52 @@ def read_paper(repo: Repo, llm, paper: dict, cache_path: Path | None = None) -> 
     return out
 
 
+def _obj(v, key="text") -> dict:
+    """The model sometimes returns a plain string where an object is expected."""
+    if isinstance(v, dict):
+        return v
+    return {key: v} if v else {}
+
+
+def _txt(v) -> str:
+    if isinstance(v, dict):
+        return v.get("title") or v.get("statement") or json.dumps(v, ensure_ascii=False)
+    return str(v)
+
+
 def summary_markdown(sm: dict) -> str:
-    why = sm.get("why", {})
+    why = _obj(sm.get("why"), "pattern")
     lines = [f"# {sm.get('title')}", "",
              f"**Authors:** {', '.join(sm.get('authors') or [])}  ",
              f"**Year:** {sm.get('year')}  **Type:** {sm.get('paper_type', '?')}  **Read:** {sm.get('read_mode')}  ",
              f"**Source:** {sm.get('source_url')}", "",
              f"> {sm.get('one_line')}", "", "## Findings"]
-    lines += [f"- {f.get('statement')}" + (f" — *{f['evidence']}*" if f.get("evidence") else "") for f in sm.get("findings", [])]
+    lines += [f"- {f.get('statement')}" + (f" — *{f['evidence']}*" if f.get("evidence") else "")
+              for f in (_obj(x, "statement") for x in sm.get("findings", []) or [])]
     lines += ["", "## The WHY", f"**Pattern:** {why.get('pattern')}", "", why.get("mechanism", ""), ""]
     for k, label in [("who_is_forced", "Who is forced / predictable"), ("why_it_persists", "Why it persists"),
                      ("what_would_kill_it", "What would kill it"), ("authors_explanation_vs_ours", "Paper's view vs ours")]:
         if why.get(k):
             lines.append(f"- **{label}:** {why[k]}")
-    st, rr = sm.get("setting", {}), sm.get("reported_results", {})
-    lines += ["", "## Setting", f"- Markets: {', '.join(st.get('markets', []))}",
-              f"- Instruments: {', '.join(st.get('instruments', []))}",
+    st, rr = _obj(sm.get("setting"), "markets"), _obj(sm.get("reported_results"), "headline")
+    lst = lambda v: [_txt(x) for x in v] if isinstance(v, list) else ([str(v)] if v else [])
+    lines += ["", "## Setting", f"- Markets: {', '.join(lst(st.get('markets')))}",
+              f"- Instruments: {', '.join(lst(st.get('instruments')))}",
               f"- Period: {st.get('sample_period', '')}  Frequency: {st.get('data_frequency', '')}  Holding: {st.get('holding_period', '')}",
               "", "## Reported results", rr.get("headline", "")]
-    lines += [f"- {x}" for x in rr.get("key_stats", [])]
+    lines += [f"- {x}" for x in lst(rr.get("key_stats"))]
     if rr.get("costs_included"):
         lines.append(f"- Costs: {rr['costs_included']}")
     lines += ["", "## Tradable edge (our framing)", sm.get("tradable_edge", ""), "", "## Angles to test"]
-    lines += [f"- {a}" for a in sm.get("angles", [])]
-    dr = sm.get("decay_risk", {})
+    lines += [f"- {a}" for a in lst(sm.get("angles"))]
+    dr = _obj(sm.get("decay_risk"), "reason")
     lines += ["", f"## Decay risk: {dr.get('level')}", dr.get("reason", ""), "", "## Data fit", sm.get("data_fit", "")]
     if sm.get("caveats"):
-        lines += ["", "## Caveats"] + [f"- {c}" for c in sm["caveats"]]
+        lines += ["", "## Caveats"] + [f"- {c}" for c in lst(sm["caveats"])]
     if sm.get("referenced_papers_worth_reading"):
         lines += ["", "## Cited papers worth reading"]
-        lines += [f"- {p.get('title')} ({p.get('year')})" for p in sm["referenced_papers_worth_reading"]]
+        lines += [f"- {p.get('title')} ({p.get('year')})" if isinstance(p, dict) else f"- {p}"
+                  for p in sm["referenced_papers_worth_reading"]]
     return "\n".join(lines) + "\n"
 
 

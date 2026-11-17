@@ -170,3 +170,11 @@ def test_reading_list(repo, monkeypatch):
     report2, _ = pipeline.run(repo, FakeLLM(), max_papers=1, scout=False, transcripts=False, library=False)
     assert report2.papers[0]["title"] == first_read and report2.papers[0]["read_mode"] == "full_pdf"
     assert first_read not in (repo.root / "papers/READING_LIST.md").read_text().split("## 2.")[0]
+
+
+def test_summary_markdown_tolerates_strings():
+    from conti_agents import agents
+    md = agents.summary_markdown({"title": "T", "why": "flows", "findings": ["a"], "setting": "US",
+                                  "reported_results": "x", "decay_risk": "high",
+                                  "referenced_papers_worth_reading": ["Some paper"]})
+    assert "flows" in md and "Some paper" in md

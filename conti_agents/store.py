@@ -93,7 +93,11 @@ class Repo:
         seeds = self.seeds()
         known = {slugify(s["title"]) for s in seeds}
         added = 0
-        for p in papers:
+        for p in papers or []:
+            if isinstance(p, str):
+                p = {"title": p}
+            if not isinstance(p, dict):
+                continue
             if p.get("title") and slugify(p["title"]) not in known:
                 seeds.append({k: v for k, v in p.items() if v not in (None, "", [])})
                 known.add(slugify(p["title"]))

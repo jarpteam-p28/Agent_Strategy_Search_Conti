@@ -1659,11 +1659,13 @@
     "year": 2009,
     "note": "Not seen in the fetched text. The original analysis of leveraged ETF rebalancing and its end-of-day price impact. I added it from my own knowledge.",
     "origin": "seed",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1539120",
-    "error": "'str' object has no attribute 'get'",
-    "updated": "2026-11-16"
+    "updated": "2026-11-16",
+    "summary": "papers/summaries/leveraged_etfs_and_market_quality_leveraged_funds_and_the_sh.md",
+    "skipped_reason": "Covered by letf_close_rebalance_continuation_nq and the new letf_flow_to_depth_last_hour_es.",
+    "read_mode": "abstract_only"
   },
   "limited_attention_and_the_earnings_announcement_returns_of_p": {
     "title": "Limited Attention and the Earnings Announcement Returns of Past Stock Market Winners",
@@ -3754,11 +3756,13 @@
     "venue": "Journal of Financial Economics, 129(2), 394-414",
     "note": "Market Intraday Momentum: the first half-hour return predicts the last half-hour return on SPY and ES. It is directly usable for our data. Title is from memory.",
     "origin": "seed",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "url": "https://doi.org/10.1016/j.jfineco.2018.05.009",
-    "error": "'str' object has no attribute 'get'",
-    "updated": "2026-11-16"
+    "updated": "2026-11-16",
+    "summary": "papers/summaries/trading_volume_predictions_and_intraday_momentum_market_intr.md",
+    "skipped_reason": "Covered by noise_area_last_half_hour_es (first half-hour → last half-hour); the 11:30-12:00 add-on was added there as a variant.",
+    "read_mode": "abstract_only"
   },
   "turn_of_the_month_window_dressing_behavior": {
     "title": "Turn-of-the-Month: Window Dressing Behavior",

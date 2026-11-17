@@ -189,6 +189,9 @@ variants:
   Add a regime gate: prior-day RSI(5) < 50 or 14-day realised vol above its 1-year median (short-gamma
   proxy)
 - 'Band-distance scaling: size by (price - band)/sigma'
+- >-
+  Gao et al. two-signal version: last-30 direction from the sign of (prior close → 10:00 return) AND the
+  11:30-12:00 return; trade only when both agree.
 related_strategies:
 - noise_area_momentum_es
 - noise_area_overnight_es
