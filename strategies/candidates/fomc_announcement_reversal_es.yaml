@@ -1,0 +1,92 @@
+id: fomc_announcement_reversal_es
+name: FOMC announcement reversal (13:50 entry against the prior 24 hours)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/the_fomc_announcement_reversal.md
+  papers:
+  - title: The FOMC Announcement Reversal
+    authors:
+    - Tommaso Baglioni
+    - Ruy Ribeiro
+    venue: working paper
+    year: 2022
+finding: >-
+  1997-2020: on scheduled FOMC days, E-mini reversal from 13:50 ET to the close against the prior 24-hour
+  return earned ~0.18% per announcement net, Sharpe ≈ 0.36.
+why: Pre-announcement positioning and drift unwind once the decision resolves the uncertainty.
+what_would_kill_it: >-
+  Few trades (8/yr); post-2020 press-conference format (since 2019 every meeting has one at 14:30); changes
+  in the pre-FOMC drift.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: America/New_York
+  universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected)
+direction: long_short
+entry:
+  long: >-
+    On each scheduled FOMC decision day: if ES return from the prior day's 13:50 ET to today's 13:49 ET
+    bar close is negative, buy at the 13:50 ET bar open.
+  short: If that 24-hour return is positive, sell at the 13:50 ET bar open.
+  filters:
+  - Scheduled meetings only (public FOMC calendar)
+  - 'Variant: only when |24h return| is above its trailing 20-meeting median'
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: 16:00 ET (variant 15:59 and 16:14 futures close).
+  other: []
+position_sizing:
+  development: 1 contract
+  live: Volatility sizing
+parameters:
+- name: entry_time
+  default: '13:50'
+  test_range: fixed (paper)
+  source: paper
+- name: exit_time
+  default: '16:00'
+  test_range: 15:00, 16:00
+  source: paper close; 15:00 isolates the decision only
+open_questions:
+- Does it hold 2014-2023 (mostly after the paper's sample start but overlapping 2014-2020)?
+- Long side vs short side?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  extra_checks:
+  - Development data only; 2024+ protected
+  - Report by year and pre/post 2019 (press conference every meeting)
+  - Random-direction baseline on the same days
+  - 2x slippage
+data_requirements:
+- ES/NQ 1-min
+- FOMC scheduled decision dates (public calendar)
+data_available: 'yes'
+expectations:
+- ≈ 80 trades over 10 years — judge on per-trade expectancy and the random baseline, not PF
+variants:
+- exit 16:00 vs 15:00
+- size filter
+related_strategies:
+- pre_fomc_drift_uncertainty_es
+- fomc_cycle_even_weeks_es
+- macro_announcement_day_long_es
+notes:
+- 'Opposite sign to the pre-FOMC drift: test on the same days so the two can be compared or combined.'
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 5
+    testability: 5
+    overfit_resistance: 4
+  verdict: refine
+  reasons: Paper tested on E-mini with costs; one fixed rule; public calendar.
+  required_changes: Quick screen; report sample size honestly.
+  copies_the_paper: false
+  reviewer: Claude (manual chat session 6, 2026-11-16)

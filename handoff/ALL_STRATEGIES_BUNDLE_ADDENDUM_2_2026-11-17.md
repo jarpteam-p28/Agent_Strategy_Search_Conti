@@ -1,6 +1,6 @@
-# ADDENDUM 2 to ALL_STRATEGIES_BUNDLE_2026-11-06 — 2026-11-17
+# ADDENDUM 2 to ALL_STRATEGIES_BUNDLE_2026-11-06 — 2026-11-17 (all 147 papers read)
 
-Same rules as the main bundle (quick screen first, scoreboard line after each, ES 2014-2023 / NQ 2021-07-2023-12, never 2024+). Run after ALL_STRATEGIES_BUNDLE_ADDENDUM_2026-11-10.
+Same rules as the main bundle (quick screen first, scoreboard line after each, ES 2014-2023 / NQ 2021-07-2023-12, never 2024+). Public FOMC calendar approved. Run after ALL_STRATEGIES_BUNDLE_ADDENDUM_2026-11-10.
 
 - Parked, not included: letf_flow_to_depth_last_hour_es (needs daily LETF fund-size data — only if Pablo approves that source), attention_spike_fade_es, letf_decay_harvest_pair, and single-stock specs.
 
@@ -32,6 +32,7 @@ Same rules as the main bundle (quick screen first, scoreboard line after each, E
 - **Filters:** Apply the same overlay to the daily P&L of existing intraday strategies (e.g. vault_break, noise_area_momentum_es) as a second test
 - **Exit:** stop: — · target: — · time: Daily rebalance at the RTH close · other: The overlay itself is the exit: size goes to 0 in the rising-stress state
 - **Parameters:** vol_target_annual=0.15 (test 0.10-0.20); illiq_smoothing_days=5 (test 3, 5, 10); flat_percentile=95 (test 90, 95, 99)
+- **Variants (pre-registered):** Conditional volatility targeting (Bongaerts et al. 2020): scale only when prior-month volatility is in its top quintile (cut) or bottom quintile (raise, cap 2x); unscaled otherwise.
 - **Extra checks:** Use block bootstrap of daily returns (e.g. 20-day blocks) to keep stress clustering; Compare at equal average exposure; Check results in 2022, a down year
 - **Data needs:** ES 1-min 2013-2026 (have); NQ 1-min 2021-2026 (have)
 - **Notes:** This is a falsification test. A null result is useful because it would tell us volatility targeting is enough.
@@ -80,3 +81,21 @@ Same rules as the main bundle (quick screen first, scoreboard line after each, E
 - **Extra checks:** Chronological 80/20 split on 2021-07 to 2026-09 (in-sample about 2021-07 to 2025-07); Bucket results by |day move| and by realized-volatility tercile; Pre/post 2022 and expiry-day vs non-expiry-day splits (0DTE confound); Long-spread vs short-spread sides reported separately; Correlation of daily P&L with letf_flow_to_depth_last_hour_es and noise_area_last_half_hour_es (target < 0.25); Sensitivity to hedge ratio (β vs dollar-neutral). If the edge exists only under one hedge choice, it is a beta artifact.
 - **Data needs:** NQ 1-min continuous 2021-07 to 2026-09 (have); ES 1-min continuous (have); US market holiday/half-day calendar; Optional: daily AUM of TQQQ/SQQQ/QLD/QID and SPXL/UPRO/SPXU/SSO/SDS to build an explicit flow-to-depth ratio instead of the raw day move (not in inventory); Optional: closing-auction volume for QQQ/SPY constituents (not in inventory)
 - **Notes:** Genuinely new relative to existing LETF specs: those trade outright direction, and this one isolates the cross-index difference in flow-to-depth; High decay risk: the paper is from 2009 and the closing-flow effect is well known; plan on half or less of any in-sample edge; Only about 5 years of overlapping data. With a 1% threshold, expect roughly 200-300 trades in total, so OOS will be thin; report confidence intervals
+
+---
+## TIER 8 — from the last 14 papers read 2026-11-16 (quick screen)
+
+### 37. `fomc_announcement_reversal_es` — FOMC announcement reversal (13:50 entry against the prior 24 hours)
+- **Spec:** `strategies/candidates/fomc_announcement_reversal_es.yaml` · verdict: refine · data: yes
+- **Finding:** 1997-2020: on scheduled FOMC days, E-mini reversal from 13:50 ET to the close against the prior 24-hour return earned ~0.18% per announcement net, Sharpe ≈ 0.36.
+- **Why:** Pre-announcement positioning and drift unwind once the decision resolves the uncertainty.
+- **Market:** instruments: ES; NQ; bar_size: 1min; session: America/New_York; universe: ES 2014-2023, NQ 2021-07-2023-12 (2024+ protected) · direction: long_short
+- **Entry long:** On each scheduled FOMC decision day: if ES return from the prior day's 13:50 ET to today's 13:49 ET bar close is negative, buy at the 13:50 ET bar open.
+- **Entry short:** If that 24-hour return is positive, sell at the 13:50 ET bar open.
+- **Filters:** Scheduled meetings only (public FOMC calendar); Variant: only when |24h return| is above its trailing 20-meeting median
+- **Exit:** stop: — · target: — · time: 16:00 ET (variant 15:59 and 16:14 futures close).
+- **Parameters:** entry_time=13:50 (test fixed (paper)); exit_time=16:00 (test 15:00, 16:00)
+- **Variants (pre-registered):** exit 16:00 vs 15:00; size filter
+- **Extra checks:** Development data only; 2024+ protected; Report by year and pre/post 2019 (press conference every meeting); Random-direction baseline on the same days; 2x slippage
+- **Data needs:** ES/NQ 1-min; FOMC scheduled decision dates (public calendar)
+- **Notes:** Opposite sign to the pre-FOMC drift: test on the same days so the two can be compared or combined.

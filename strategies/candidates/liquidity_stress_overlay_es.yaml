@@ -174,3 +174,7 @@ review:
     test passes, and fix the IS/OOS dates in advance, since those strategies have their own development
     splits.
   copies_the_paper: false
+variants:
+- >-
+  Conditional volatility targeting (Bongaerts et al. 2020): scale only when prior-month volatility is
+  in its top quintile (cut) or bottom quintile (raise, cap 2x); unscaled otherwise.

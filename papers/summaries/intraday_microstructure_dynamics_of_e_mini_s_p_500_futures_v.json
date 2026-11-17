@@ -1,0 +1,56 @@
+{
+  "title": "Intraday Microstructure Dynamics of E-mini S&P 500 Futures: Volatility Regimes, Liquidity Decay, and Long Memory in Realized Volatility",
+  "authors": [
+    "Max Brown"
+  ],
+  "year": 2026,
+  "source_url": "https://papers.ssrn.com/abstract=6847024",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "On ES 1-min data (Apr 2024-May 2026, 529 sessions), activity and bar range decay through the day (−44% from the first to the last 30 minutes), realized volatility is highly persistent (lag-1 autocorrelation 0.71, still positive at 21 days), and mean bar range tracks realized volatility almost perfectly (r = 0.975).",
+  "findings": [
+    {
+      "statement": "Mean 1-min bar range 4.78 pts in the first 30 min vs 2.69 in the last.",
+      "evidence": "ES, 2024-2026."
+    },
+    {
+      "statement": "Four volatility regimes; April 2025 tariff shock 33.9% annualized vs 9.3% normal.",
+      "evidence": ""
+    },
+    {
+      "statement": "Daily RV autocorrelation 0.71 at lag 1, significant to lag 21.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Volatility clustering / long memory."
+  },
+  "setting": {
+    "markets": [
+      "US index futures"
+    ],
+    "instruments": [
+      "ES"
+    ],
+    "sample_period": "2024-04 to 2026-05",
+    "data_frequency": "1-minute",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "On ES 1-min data (Apr 2024-May 2026, 529 sessions), activity and bar range decay through the day (−44% from the first to the last 30 minutes), realized volatility is highly persistent (lag-1 autocorrelation 0.71, still positive at 21 days), and mean bar range tracks realized volatility almost perfectly (r = 0.975).",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy. Supports our use of range-based volatility (AvgRange) and regime splits. Sample is entirely in our protected 2024+ period — do NOT use it to choose parameters.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Descriptive."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Sample overlaps the protected 2024+ data.",
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

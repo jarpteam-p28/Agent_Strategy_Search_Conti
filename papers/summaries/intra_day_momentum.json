@@ -1,0 +1,55 @@
+{
+  "title": "Intra-Day Momentum",
+  "authors": [
+    "Oleg Komarov"
+  ],
+  "year": 2017,
+  "source_url": "https://cxoadvisory.com/?p=29509",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "In US stocks (1993-2010) the 15:30-16:00 return is positively related to the 9:30-12:00 return, while the 13:30-15:30 return reverses the morning; the last half-hour is the strongest intraday slot (+8.9%/yr) and the first hour the weakest; all gross.",
+  "findings": [
+    {
+      "statement": "Last half-hour annualized +8.9%, overnight +20.1%, 09:30-10:00 −9.2%, 10:00-10:30 −5.9%.",
+      "evidence": "US stocks ex-microcaps, 1993-2010."
+    },
+    {
+      "statement": "9:30-12:00 winners/losers both positive in 15:30-16:00; 13:30-15:30 return negatively related to the morning.",
+      "evidence": ""
+    },
+    {
+      "statement": "Morning winner/loser spread flipped sign after 2001 decimalization.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Institutional order splitting and end-of-day rebalancing."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1993-2010",
+    "data_frequency": "30-minute",
+    "holding_period": "30 minutes"
+  },
+  "reported_results": {
+    "headline": "In US stocks (1993-2010) the 15:30-16:00 return is positively related to the 9:30-12:00 return, while the 13:30-15:30 return reverses the morning; the last half-hour is the strongest intraday slot (+8.9%/yr) and the first hour the weakest; all gross.",
+    "key_stats": []
+  },
+  "tradable_edge": "Covered by noise_area_last_half_hour_es; adds a variant signal (09:30-12:00 return instead of the first half-hour) and the mid-afternoon reversal as a descriptive check.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Gross; stock-level."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

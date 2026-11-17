@@ -1,0 +1,55 @@
+{
+  "title": "Large Bets and Stock Market Crashes",
+  "authors": [
+    "Albert S. Kyle",
+    "Anna A. Obizhaeva"
+  ],
+  "year": 2012,
+  "source_url": "https://pages.nes.ru/aobizhaeva/Kyle-Obizhaeva-crashes.pdf",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "Market-microstructure 'invariance' predicts price impact of large forced sales far better than conventional wisdom: e.g., 1987 portfolio insurance sales (67% of ADV) → predicted −16.8% vs actual −32%; SocGen 2008 −10.8% vs −9.4%; aggregate-market demand elasticity ≈ 0.01, so even ~1-3% of daily volume sold quickly moves index markets materially.",
+  "findings": [
+    {
+      "statement": "Impact ∝ (dollar volume)^(1/3) × (vol)^(4/3) × order size / volume; k = 5 calibrated on 400k portfolio transitions.",
+      "evidence": "Full paper."
+    },
+    {
+      "statement": "1929 −46% predicted vs −25% actual; 1987 −17% vs −32%; 2010 flash crash −0.6% vs −5.1% (speed amplified).",
+      "evidence": ""
+    },
+    {
+      "statement": "Faster execution increases temporary impact → V-shaped moves.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Forced, fast selling relative to market depth creates outsized temporary impact that partly reverses."
+  },
+  "setting": {
+    "markets": [
+      "US/European equities"
+    ],
+    "instruments": [
+      "indices"
+    ],
+    "sample_period": "1929-2010 events",
+    "data_frequency": "event",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "Market-microstructure 'invariance' predicts price impact of large forced sales far better than conventional wisdom: e.g., 1987 portfolio insurance sales (67% of ADV) → predicted −16.8% vs actual −32%; SocGen 2008 −10.8% vs −9.4%; aggregate-market demand elasticity ≈ 0.01, so even ~1-3% of daily volume sold quickly moves index markets materially.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy. Supports the flow-to-depth logic of letf_flow_to_depth_last_hour_es and the V-shaped reversal logic of forced_selling_flush_fade_es.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Theory + case studies."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

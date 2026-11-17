@@ -1,0 +1,54 @@
+{
+  "title": "Can Investors Profit from the Prophets? Security Analyst Recommendations and Stock Returns",
+  "authors": [
+    "Brad M. Barber",
+    "Reuven Lehavy",
+    "Maureen McNichols",
+    "Brett Trueman"
+  ],
+  "year": 2001,
+  "source_url": "https://ideas.repec.org/a/bla/jfinan/v56y2001i2p531-563.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Buying the most-recommended stocks and shorting the least-recommended earned >4%/yr gross (1986-1996), but high turnover and costs wipe it out unless rebalanced infrequently.",
+  "findings": [
+    {
+      "statement": "Top-minus-bottom consensus portfolio > 4% annual abnormal return gross.",
+      "evidence": "JF 56(2)."
+    },
+    {
+      "statement": "Net of transaction costs the abnormal returns are not reliably positive.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Slow reaction to analyst information."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1986-1996",
+    "data_frequency": "daily",
+    "holding_period": "days-months"
+  },
+  "reported_results": {
+    "headline": "Buying the most-recommended stocks and shorting the least-recommended earned >4%/yr gross (1986-1996), but high turnover and costs wipe it out unless rebalanced infrequently.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; no ES/NQ test.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": "Costs."
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

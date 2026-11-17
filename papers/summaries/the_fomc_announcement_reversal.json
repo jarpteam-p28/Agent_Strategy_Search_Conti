@@ -1,0 +1,52 @@
+{
+  "title": "The FOMC Announcement Reversal",
+  "authors": [
+    "Tommaso Baglioni",
+    "Ruy Ribeiro"
+  ],
+  "year": 2022,
+  "source_url": "https://cxoadvisory.com/calendar-effects/stock-market-return-reversal-after-fomc-announcements",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "On scheduled FOMC days, the S&P 500 reverses the prior 24 hours: buying E-mini at 13:50 ET after a negative prior-24h return (selling after a positive one) and exiting at the close earned ~0.18% per announcement net of spreads, Sharpe ≈ 0.36 (180 announcements, Oct 1997-Jan 2020).",
+  "findings": [
+    {
+      "statement": "Rule: sign = −sign(prior 24h return), enter 13:50 ET (10 min before the release), exit at the day's close; buys at ask / sells at bid.",
+      "evidence": "E-mini S&P 500, 180 scheduled FOMC announcements."
+    },
+    {
+      "statement": "≈ +0.18% per announcement net; Sharpe ≈ 0.36.",
+      "evidence": "Subperiods 1997-2011 and 2011-2020 studied; varies with VIX and policy uncertainty (details behind paywall)."
+    }
+  ],
+  "why": {
+    "pattern": "Pre-announcement positioning (and the pre-FOMC drift) unwinds once the decision resolves uncertainty."
+  },
+  "setting": {
+    "markets": [
+      "US index futures"
+    ],
+    "instruments": [
+      "ES"
+    ],
+    "sample_period": "1997-2020",
+    "data_frequency": "intraday",
+    "holding_period": "13:50 → close"
+  },
+  "reported_results": {
+    "headline": "On scheduled FOMC days, the S&P 500 reverses the prior 24 hours: buying E-mini at 13:50 ET after a negative prior-24h return (selling after a positive one) and exiting at the close earned ~0.18% per announcement net of spreads, Sharpe ≈ 0.36 (180 announcements, Oct 1997-Jan 2020).",
+    "key_stats": []
+  },
+  "tradable_edge": "New spec fomc_announcement_reversal_es — fully testable on ES/NQ 1-min with the public FOMC calendar.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "≈ 8 trades/yr; few observations, but our 2014-2023 window is mostly out of sample."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

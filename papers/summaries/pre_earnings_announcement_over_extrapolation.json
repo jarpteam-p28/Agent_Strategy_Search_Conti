@@ -1,0 +1,48 @@
+{
+  "title": "Pre-Earnings Announcement Over-Extrapolation",
+  "authors": [
+    "Peter Kelly",
+    "Robert C. Stoumbos"
+  ],
+  "year": 2016,
+  "source_url": "https://mendoza.nd.edu/news/investors-prone-to-extrapolation-bias-before-earnings-announcements-study-finds/",
+  "paper_type": "academic",
+  "read_mode": "secondary",
+  "one_line": "Retail investors buy before earnings announcements of firms whose past announcement returns were strong; prices of those firms run up before and reverse after the announcement (78,000 brokerage accounts, 1991-1996).",
+  "findings": [
+    {
+      "statement": "Pre-announcement retail buying tracks past announcement returns; post-announcement reversal.",
+      "evidence": "Discount-broker data."
+    }
+  ],
+  "why": {
+    "pattern": "Extrapolative retail demand."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1991-1996",
+    "data_frequency": "daily",
+    "holding_period": "days"
+  },
+  "reported_results": {
+    "headline": "Retail investors buy before earnings announcements of firms whose past announcement returns were strong; prices of those firms run up before and reverse after the announcement (78,000 brokerage accounts, 1991-1996).",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level; same family as megacap_earnings_overnight_split_nq (parked).",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "-"
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

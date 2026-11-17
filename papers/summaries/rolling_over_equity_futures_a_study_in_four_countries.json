@@ -1,0 +1,55 @@
+{
+  "title": "Rolling Over Equity Futures: A Study in Four Countries",
+  "authors": [
+    "Ronald T. Slivka",
+    "Han Qin",
+    "Kai Ye"
+  ],
+  "year": 2020,
+  "source_url": "https://www.indianjournalofcapitalmarkets.com/index.php/IJF/article/download/123688/99703/340937",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "For ES (and FTSE, Nifty, A50) 2016 expirations, ~90% of calendar-spread volume falls in the last 5 days before expiry (ES peak on day 12 of a 15-day window); ES spread volatility rises through the roll window, so rolling earlier lowers risk; spreads stay within a 0.5% no-arbitrage band.",
+  "findings": [
+    {
+      "statement": "Spread volume > 10% of futures volume from roll-window day 8-11; peaks 40-70% on days 12-14.",
+      "evidence": "2016 expirations, daily data."
+    },
+    {
+      "statement": "Volatility-minimizing roll beats even and stack rolls in US, India, China.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics of the quarterly roll."
+  },
+  "setting": {
+    "markets": [
+      "index futures"
+    ],
+    "instruments": [
+      "ES",
+      "FTSE",
+      "Nifty",
+      "A50"
+    ],
+    "sample_period": "2016",
+    "data_frequency": "daily",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "For ES (and FTSE, Nifty, A50) 2016 expirations, ~90% of calendar-spread volume falls in the last 5 days before expiry (ES peak on day 12 of a 15-day window); ES spread volatility rises through the roll window, so rolling earlier lowers risk; spreads stay within a 0.5% no-arbitrage band.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy. Backtest hygiene: our continuous ES series should switch on volume (as the data already does) and roll-week days can be flagged as a split.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Descriptive."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

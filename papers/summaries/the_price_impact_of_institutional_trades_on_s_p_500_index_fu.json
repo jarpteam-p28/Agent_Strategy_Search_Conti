@@ -1,0 +1,54 @@
+{
+  "title": "Large Trades and Intraday Futures Price Behavior (indexed as: The Price Impact of Institutional Trades on S&P 500 Index Futures)",
+  "authors": [
+    "Alex Frino",
+    "Johan Bjursell",
+    "George H. K. Wang",
+    "Andrew Lepone"
+  ],
+  "year": 2008,
+  "source_url": "https://ideas.repec.org/a/wly/jfutmk/v28y2008i12p1147-1181.html",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "In CME futures, large customer BUYS have bigger permanent (information) price impact than large sells, while sells have bigger temporary (liquidity) impact that reverses; the asymmetry flips with market state (sells matter more in bear markets).",
+  "findings": [
+    {
+      "statement": "Permanent impact: buys > sells; temporary impact: sells > buys.",
+      "evidence": "JFM 28(12), CME customer large trades."
+    },
+    {
+      "statement": "Bear markets: large sells carry more information; bull markets: buys.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Liquidity-driven selling partly reverses; information-driven buying persists."
+  },
+  "setting": {
+    "markets": [
+      "US index futures"
+    ],
+    "instruments": [
+      "CME futures"
+    ],
+    "sample_period": "-",
+    "data_frequency": "trade-level",
+    "holding_period": "minutes"
+  },
+  "reported_results": {
+    "headline": "In CME futures, large customer BUYS have bigger permanent (information) price impact than large sells, while sells have bigger temporary (liquidity) impact that reverses; the asymmetry flips with market state (sells matter more in bear markets).",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy (needs trade-level customer flags). Context for forced_selling_flush_fade_es: liquidity selling reverses, but less so in bear regimes.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": "Descriptive."
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected in the backtest project).",
+  "caveats": [
+    "Only the abstract / a secondary summary was reachable (SSRN is blocked from chat sessions); numbers not verified against the full paper.",
+    "Read by Claude in a chat session (manual run 6, 2026-11-16), not by the weekly pipeline."
+  ],
+  "referenced_papers_worth_reading": []
+}

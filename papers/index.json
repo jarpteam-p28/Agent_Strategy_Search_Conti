@@ -602,11 +602,14 @@
     "why_promising": "FINDING: stocks with the best consensus ratings outperform and the worst underperform, but the strategy needs very high turnover. The paper reports that net abnormal returns after costs were not reliably above zero. WHY: slow information diffusion, with analysts as an information channel. The edge is concentrated in the days right after a rating change, which is where it meets the revision-drift item on the focus list. KILL: faster dissemination (algorithmic news trading) and Reg FD. DECAY: old (1998 and 2001), so expect little left. The cost result teaches us to ask for a net-of-costs test, as our cost-hurdle notes do. Read as background; the already-known 'Analyzing the Analysts' is related. Companion papers are listed on the SSRN author page: 'Prophets and Losses' (1996-2000) and 'Ratings Changes, Ratings Levels, and the Predictive Value of Analysts' Recommendations'.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "added": "2026-11-16",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sKGekXwcYVaSgB2Tno'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/can_investors_profit_from_the_prophets_consensus_analyst_rec.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "skipped_reason": "Stock-level; no ES/NQ test."
   },
   "closing_the_question_on_the_continuation_of_turn_of_the_mont": {
     "title": "Closing the Question on the Continuation of Turn-of-the-Month Effects: Evidence from the S&P 500 Index Futures Contract",
@@ -685,11 +688,16 @@
     "where_to_get_it": "Direct open PDF from the Erasmus University repository (repub.eur.nl link in pdf_url). The tandfonline page is the journal version, and a CFA Institute Research & Policy Center summary page also exists.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "added": "2026-11-16",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sK58D42zNVScDkVR7L'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "secondary",
+    "summary": "papers/summaries/conditional_volatility_targeting.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "strategies": [
+      "liquidity_stress_overlay_es"
+    ]
   },
   "dash_for_cash_monthly_market_impact_of_institutional_liquidi": {
     "title": "Dash for Cash: Monthly Market Impact of Institutional Liquidity Needs",
@@ -749,11 +757,14 @@
     "why_promising": "FINDING: high days-to-cover stocks underperform, and DTC predicts better than the raw short ratio. WHY: liquidity constraint and crowded exits. Arbitrageurs who short illiquid names need a premium, and DTC is the cost of exiting the position. This is the 'liquidity constraints on large orders' pattern turned into a cross-sectional signal. KILL: a large drop in the cost of shorting or more liquidity, or short interest becoming too stale or noisy. The paper reports short-side losses in the 2008 ban, so squeeze and borrow risk are real. DECAY: moderate (2015). Angles: long-only 'avoid or underweight' filter on high-DTC names, and a squeeze-risk filter for the gap-and-go ideas on the list. Borrow fees and short-squeeze items on the focus list are covered with this paper plus the already-known loan fee papers.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "added": "2026-11-16",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sKAiKPDNmTp55uhwzE'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "secondary",
+    "summary": "papers/summaries/days_to_cover_and_stock_returns.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "skipped_reason": "Stock-level; no ES/NQ test."
   },
   "decoding_inside_information": {
     "title": "Decoding Inside Information",
@@ -1437,11 +1448,16 @@
     "why_promising": "FINDING: single stocks that won or lost the most in the morning earn abnormal returns in the last half-hour, while time-series index predictability alone is not economically profitable after costs. This matches our own cost-hurdle notes (Mesfin 2026: gross edges too small for MNQ friction). WHY: it builds on Heston et al. (2010) intraday seasonality and on institutional trading and hedging that is concentrated at the close. KILL: closing-auction migration and the growth of closing-period flows (leveraged ETFs, options hedging). DECAY: the abstract itself reports sample-period dependence, so check by subperiod. Angle: compare the single-stock cross-section against the index-futures version we can already test, and use it as the single-stock 'stocks in play' companion. Priority 2 because it is a working paper with a modest download count and needs data we lack.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "added": "2026-11-16",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sKHbJQLVZiePdspmEp'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "secondary",
+    "summary": "papers/summaries/intra_day_momentum.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "strategies": [
+      "noise_area_last_half_hour_es"
+    ]
   },
   "intraday_0dte_option_order_flow_and_s_p_500_downside_risk": {
     "title": "Intraday 0DTE Option Order Flow and S&P 500 Downside Risk",
@@ -1495,9 +1511,14 @@
     "where_to_get_it": "Open the SSRN abstract page (abstract_id=6847024) and click 'Download This Paper'. It is a recent posting, so check that the PDF is available.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-11-16"
+    "added": "2026-11-16",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/intraday_microstructure_dynamics_of_e_mini_s_p_500_futures_v.md",
+    "updated": "2026-11-16",
+    "read_by": "claude_manual_6_2026-11-16",
+    "skipped_reason": "No strategy. Supports our use of range-based volatility (AvgRange) and regime splits. Sample is entirely in our protected 2024+ period — do NOT use it to choose parameters."
   },
   "intraday_momentum_the_first_half_hour_return_predicts_the_la": {
     "title": "Intraday Momentum: The First Half-Hour Return Predicts the Last Half-Hour Return",
@@ -1684,10 +1705,16 @@
     "year": 2012,
     "note": "Source of the price-impact (microstructure invariance) formula used to size the flow impact; related to market impact of large forced sellers in crashes.",
     "origin": "seed",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sJw2YrudUCcaWzWoUB'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/large_bets_and_stock_market_crashes.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "strategies": [
+      "letf_flow_to_depth_last_hour_es",
+      "forced_selling_flush_fade_es"
+    ]
   },
   "leveraged_and_inverse_etf_rebalancing_and_market_close": {
     "title": "Leveraged and Inverse ETF Rebalancing and Market Close",
@@ -1855,9 +1882,16 @@
     "where_to_get_it": "Open the SSRN abstract page (abstract_id=2495490) and click 'Download This Paper'. I could not check from the search results whether the PDF is free, so confirm on the page.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-11-16"
+    "added": "2026-11-16",
+    "read_mode": "title_only",
+    "summary": "papers/summaries/lovers_by_night_strangers_by_day_an_investigation_of_simple.md",
+    "updated": "2026-11-16",
+    "read_by": "claude_manual_6_2026-11-16",
+    "strategies": [
+      "overnight_drift_long"
+    ]
   },
   "market_intraday_momentum": {
     "title": "Market Intraday Momentum",
@@ -2026,11 +2060,14 @@
     "why_promising": "FINDING: past return and past earnings surprise each predict large drifts after controlling for the other, with little reversal. A search-result summary says about 41% of the 6-month price-momentum premium is earned around earnings announcement dates. WHY: slow information diffusion plus sluggish analyst revisions (the PEAD/analyst-drift pattern). KILL: heavy analyst coverage and faster earnings processing, or momentum crashes. DECAY: published in 1996 and widely known, so plan on roughly half the paper's number. It is one of the few papers that ties the momentum, PEAD and analyst-revision items on the focus list together, which fits the Conti 'combine findings' approach. The earnings-window concentration points to an angle: hold momentum names through their announcement dates only.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "added": "2026-11-16",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sKC2S7rD8gxHTg3whM'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/momentum_strategies.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "skipped_reason": "Stock-level; no ES/NQ test."
   },
   "nasdaq_100_index_futures_intraday_momentum_or_reversal": {
     "title": "Nasdaq-100 Index Futures: Intraday Momentum or Reversal?",
@@ -2585,9 +2622,14 @@
     "why_promising": "FINDING: PEAD exists in the UK, giving out-of-sample confirmation beyond the US. Another search result (an Aalto thesis on European PEAD) mentions Gerard (2012) for continental Europe and notes stronger effects with lower analyst coverage. This supports the Conti 'different universe' angle (Europe, with lower coverage and liquidity). WHY: slow diffusion of information and liquidity constraints in less-covered stocks. KILL: improved reporting and more analyst coverage. A related paper (Hung, Li and Wang, RFS 2015, already on our known list) finds that PEAD declined after IFRS adoption. DECAY: old, so use as a starting point only for a modern Europe-specific test with a fresh sample. Priority 3 because the author details need confirming and the data is not ours; it is the Europe starting-point paper for the PEAD focus area.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-11-16"
+    "added": "2026-11-16",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/post_earnings_announcement_drift_in_the_uk.md",
+    "updated": "2026-11-16",
+    "read_by": "claude_manual_6_2026-11-16",
+    "skipped_reason": "Stock-level, UK; no ES/NQ test."
   },
   "post_earnings_announcement_drift_the_role_of_revenue_surpris": {
     "title": "Post-Earnings Announcement Drift: The Role of Revenue Surprises",
@@ -2652,11 +2694,14 @@
     "why_promising": "FINDING: stocks with strong recent earnings-day reactions run up in the days before the next announcement and then reverse afterwards. This addresses the 'pre-earnings run-up' and 'earnings-day fade' items on the focus list directly. WHY: behavioral order flow. Retail and some institutional investors over-extrapolate past earnings-day returns and buy ahead of the print, pushing the price up and then paying for it. This is a predictable-trading-flow pattern, with an attention component. KILL: the retail attention premium shrinking or earnings-timing changes. DECAY: a Paperswithbacktest note says the strategy has faded since 2020, so treat it as possibly decayed and test post-2020 separately. Angle: a short holding window (about 5 days before the print, exit at the open before or on announcement). Useful as a companion to the already-known earnings announcement premium papers.",
     "track": "stocks",
     "origin": "librarian",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "added": "2026-11-16",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sKEbyJHYzncn1Tw24S'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "secondary",
+    "summary": "papers/summaries/pre_earnings_announcement_over_extrapolation.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "skipped_reason": "Stock-level; same family as megacap_earnings_overnight_split_nq (parked)."
   },
   "predatory_trading": {
     "title": "Predatory Trading",
@@ -2958,9 +3003,14 @@
     "where_to_get_it": "Open the SSRN abstract page (abstract_id=3514204) and click 'Download This Paper'. I could not check from the search results whether the PDF is free.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-11-16"
+    "added": "2026-11-16",
+    "read_mode": "full_pdf",
+    "summary": "papers/summaries/rolling_over_equity_futures_a_study_in_four_countries.md",
+    "updated": "2026-11-16",
+    "read_by": "claude_manual_6_2026-11-16",
+    "skipped_reason": "No strategy. Backtest hygiene: our continuous ES series should switch on volume (as the data already does) and roll-week days can be flagged as a split."
   },
   "seasonal_fluctuations_in_aggregate_returns_seasonality_in_th": {
     "title": "Seasonal Fluctuations in Aggregate Returns / Seasonality in the Cross-Section of Stock Returns",
@@ -3440,11 +3490,16 @@
     "year_note": null,
     "track": "index_futures",
     "origin": "librarian",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "added": "2026-11-16",
-    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sKFmQu4oLbKbxqKbkC'}",
-    "updated": "2026-11-17"
+    "updated": "2026-11-16",
+    "read_mode": "secondary",
+    "summary": "papers/summaries/the_fomc_announcement_reversal.md",
+    "read_by": "claude_manual_6_2026-11-16",
+    "strategies": [
+      "fomc_announcement_reversal_es"
+    ]
   },
   "the_high_volume_return_premium": {
     "title": "The High Volume Return Premium",
@@ -3488,13 +3543,16 @@
     "year": 2012,
     "note": "Finds end-of-day price pressure and extra volatility from 6 LETFs on 63 real estate stocks.",
     "origin": "seed",
-    "status": "failed",
+    "status": "summarized",
     "attempts": 1,
     "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1716999",
     "read_mode": "abstract_only",
     "summary": "papers/summaries/the_impact_of_leveraged_and_inverse_etfs_on_underlying_stock.md",
-    "updated": "2026-11-17",
-    "error": "{'type': 'error', 'error': {'details': None, 'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Ch7sFwcgNjBmiZYYqjKQS'}"
+    "updated": "2026-11-16",
+    "read_by": "claude_manual_6_2026-11-16",
+    "strategies": [
+      "letf_close_rebalance_continuation_nq"
+    ]
   },
   "the_impact_of_volatility_targeting": {
     "title": "The Impact of Volatility Targeting",
@@ -3770,9 +3828,16 @@
     "where_to_get_it": "Open the SSRN abstract page (abstract_id=1009071) and click 'Download This Paper'; the direct delivery link is in pdf_url.",
     "track": "index_futures",
     "origin": "librarian",
-    "status": "queued",
+    "status": "summarized",
     "attempts": 0,
-    "added": "2026-11-16"
+    "added": "2026-11-16",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/the_price_impact_of_institutional_trades_on_s_p_500_index_fu.md",
+    "updated": "2026-11-16",
+    "read_by": "claude_manual_6_2026-11-16",
+    "strategies": [
+      "forced_selling_flush_fade_es"
+    ]
   },
   "the_role_of_leveraged_etfs_and_option_market_imbalances_on_e": {
     "title": "The Role of Leveraged ETFs and Option Market Imbalances on End-of-Day Price Dynamics (revised as: Liquidity Provision to Leveraged ETFs and Equity Options Rebalancing Flows: Evidence from End-of-Day Stock Prices; JFQA)",

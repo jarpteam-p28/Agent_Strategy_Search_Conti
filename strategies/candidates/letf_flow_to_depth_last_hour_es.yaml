@@ -160,6 +160,10 @@ notes:
   so it is not repeated here.
 - >-
   Prior RTH close for ES = 16:00 ET price (not the 16:15 Globex settle); state this in the code header.
+- >-
+  Kyle & Obizhaeva (2012): aggregate-market demand elasticity ≈ 0.01 — impact of forced flow scales with
+  flow/volume and is larger when executed fast; Bai, Bond & Hatch (2015) confirm late-day LETF pressure
+  in REIT stocks.
 open_questions:
 - >-
   Does AUM data with daily granularity exist cheaply for 2013-2026, and should swap exposure (not NAV)

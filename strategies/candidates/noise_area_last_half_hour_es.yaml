@@ -192,6 +192,9 @@ variants:
 - >-
   Gao et al. two-signal version: last-30 direction from the sign of (prior close → 10:00 return) AND the
   11:30-12:00 return; trade only when both agree.
+- >-
+  Komarov (2017) signal: use the 09:30-12:00 return instead of the first half-hour; mid-afternoon (13:30-15:30)
+  tends to reverse the morning.
 related_strategies:
 - noise_area_momentum_es
 - noise_area_overnight_es
