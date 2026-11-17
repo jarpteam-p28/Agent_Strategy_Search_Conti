@@ -1,0 +1,48 @@
+{
+  "title": "A Dynamic Model for Hard-to-Borrow Stocks",
+  "authors": [
+    "Marco Avellaneda",
+    "Mike Lipkin"
+  ],
+  "year": 2009,
+  "source_url": null,
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Model of hard-to-borrow stocks in which buy-in risk creates upward price drift and expensive puts; borrow cost matters for any short-LETF or short-squeeze trade.",
+  "findings": [
+    {
+      "statement": "Theory plus calibration to option prices.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Short-sale constraints / buy-in risk."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "hard-to-borrow stocks"
+    ],
+    "sample_period": "-",
+    "data_frequency": "-",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "Model of hard-to-borrow stocks in which buy-in risk creates upward price drift and expensive puts; borrow cost matters for any short-LETF or short-squeeze trade.",
+    "key_stats": []
+  },
+  "tradable_edge": "No ES/NQ strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": ""
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Summarized from the published abstract and well-known results; full text not fetched (not on this session's web allowlist).",
+    "Read by Claude in a chat session (manual run 7, 2026-11-17)."
+  ],
+  "referenced_papers_worth_reading": []
+}

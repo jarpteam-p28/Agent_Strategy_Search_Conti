@@ -79,6 +79,9 @@ notes:
 - >-
   Opposite of the last-half-hour momentum idea: momentum INTO the close, reversal AFTER it — test both
   on the same days.
+- >-
+  Nagel (2012, Evaporating Liquidity): reversal / liquidity-provision returns scale with VIX — the high-volatility
+  filter is the main test, not an optional split.
 review:
   scores:
     why_strength: 3

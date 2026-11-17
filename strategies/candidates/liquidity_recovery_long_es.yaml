@@ -133,6 +133,9 @@ notes:
 - >-
   Chronological 80/20 split on 2014-2026 puts only about 2 stress episodes in out-of-sample. Treat the
   OOS result as weak evidence.
+- >-
+  Nagel (2012, Evaporating Liquidity): reversal / liquidity-provision returns scale with VIX — the high-volatility
+  filter is the main test, not an optional split.
 open_questions:
 - >-
   Is range/volume a good enough proxy for market depth? Tick bid/ask data covers only 2021-2023 (ES),

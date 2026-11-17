@@ -1,0 +1,52 @@
+{
+  "title": "Liquidity Risk and Expected Stock Returns",
+  "authors": [
+    "Lubos Pastor",
+    "Robert F. Stambaugh"
+  ],
+  "year": 2003,
+  "source_url": null,
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Stocks more sensitive to aggregate liquidity (measured by daily return reversals relative to signed volume) earn ~7.5%/yr more than low-sensitivity stocks (1966-1999); market-wide liquidity drops sharply in crises.",
+  "findings": [
+    {
+      "statement": "High-minus-low liquidity-beta decile spread ≈ 7.5%/yr.",
+      "evidence": ""
+    },
+    {
+      "statement": "Liquidity measure = order-flow-induced reversal, computable from index data.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Aggregate liquidity risk premium."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1962-1999",
+    "data_frequency": "daily/monthly",
+    "holding_period": "months"
+  },
+  "reported_results": {
+    "headline": "Stocks more sensitive to aggregate liquidity (measured by daily return reversals relative to signed volume) earn ~7.5%/yr more than low-sensitivity stocks (1966-1999); market-wide liquidity drops sharply in crises.",
+    "key_stats": []
+  },
+  "tradable_edge": "No ES strategy; its reversal-based liquidity measure could replace the range/volume ILLIQ proxy in liquidity_recovery_long_es as a variant.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": ""
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected).",
+  "caveats": [
+    "Summarized from the published abstract and well-known results; full text not fetched (not on this session's web allowlist).",
+    "Read by Claude in a chat session (manual run 7, 2026-11-17)."
+  ],
+  "referenced_papers_worth_reading": []
+}

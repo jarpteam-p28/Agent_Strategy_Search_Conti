@@ -58,11 +58,30 @@
     "status": "summarized",
     "attempts": 0,
     "added": "2026-11-02",
-    "read_mode": "secondary",
+    "read_mode": "web_fetch",
     "summary": "papers/summaries/0dtes_trading_gamma_risk_and_volatility_propagation.md",
-    "updated": "2026-11-10",
+    "updated": "2026-11-17",
     "read_by": "claude_manual_5_2026-11-10",
     "skipped_reason": "No strategy (needs options data). Context for gamma_flip_cross and for post-2022 regime splits."
+  },
+  "a_dynamic_model_for_hard_to_borrow_stocks": {
+    "title": "A Dynamic Model for Hard-to-Borrow Stocks",
+    "authors": [
+      "M. Avellaneda",
+      "M. D. Lipkin"
+    ],
+    "venue": "RISK Magazine / SSRN",
+    "year": 2009,
+    "url": "http://ssrn.com/abstract=1357069",
+    "note": "Borrow-cost model, which matters for any short-LETF decay trade.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/a_dynamic_model_for_hard_to_borrow_stocks.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "No ES/NQ strategy.",
+    "attempts": 0
   },
   "a_flow_based_explanation_for_return_predictability": {
     "title": "A Flow-Based Explanation for Return Predictability",
@@ -510,6 +529,24 @@
     ],
     "skipped_reason": null
   },
+  "betting_against_beta": {
+    "title": "Betting Against Beta",
+    "authors": [
+      "Andrea Frazzini",
+      "Lasse Heje Pedersen"
+    ],
+    "venue": "Journal of Financial Economics",
+    "year": 2014,
+    "note": "A follow-on by the same author. It uses funding constraints as the WHY for a tradable factor. Not cited in this paper (it appeared later).",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/betting_against_beta.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Cross-asset factor; no single-instrument ES/NQ test.",
+    "attempts": 0
+  },
   "buying_duration_index_rebalancing_and_price_pressure_in_gove": {
     "title": "Buying Duration: Index Rebalancing and Price Pressure in Government Bond Markets",
     "authors": [
@@ -699,6 +736,42 @@
       "liquidity_stress_overlay_es"
     ]
   },
+  "contrarian_investment_extrapolation_and_risk": {
+    "title": "Contrarian Investment, Extrapolation, and Risk",
+    "authors": [
+      "Josef Lakonishok",
+      "Andrei Shleifer",
+      "Robert Vishny"
+    ],
+    "venue": "Journal of Finance",
+    "year": 1994,
+    "note": "Evidence for the value/glamour anomaly. Investors extrapolate growth, and the anomaly is not explained by risk.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/contrarian_investment_extrapolation_and_risk.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Stock-level.",
+    "attempts": 0
+  },
+  "costly_arbitrage_evidence_from_closed_end_funds": {
+    "title": "Costly Arbitrage: Evidence from Closed-End Funds",
+    "authors": [
+      "Jeffrey Pontiff"
+    ],
+    "venue": "Quarterly Journal of Economics",
+    "year": 1996,
+    "note": "Tests how arbitrage costs and idiosyncratic risk determine the size of the mispricing.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/costly_arbitrage_evidence_from_closed_end_funds.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "No strategy.",
+    "attempts": 0
+  },
   "dash_for_cash_monthly_market_impact_of_institutional_liquidi": {
     "title": "Dash for Cash: Monthly Market Impact of Institutional Liquidity Needs",
     "authors": [
@@ -795,6 +868,23 @@
     "read_by": "claude_manual_4_2026-11-01",
     "skipped_reason": "Stock-level; no ES/NQ strategy."
   },
+  "demand_curves_for_stocks_do_slope_down": {
+    "title": "Demand Curves for Stocks Do Slope Down",
+    "authors": [
+      "Andrei Shleifer"
+    ],
+    "venue": "Journal of Finance",
+    "year": 1986,
+    "note": "Original S&P 500 addition price-pressure paper. Recalled, not checked against the reference list.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/demand_curves_for_stocks_do_slope_down.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Stock-level; supports the price-pressure logic behind month-end/LETF index-futures specs.",
+    "attempts": 0
+  },
   "do_leveraged_etfs_really_amplify_late_day_returns_and_volati": {
     "title": "Do Leveraged ETFs Really Amplify Late-Day Returns and Volatility?",
     "authors": [
@@ -831,6 +921,45 @@
     "updated": "2026-11-17",
     "strategies": [],
     "skipped_reason": "This paper (Tuzun 2013) is already the source of letf_flow_to_depth_last_hour_es. The edge it describes is covered in full by four existing specs:\n- letf_flow_to_depth_last_hour_es: late-day continuation 15:00-15:59 ET, scaled by the rebalance flow implied by the day's return\n- letf_close_rebalance_continuation_nq: 15:30-16:00 ET continuation on NQ/ES, signed by the day's move\n- letf_rebalance_day_reversal_nq: next-day reversal after high-flow days\n- noise_area_last_half_hour_es: last-half-hour continuation conditioned on move size\n\nThe summary's remaining angles add nothing that needs its own spec. Asymmetric sides, a day-return threshold and the pre/post-2022 (0DTE) split are filters or report items for those specs. The late-day volatility effect would need options to trade and is not a direction signal for futures. The paper was recalled from memory only, so there are no verified numbers to update the existing specs with. A new spec would duplicate them."
+  },
+  "do_noise_traders_move_markets": {
+    "title": "Do noise traders move markets?",
+    "authors": [
+      "Brad M. Barber",
+      "Terrance Odean",
+      "Ning Zhu"
+    ],
+    "year": 2006,
+    "venue": "SSRN working paper",
+    "url": "http://ssrn.com/abstract=869827",
+    "note": "Links retail order flow (the same broker datasets) to price pressure and subsequent returns. It would give the missing return evidence.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/do_noise_traders_move_markets.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Same paper in substance as the 2009 RFS version; stock-level.",
+    "attempts": 0
+  },
+  "do_retail_trades_move_markets": {
+    "title": "Do Retail Trades Move Markets?",
+    "authors": [
+      "Barber, B.",
+      "Odean, T.",
+      "Zhu, N."
+    ],
+    "venue": "Review of Financial Studies",
+    "year": 2009,
+    "note": "Shows retail order imbalances persist for weeks and that heavy retail buying is followed by long-run underperformance; supports both the persistence and reversal findings.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/do_retail_trades_move_markets.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Stock-level.",
+    "attempts": 0
   },
   "do_s_p500_options_increase_market_volatility_evidence_from_0": {
     "title": "Do S&P500 Options Increase Market Volatility? Evidence from 0DTEs",
@@ -1107,9 +1236,9 @@
     "status": "summarized",
     "attempts": 0,
     "added": "2026-10-22",
-    "read_mode": "abstract_only",
+    "read_mode": "full_pdf",
     "summary": "papers/summaries/evaporating_liquidity.md",
-    "updated": "2026-11-01",
+    "updated": "2026-11-17",
     "read_by": "claude_manual_3_2026-11-01",
     "skipped_reason": "Index angle (speculative): short-term reversal in ES works mainly in high-volatility regimes — a regime filter for the overnight-reversal spec."
   },
@@ -1598,6 +1727,26 @@
     "read_by": "claude_manual_4_2026-11-01",
     "skipped_reason": "Supports overnight_reversal_first_hour_es (and its cost warning); test up-opens and down-opens separately."
   },
+  "intraday_share_price_volatility_and_leveraged_etf_rebalancin": {
+    "title": "Intraday Share Price Volatility and Leveraged ETF Rebalancing",
+    "authors": [
+      "Shum, P.",
+      "Hejazi, W.",
+      "Haryanto, E.",
+      "Rodier, A."
+    ],
+    "year": 2016,
+    "venue": "Review of Finance",
+    "note": "Tests whether rebalancing flow moves late-day volatility. Cited from memory, not checked.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/intraday_share_price_volatility_and_leveraged_etf_rebalancin.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Supports conditioning the LETF close specs on the volatility regime (AvgRange tercile).",
+    "attempts": 0
+  },
   "intraday_time_series_momentum_global_evidence_and_links_to_m": {
     "title": "Intraday time series momentum: Global evidence and links to market characteristics",
     "authors": [
@@ -1716,6 +1865,19 @@
       "forced_selling_flush_fade_es"
     ]
   },
+  "leveraged_and_inverse_etf_rebalancing": {
+    "title": "Leveraged and Inverse ETF Rebalancing",
+    "authors": [
+      "Tugkan Tuzun"
+    ],
+    "venue": "Federal Reserve Board working paper",
+    "year": 2013,
+    "note": "Links rebalancing flow to last-half-hour returns and volatility. From my own knowledge, not seen in the fetched text.",
+    "origin": "seed",
+    "status": "duplicate",
+    "duplicate_of": "leveraged_and_inverse_etf_rebalancing_and_market_close",
+    "updated": "2026-11-17"
+  },
   "leveraged_and_inverse_etf_rebalancing_and_market_close": {
     "title": "Leveraged and Inverse ETF Rebalancing and Market Close",
     "authors": [
@@ -1755,6 +1917,20 @@
       "letf_flow_to_depth_last_hour_es"
     ],
     "skipped_reason": null
+  },
+  "leveraged_etfs_and_market_closing_hour_momentum_cheng_madhav": {
+    "title": "Leveraged ETFs and market closing-hour momentum (Cheng & Madhavan, The Dynamics of Leveraged and Inverse Exchange-Traded Funds)",
+    "authors": [
+      "Minder Cheng",
+      "Ananth Madhavan"
+    ],
+    "venue": "Journal of Investment Management",
+    "year": 2009,
+    "note": "Related work I know of, not checked against the reference list. It estimates the rebalancing flow of leveraged ETFs.",
+    "origin": "seed",
+    "status": "duplicate",
+    "duplicate_of": "dynamics_of_leveraged_and_inverse_exchange_traded_funds",
+    "updated": "2026-11-17"
   },
   "leveraged_etfs_and_market_quality_leveraged_funds_and_the_sh": {
     "title": "Leveraged ETFs and market quality / Leveraged Funds and the Shadow Cost of Leverage",
@@ -1837,6 +2013,24 @@
     "read_by": "claude_manual_5_2026-11-10",
     "skipped_reason": "Stock-level; supports treating index reversal rules as liquidity premia that need tight cost modelling."
   },
+  "liquidity_and_market_crashes_leverage_cycle_and_the_economy": {
+    "title": "Liquidity and Market Crashes / Leverage Cycle and the Economy (Geanakoplos)",
+    "authors": [
+      "Gromb",
+      "Vayanos"
+    ],
+    "venue": "Review of Financial Studies",
+    "year": 2002,
+    "note": "From memory; related theory on margin-constrained arbitrageurs. Not confirmed as cited.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/liquidity_and_market_crashes_leverage_cycle_and_the_economy.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Theory backing forced_selling_flush_fade_es and liquidity_recovery_long_es; no new spec.",
+    "attempts": 0
+  },
   "liquidity_provision_to_leveraged_etfs_and_equity_options_reb": {
     "title": "Liquidity Provision to Leveraged ETFs and Equity Options Rebalancing Flows: Evidence from End-of-Day Stock Prices",
     "authors": [
@@ -1859,6 +2053,44 @@
       "letf_close_rebalance_continuation_nq"
     ],
     "skipped_reason": null
+  },
+  "liquidity_risk_and_expected_stock_returns": {
+    "title": "Liquidity Risk and Expected Stock Returns",
+    "authors": [
+      "Lubos Pastor",
+      "Robert Stambaugh"
+    ],
+    "venue": "Journal of Political Economy",
+    "year": 2003,
+    "note": "From memory, not confirmed as cited here. It prices aggregate liquidity risk, and builds a reversal-based liquidity measure that could be computed from index futures.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/liquidity_risk_and_expected_stock_returns.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "No ES strategy; its reversal-based liquidity measure could replace the range/volume ILLIQ proxy in liquidity_recovery_long_es as a variant.",
+    "attempts": 0
+  },
+  "long_term_performance_of_leveraged_etfs": {
+    "title": "Long Term Performance of Leveraged ETFs",
+    "authors": [
+      "L. Lu",
+      "J. Wang",
+      "G. Zhang"
+    ],
+    "venue": "SSRN",
+    "year": 2009,
+    "url": "http://ssrn.com/abstract=1344133",
+    "note": "Empirical evidence of long-horizon LETF underperformance versus static leverage.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/long_term_performance_of_leveraged_etfs.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "No ES/NQ strategy (letf_decay_harvest_pair parked).",
+    "attempts": 0
   },
   "lovers_by_night_strangers_by_day_an_investigation_of_simple": {
     "title": "Lovers by Night, Strangers by Day? An Investigation of Simple Overnight Trading Strategies",
@@ -2231,6 +2463,26 @@
     "strategies": [
       "noise_area_momentum_es"
     ]
+  },
+  "noise_trader_risk_in_financial_markets": {
+    "title": "Noise Trader Risk in Financial Markets",
+    "authors": [
+      "J. Bradford DeLong",
+      "Andrei Shleifer",
+      "Lawrence Summers",
+      "Robert Waldmann"
+    ],
+    "venue": "Journal of Political Economy",
+    "year": 1990,
+    "note": "The noise-trader-risk foundation: mispricings can deepen before correcting, which limits arbitrage.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/noise_trader_risk_in_financial_markets.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Theory only; explains why stop placement matters for fade strategies.",
+    "attempts": 0
   },
   "nonlinear_time_series_momentum": {
     "title": "Nonlinear Time Series Momentum",
@@ -2816,6 +3068,24 @@
     ],
     "skipped_reason": null
   },
+  "price_and_volume_effects_associated_with_changes_in_the_s_p": {
+    "title": "Price and Volume Effects Associated with Changes in the S&P 500 List",
+    "authors": [
+      "Lawrence Harris",
+      "Eitan Gurel"
+    ],
+    "venue": "Journal of Finance",
+    "year": 1986,
+    "note": "Documents the temporary price pressure and reversal. Recalled, not checked.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/price_and_volume_effects_associated_with_changes_in_the_s_p.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Stock-level.",
+    "attempts": 0
+  },
   "price_drift_before_u_s_macroeconomic_news_private_informatio": {
     "title": "Price Drift before U.S. Macroeconomic News: Private Information about Public Announcements?",
     "authors": [
@@ -2848,6 +3118,25 @@
     "updated": "2026-11-01",
     "read_by": "claude_manual_2_2026-11-01",
     "skipped_reason": "Not directly tradable; event-avoidance filter idea."
+  },
+  "profiting_from_predictability_smart_traders_daily_price_limi": {
+    "title": "Profiting from predictability: Smart traders, daily price limits, and investor attention",
+    "authors": [
+      "Mark Seasholes",
+      "Guojun Wu"
+    ],
+    "year": 2004,
+    "venue": "SSRN working paper (later Journal of Banking & Finance)",
+    "url": "http://ssrn.com/abstract=527182",
+    "note": "Out-of-sample test in Shanghai. Retail buys the day after upper price limit hits, prices revert within about 10 days, and a few smart traders profit. Closest thing to a tradable reversal.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/profiting_from_predictability_smart_traders_daily_price_limi.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Stock-level, China.",
+    "attempts": 0
   },
   "regression_discontinuity_and_the_price_effects_of_stock_mark": {
     "title": "Regression Discontinuity and the Price Effects of Stock Market Indexing",
@@ -3405,6 +3694,20 @@
       "pre_fomc_drift_uncertainty_es"
     ]
   },
+  "the_dynamics_of_leveraged_and_inverse_exchange_traded_funds": {
+    "title": "The Dynamics of Leveraged and Inverse Exchange-Traded Funds",
+    "authors": [
+      "Minder Cheng",
+      "Ananth Madhavan"
+    ],
+    "venue": "Barclays Global Investors (working paper)",
+    "year": 2009,
+    "note": "Independently derived the same formula and covers rebalancing flows at the close. Strong source for the end-of-day flow and gamma angle.",
+    "origin": "seed",
+    "status": "duplicate",
+    "duplicate_of": "dynamics_of_leveraged_and_inverse_exchange_traded_funds",
+    "updated": "2026-11-17"
+  },
   "the_earnings_announcement_premium_and_trading_volume": {
     "title": "The Earnings Announcement Premium and Trading Volume",
     "authors": [
@@ -3769,6 +4072,25 @@
     "read_by": "claude_manual_4_2026-11-01",
     "skipped_reason": "No strategy."
   },
+  "the_price_effects_of_s_p_500_index_changes_is_the_demand_for": {
+    "title": "The Price Effects of S&P 500 Index Changes: Is the Demand for Stocks Perfectly Elastic?",
+    "authors": [
+      "Honghui Chen",
+      "Gregory Noronha",
+      "Vijay Singal"
+    ],
+    "venue": "Journal of Finance",
+    "year": 2004,
+    "note": "The same authors' related paper. It shows the asymmetry between additions and deletions. Recalled, not checked.",
+    "origin": "seed",
+    "status": "summarized",
+    "read_mode": "abstract_only",
+    "summary": "papers/summaries/the_price_effects_of_s_p_500_index_changes_is_the_demand_for.md",
+    "updated": "2026-11-17",
+    "read_by": "claude_manual_7_2026-11-17",
+    "skipped_reason": "Stock-level; basis of index_deletion_rebound_stocks (parked).",
+    "attempts": 0
+  },
   "the_price_impact_of_hedging_expiring_index_options": {
     "title": "The Price Impact of Hedging Expiring Index Options",
     "authors": [
@@ -3984,10 +4306,10 @@
     "status": "summarized",
     "attempts": 1,
     "url": "https://doi.org/10.1016/j.jfineco.2018.05.009",
-    "updated": "2026-11-16",
+    "updated": "2026-11-17",
     "summary": "papers/summaries/trading_volume_predictions_and_intraday_momentum_market_intr.md",
     "skipped_reason": "Covered by noise_area_last_half_hour_es (first half-hour → last half-hour); the 11:30-12:00 add-on was added there as a variant.",
-    "read_mode": "abstract_only"
+    "read_mode": "full_pdf"
   },
   "turn_of_the_month_window_dressing_behavior": {
     "title": "Turn-of-the-Month: Window Dressing Behavior",

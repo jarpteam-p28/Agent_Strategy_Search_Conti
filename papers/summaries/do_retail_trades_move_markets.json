@@ -1,0 +1,49 @@
+{
+  "title": "Do Retail Trades Move Markets?",
+  "authors": [
+    "Brad M. Barber",
+    "Terrance Odean",
+    "Ning Zhu"
+  ],
+  "year": 2009,
+  "source_url": null,
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Retail order imbalances (TAQ small trades, 1983-2001) persist for weeks and move prices in the same direction short-term; stocks heavily bought by retail underperform over the next year.",
+  "findings": [
+    {
+      "statement": "Weekly imbalance predicts next-week returns positively; annual horizon negatively (≈ −4.4%/yr spread).",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Correlated retail demand creates temporary price pressure."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "stocks"
+    ],
+    "sample_period": "1983-2001",
+    "data_frequency": "weekly",
+    "holding_period": "weeks-1 year"
+  },
+  "reported_results": {
+    "headline": "Retail order imbalances (TAQ small trades, 1983-2001) persist for weeks and move prices in the same direction short-term; stocks heavily bought by retail underperform over the next year.",
+    "key_stats": []
+  },
+  "tradable_edge": "Stock-level.",
+  "angles": [],
+  "decay_risk": {
+    "level": "high",
+    "reason": ""
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Summarized from the published abstract and well-known results; full text not fetched (not on this session's web allowlist).",
+    "Read by Claude in a chat session (manual run 7, 2026-11-17)."
+  ],
+  "referenced_papers_worth_reading": []
+}

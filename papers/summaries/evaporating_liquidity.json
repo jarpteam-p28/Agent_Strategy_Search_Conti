@@ -6,9 +6,13 @@
   "year": 2012,
   "source_url": "https://nber.org/papers/w17653",
   "paper_type": "academic",
-  "read_mode": "abstract_only",
+  "read_mode": "full_pdf",
   "one_line": "Short-term reversal returns (a proxy for paid liquidity provision) are predictable with the VIX: expected returns and Sharpe ratios spike when VIX rises in turmoil (e.g. 2007-09), even for industry portfolios that earn little on average.",
   "findings": [
+    {
+      "statement": "Reversal-strategy returns (liquidity provision) rise ~0.22 pp/day per normalized VIX point (≈ 0.014 pp per annualized VIX point); expected returns rose ~10× in 2007-09, Sharpe doubled.",
+      "evidence": "Nagel, NBER w17653, CRSP stocks 1998-2010."
+    },
     {
       "statement": "Reversal strategy returns vary strongly over time and are predicted by VIX.",
       "evidence": "RFS 25(7), 2012."
@@ -37,7 +41,7 @@
     "headline": "Short-term reversal returns (a proxy for paid liquidity provision) are predictable with the VIX: expected returns and Sharpe ratios spike when VIX rises in turmoil (e.g. 2007-09), even for industry portfolios that earn little on average.",
     "key_stats": []
   },
-  "tradable_edge": "Index angle (speculative): short-term reversal in ES works mainly in high-volatility regimes — a regime filter for the overnight-reversal spec.",
+  "tradable_edge": "Supports conditioning every ES/NQ reversal spec (close_reversal_overnight_es, forced_selling_flush_fade_es, liquidity_recovery_long_es) on high volatility — use AvgRange top tercile as the VIX proxy.",
   "angles": [
     "Condition overnight_reversal_first_hour_es on high AvgRange"
   ],
@@ -47,7 +51,8 @@
   },
   "data_fit": "Cross-sectional; the ES version would be a regime filter only.",
   "caveats": [
-    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline."
+    "Read by Claude in a chat session (manual run 3), not by the weekly pipeline.",
+    "Full NBER text read (2026-11-17, manual run 7)."
   ],
   "referenced_papers_worth_reading": []
 }

@@ -1,12 +1,16 @@
 # Market Intraday Momentum
 
 **Authors:** Lei Gao, Yufeng Han, Sophia Zhengzi Li, Guofu Zhou  
-**Year:** 2018  **Type:** academic  **Read:** abstract_only  
+**Year:** 2018  **Type:** academic  **Read:** full_pdf  
 **Source:** https://doi.org/10.1016/j.jfineco.2018.05.009
 
 > The market's return in the first half-hour of the day, measured from the prior close, predicts the sign of the return in the last half-hour, and the 11:30–12:00 half-hour adds to that signal.
 
 ## Findings
+- SPY 1993-2013: first half-hour (prior close → 10:00) predicts the last half-hour, slope 6.94 (t = 4.08), R² 1.6%; adding 15:00-15:30 lifts R² to 2.6%; out-of-sample R² 1.2-1.8%. — *Gao, Han, Li & Zhou, full working paper.*
+- Timing (long if r1 > 0 else short, last 30 min): 6.67%/yr, vol 6.2%, Sharpe 1.08, hit 54%; ≈ 6.5%/yr after costs post-2005.
+- Predictability triples in high-volatility and high-volume terciles (R² 3.3% vs 0.6%), is stronger in recessions and on FOMC/CPI/GDP days, and stronger when r1 > 0 (R² 2.3-4.5%) than when r1 < 0 (0.3-0.9%).
+- QQQ: in-sample R² 1.4%, out-of-sample 0.7%; FTSE futures out-of-sample 1.9%.
 - On SPY and S&P 500 futures, the first half-hour return (prior day's close to 10:00 ET) positively predicts the last half-hour return (15:30–16:00). The paper reports this in-sample and out-of-sample. — *From memory, not verified against the text: about 1993–2013, in-sample R² of roughly 1–2%, statistically significant. Treat the exact numbers as unconfirmed.*
 - The second-to-last half-hour return (about 11:30–12:00, the 12th half-hour) is a second, smaller predictor of the last half-hour. Using it together with the first half-hour raises explanatory power. — *From memory: both coefficients are positive and significant. Exact values unconfirmed.*
 - The effect is stronger on high-volatility days, high-volume days, recession days and days with major macro news releases. — *From memory. The paper has subsample splits, and the effect is stronger in these regimes.*
@@ -57,6 +61,7 @@ The paper has been public since 2018 and is widely cited. Follow-up papers repor
 - I am not sure whether the paper's economic-gain numbers include costs. I assume they are mostly gross.
 - The paper's own sample ends in 2013, so it says nothing about the 0DTE era.
 - The long-only part of the signal may mostly be market drift in the last half-hour, so beat an 'always long 15:30–16:00' baseline.
+- Full working-paper text read (2026-11-17, manual run 7).
 
 ## Cited papers worth reading
 - Intraday Momentum: The First Half-Hour Return Predicts the Last Half-Hour Return (working paper, earlier version of this paper) (2014)

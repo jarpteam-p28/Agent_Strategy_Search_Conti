@@ -1,0 +1,50 @@
+{
+  "title": "Intraday Share Price Volatility and Leveraged ETF Rebalancing",
+  "authors": [
+    "Pauline Shum",
+    "Walid Hejazi",
+    "Edgar Haryanto",
+    "Arthur Rodier"
+  ],
+  "year": 2016,
+  "source_url": null,
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Leveraged-ETF rebalancing raises end-of-day volatility in S&P 500 stocks, mainly in volatile periods such as 2008 (Review of Finance 20(6)); the effect is small in calm markets.",
+  "findings": [
+    {
+      "statement": "Late-day volatility rises with implied LETF rebalancing demand, concentrated in high-volatility regimes.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Mandated same-direction rebalancing flow."
+  },
+  "setting": {
+    "markets": [
+      "US equities"
+    ],
+    "instruments": [
+      "S&P 500 stocks"
+    ],
+    "sample_period": "2006-2011",
+    "data_frequency": "intraday",
+    "holding_period": "last hour"
+  },
+  "reported_results": {
+    "headline": "Leveraged-ETF rebalancing raises end-of-day volatility in S&P 500 stocks, mainly in volatile periods such as 2008 (Review of Finance 20(6)); the effect is small in calm markets.",
+    "key_stats": []
+  },
+  "tradable_edge": "Supports conditioning the LETF close specs on the volatility regime (AvgRange tercile).",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": ""
+  },
+  "data_fit": "ES 1-min Dec 2013 → Sep 2026, NQ 1-min Jul 2021 → Sep 2026 (2024+ protected).",
+  "caveats": [
+    "Summarized from the published abstract and well-known results; full text not fetched (not on this session's web allowlist).",
+    "Read by Claude in a chat session (manual run 7, 2026-11-17)."
+  ],
+  "referenced_papers_worth_reading": []
+}

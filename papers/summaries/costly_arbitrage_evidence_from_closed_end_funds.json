@@ -1,0 +1,47 @@
+{
+  "title": "Costly Arbitrage: Evidence from Closed-End Funds",
+  "authors": [
+    "Jeffrey Pontiff"
+  ],
+  "year": 1996,
+  "source_url": null,
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Closed-end fund discounts are larger and more persistent when arbitrage is costly — when the fund's holdings are hard to hedge (high idiosyncratic risk), dividends are low and interest rates high.",
+  "findings": [
+    {
+      "statement": "Mispricing size rises with idiosyncratic risk and holding costs.",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Arbitrage costs determine how much mispricing survives."
+  },
+  "setting": {
+    "markets": [
+      "US"
+    ],
+    "instruments": [
+      "closed-end funds"
+    ],
+    "sample_period": "1965-1985",
+    "data_frequency": "monthly",
+    "holding_period": "-"
+  },
+  "reported_results": {
+    "headline": "Closed-end fund discounts are larger and more persistent when arbitrage is costly — when the fund's holdings are hard to hedge (high idiosyncratic risk), dividends are low and interest rates high.",
+    "key_stats": []
+  },
+  "tradable_edge": "No strategy.",
+  "angles": [],
+  "decay_risk": {
+    "level": "low",
+    "reason": ""
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Summarized from the published abstract and well-known results; full text not fetched (not on this session's web allowlist).",
+    "Read by Claude in a chat session (manual run 7, 2026-11-17)."
+  ],
+  "referenced_papers_worth_reading": []
+}

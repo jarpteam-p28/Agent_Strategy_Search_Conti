@@ -209,6 +209,10 @@ notes:
 - >-
   Li, Sakkas & Urquhart (2022): first→last half-hour predictability is concentrated in crises and illiquid
   periods — report results by AvgRange tercile.
+- >-
+  Gao et al. full text: the edge is mostly on days with POSITIVE first-half-hour returns (R² 2.3-4.5%
+  vs 0.3-0.9%) and in high-volatility/high-volume terciles — report long and short sides and volatility
+  terciles separately. QQQ out-of-sample R² only 0.7%.
 review:
   scores:
     why_strength: 4

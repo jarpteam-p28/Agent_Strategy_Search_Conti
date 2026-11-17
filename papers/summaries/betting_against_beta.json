@@ -1,0 +1,52 @@
+{
+  "title": "Betting Against Beta",
+  "authors": [
+    "Andrea Frazzini",
+    "Lasse Heje Pedersen"
+  ],
+  "year": 2014,
+  "source_url": null,
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "Leverage-constrained investors bid up high-beta assets, so a long low-beta / short high-beta (leveraged to beta-neutral) factor earns large risk-adjusted returns across US and international stocks, bonds and futures.",
+  "findings": [
+    {
+      "statement": "BAB factor Sharpe ≈ 0.78 in US stocks (1926-2012); positive in 18 of 19 countries.",
+      "evidence": ""
+    },
+    {
+      "statement": "BAB returns fall when funding constraints tighten (TED spread).",
+      "evidence": ""
+    }
+  ],
+  "why": {
+    "pattern": "Leverage constraints."
+  },
+  "setting": {
+    "markets": [
+      "global"
+    ],
+    "instruments": [
+      "stocks, bonds, futures"
+    ],
+    "sample_period": "1926-2012",
+    "data_frequency": "monthly",
+    "holding_period": "monthly"
+  },
+  "reported_results": {
+    "headline": "Leverage-constrained investors bid up high-beta assets, so a long low-beta / short high-beta (leveraged to beta-neutral) factor earns large risk-adjusted returns across US and international stocks, bonds and futures.",
+    "key_stats": []
+  },
+  "tradable_edge": "Cross-asset factor; no single-instrument ES/NQ test.",
+  "angles": [],
+  "decay_risk": {
+    "level": "medium",
+    "reason": ""
+  },
+  "data_fit": "Single-stock study — not testable on our ES/NQ data.",
+  "caveats": [
+    "Summarized from the published abstract and well-known results; full text not fetched (not on this session's web allowlist).",
+    "Read by Claude in a chat session (manual run 7, 2026-11-17)."
+  ],
+  "referenced_papers_worth_reading": []
+}
