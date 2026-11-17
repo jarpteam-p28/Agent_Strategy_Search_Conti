@@ -1,0 +1,209 @@
+id: liquidity_recovery_long_es
+name: Liquidity-Recovery Long after a Stress Spike (ES/NQ daily, long only, time exit)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/market_liquidity_and_funding_liquidity.md
+  papers:
+  - title: Market Liquidity and Funding Liquidity
+    authors:
+    - Markus K. Brunnermeier
+    - Lasse Heje Pedersen
+    venue: Review of Financial Studies
+    year: 2009
+    url: https://doi.org/10.1093/rfs/hhn098
+    note: >-
+      Theory paper, read from the abstract and memory only. It supplies the WHY (margin and loss spirals
+      force levered liquidity providers out; liquidity is fragile and common across assets). It gives
+      no trading rules or effect sizes.
+finding: >-
+  Theory only, with no sample. Levered liquidity providers rely on collateralised funding. When volatility
+  rises or they lose money, margins go up and capital shrinks, so they must cut positions and stop providing
+  liquidity. Market liquidity then dries up across assets at once and prices overshoot fundamentals (loss
+  and margin spirals). The paper's cited episodes are 1987, 1998 and 2007-08. It reports no trading statistics.
+why: >-
+  Institutional constraint / forced seller. Margin calls and VaR limits make deleveraging mechanical,
+  so the overshoot comes from forced selling, not from information. Our framing differs from a price-drop
+  rebound. We do not buy because price fell. We buy when there is evidence that the spiral has stopped,
+  meaning price impact per unit of volume (our illiquidity proxy) has peaked and is falling. That is when
+  the forced-out liquidity providers start coming back and the overshoot unwinds. Entering on the liquidity
+  recovery rather than the price low is meant to avoid catching the falling knife while the spiral is
+  still running.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min bars aggregated to daily RTH statistics; trades at RTH close
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC)
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    At the RTH close on day t, compute ILLIQ_d = (RTH high - RTH low)/RTH open divided by RTH volume,
+    and smooth it with a 5-day average ILLIQ5. Stress state: ILLIQ5 was above the 90th percentile of its
+    trailing 252-day distribution at some point in the last 10 sessions, AND ES is down at least 5% from
+    its 20-day closing high. Trigger: the first close on which ILLIQ5 has fallen at least 25% from its
+    peak in that stress window AND today's ILLIQ_d is below ILLIQ5. Buy 1 contract at the close.
+  short: null
+  filters:
+  - >-
+    Only one position at a time; no new entry within 10 sessions of the last exit (cluster lockout, because
+    one stress episode should give one trade)
+  - 'Warm-up: 252 sessions of ILLIQ history before the first trade'
+  - >-
+    Volume: drop roll days, or use summed volume across contracts, so rollover does not fake a liquidity
+    spike
+exit:
+  stop_loss: Close below the stress-window low minus 0.5 x ATR(20) daily, checked on the close
+  take_profit: 'None in the base test. Variant: exit at the 20-day close high that held before the stress'
+  time_exit: Exit at the RTH close 10 trading days after entry
+  other:
+  - >-
+    Exit early if a new stress window opens (ILLIQ5 makes a new high above its previous peak), because
+    the spiral has restarted
+position_sizing:
+  development: 1 ES contract fixed (1 NQ for the NQ run)
+  live: >-
+    Volatility targeting: contracts = fixed dollar risk (e.g. $10,000) / (ATR(20) x point value), capped
+    at 3x the development size
+parameters:
+- name: stress_percentile
+  default: 90
+  source: assumption
+  test_range: 80, 85, 90, 95
+- name: illiq_smoothing_days
+  default: 5
+  source: assumption
+  test_range: 3, 5, 10
+- name: recovery_drop_from_peak
+  default: 0.25
+  source: assumption
+  test_range: 0.15-0.40
+- name: drawdown_from_high_filter
+  default: 0.05
+  source: assumption
+  test_range: 0.03-0.10
+- name: hold_days
+  default: 10
+  source: 'assumption (summary: holding hours to days)'
+  test_range: 3, 5, 10, 20
+- name: stop_atr_mult
+  default: 0.5
+  source: assumption
+  test_range: 0-1.5
+expectations:
+- >-
+  The paper gives no numbers. We expect positive average 10-day returns after the trigger, above the unconditional
+  10-day ES return over the same sample
+- >-
+  Entries on the liquidity-recovery trigger should have smaller adverse excursion than entries at the
+  stress peak or at the first 5% drawdown
+- Few trades (roughly 10-25 over 2014-2026), so expect wide confidence intervals
+data_requirements:
+- ES 1-min RTH OHLCV 2013-12 to 2026-09 (have)
+- NQ 1-min 2021-07 onward (have)
+- 'Optional: VIX daily to cross-check the proxy (not in inventory)'
+data_available: 'yes'
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - >-
+    Compare with buying at the stress peak, and with buying after a plain 5% drawdown, to see whether
+    the liquidity-recovery trigger adds anything
+  - Compare with always-long ES over the same 10-day windows
+  - >-
+    List every trade with its date. Check whether the result rests on one episode (Mar 2020, Aug 2015,
+    Feb 2018, 2022, Aug 2024) by dropping each in turn
+  - Report pre- and post-2022 results
+  - Report gross vs net (~$5 round turn ES); this matters less with multi-day holds
+  - >-
+    Check overlap with deleveraging_rebound_es_daily trade dates, because a high overlap means this adds
+    nothing
+what_would_kill_it: >-
+  Faster central-bank backstops that end spirals before our trigger, so the rebound has already happened.
+  Counter-cyclical or fixed margin rules. Crowding of vol-targeting and dip-buying funds, so liquidity
+  recovers instantly with no overshoot left. Also, if the proxy just tracks volatility, the strategy is
+  a VIX mean-reversion trade in disguise.
+notes:
+- Read from the abstract only. All thresholds are our own constructs.
+- >-
+  Chronological 80/20 split on 2014-2026 puts only about 2 stress episodes in out-of-sample. Treat the
+  OOS result as weak evidence.
+open_questions:
+- >-
+  Is range/volume a good enough proxy for market depth? Tick bid/ask data covers only 2021-2023 (ES),
+  so we could check it against the quoted spread and size there
+- Use RTH or ETH volume and range? Stress often peaks overnight
+- Volume has a long-run trend and roll effects. Is a 252-day percentile enough to normalise it?
+- Should the stress state also require a volatility spike, or is ILLIQ alone the point?
+- >-
+  How different is this in practice from deleveraging_rebound_es_daily (unknown trigger details, written
+  from memory)?
+related_strategies:
+- deleveraging_rebound_es_daily
+- forced_selling_flush_fade_es
+- trend_risk_timing_overlay_es
+variants:
+- 'Intraday version: 30-min ILLIQ on 1-min bars, holding to the next close'
+- 'NQ-leads-ES check: trigger on NQ ILLIQ, trade ES'
+review:
+  scores:
+    why_strength: 4
+    persistence: 3
+    simplicity: 2
+    testability: 3
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    WHY is genuinely structural (forced deleveraging via margin/loss spirals) and the framing - enter
+    on liquidity recovery, not the price low - is our own, not copied from a theory paper that has no
+    rules.
+  - >-
+    Sample is tiny: ~10-25 trades over 12 years, with only ~2 episodes in a chronological 20% OOS. Six
+    parameters, all assumptions with tuning ranges, on that sample is a recipe for curve-fitting.
+  - >-
+    The range/volume ILLIQ proxy is unverified on index futures: in crashes volume can rise faster than
+    range, so the ratio may not spike, or may just mirror realised volatility (making this a VIX mean-reversion
+    trade in disguise, as the spec itself admits).
+  - >-
+    Rule stack is heavy for the event count: stress percentile + drawdown filter + 25% recovery + daily-below-average
+    condition + ATR stop + time exit + early stress-restart exit + 10-day lockout.
+  - Possible duplicate of deleveraging_rebound_es_daily; overlap unresolved.
+  - >-
+    Good extra checks already planned (drop-one-episode, baselines vs stress-peak and plain 5% drawdown,
+    pre/post 2022), and multi-day holds keep costs negligible.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Validate the proxy first: plot ILLIQ5 through Aug 2015, Feb 2018, Mar 2020, 2022 and Aug 2024; correlate
+    it with the quoted spread/depth from the 2021-23 ES tick data and with realised volatility. If it
+    doesn't peak in those episodes, or is ~collinear with realised vol, change the proxy or drop the strategy.
+  - >-
+    Freeze all parameters at their defaults. No in-sample optimisation given ~15 events; show only a coarse
+    robustness grid and require a broad positive plateau, not a best cell.
+  - >-
+    Replace the chronological 80/20 as the main validation with an episode-level event study (forward
+    1/3/5/10/20-day returns per stress episode), drop-one-episode tests and a block bootstrap over episodes;
+    keep 80/20 only as a sanity check.
+  - >-
+    Add a volatility-only control (same rules, trigger = realised vol down 25% from its stress peak).
+    The ILLIQ trigger must beat it, as well as the stress-peak and plain-5%-drawdown baselines, to justify
+    itself.
+  - >-
+    Simplify: one stress condition, one recovery trigger, a time exit plus one stop. Drop the stress-restart
+    early exit and the 'today below ILLIQ5' condition unless the event study shows they matter.
+  - >-
+    Resolve overlap with deleveraging_rebound_es_daily (pin down its trigger and measure trade-date overlap)
+    before coding; merge or park this one if overlap is high.
+  - >-
+    Specify the data handling: RTH vs ETH range/volume (pick one), roll handling (summed volume across
+    contracts or calendar roll-day exclusion), RTH-only ATR and warm-up, the NQ run's drawdown filter
+    defined on NQ itself, and stop exit at the close on the day it triggers.
+  - >-
+    Consider reframing as a regime overlay (cut size during stress, re-risk on recovery) on other strategies
+    if the standalone trade count stays this thin.

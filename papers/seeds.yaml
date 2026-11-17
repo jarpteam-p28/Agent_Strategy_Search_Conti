@@ -435,3 +435,183 @@
   note: >-
     Source of the price-impact (microstructure invariance) formula used to size the flow impact; related
     to market impact of large forced sellers in crashes.
+- title: >-
+    Leveraged ETFs and market closing-hour momentum (Cheng & Madhavan, The Dynamics of Leveraged and Inverse
+    Exchange-Traded Funds)
+  authors:
+  - Minder Cheng
+  - Ananth Madhavan
+  venue: Journal of Investment Management
+  year: 2009
+  note: >-
+    Related work I know of, not checked against the reference list. It estimates the rebalancing flow
+    of leveraged ETFs.
+- title: Demand Curves for Stocks Do Slope Down
+  authors:
+  - Andrei Shleifer
+  venue: Journal of Finance
+  year: 1986
+  note: Original S&P 500 addition price-pressure paper. Recalled, not checked against the reference list.
+- title: Price and Volume Effects Associated with Changes in the S&P 500 List
+  authors:
+  - Lawrence Harris
+  - Eitan Gurel
+  venue: Journal of Finance
+  year: 1986
+  note: Documents the temporary price pressure and reversal. Recalled, not checked.
+- title: 'The Price Effects of S&P 500 Index Changes: Is the Demand for Stocks Perfectly Elastic?'
+  authors:
+  - Honghui Chen
+  - Gregory Noronha
+  - Vijay Singal
+  venue: Journal of Finance
+  year: 2004
+  note: >-
+    The same authors' related paper. It shows the asymmetry between additions and deletions. Recalled,
+    not checked.
+- title: Liquidity Risk and Expected Stock Returns
+  authors:
+  - Lubos Pastor
+  - Robert Stambaugh
+  venue: Journal of Political Economy
+  year: 2003
+  note: >-
+    From memory, not confirmed as cited here. It prices aggregate liquidity risk, and builds a reversal-based
+    liquidity measure that could be computed from index futures.
+- title: Liquidity and Market Crashes / Leverage Cycle and the Economy (Geanakoplos)
+  authors:
+  - Gromb
+  - Vayanos
+  venue: Review of Financial Studies
+  year: 2002
+  note: From memory; related theory on margin-constrained arbitrageurs. Not confirmed as cited.
+- title: Betting Against Beta
+  authors:
+  - Andrea Frazzini
+  - Lasse Heje Pedersen
+  venue: Journal of Financial Economics
+  year: 2014
+  note: >-
+    A follow-on by the same author. It uses funding constraints as the WHY for a tradable factor. Not
+    cited in this paper (it appeared later).
+- title: 'Paying Attention: Overnight Returns and the Hidden Cost of Buying at the Open'
+  authors:
+  - Berkman, H.
+  - Koch, P.
+  - Tuttle, L.
+  - Zhang, Y.
+  venue: Journal of Financial and Quantitative Analysis
+  year: 2012
+  note: >-
+    The foundation: attention-driven retail buying at the open inflates overnight returns, which then
+    reverse intraday. Directly gives the WHY and an intraday-reversal trade idea.
+- title: Do Retail Trades Move Markets?
+  authors:
+  - Barber, B.
+  - Odean, T.
+  - Zhu, N.
+  venue: Review of Financial Studies
+  year: 2009
+  note: >-
+    Shows retail order imbalances persist for weeks and that heavy retail buying is followed by long-run
+    underperformance; supports both the persistence and reversal findings.
+- title: 'Profiting from predictability: Smart traders, daily price limits, and investor attention'
+  authors:
+  - Mark Seasholes
+  - Guojun Wu
+  year: 2004
+  venue: SSRN working paper (later Journal of Banking & Finance)
+  url: http://ssrn.com/abstract=527182
+  note: >-
+    Out-of-sample test in Shanghai. Retail buys the day after upper price limit hits, prices revert within
+    about 10 days, and a few smart traders profit. Closest thing to a tradable reversal.
+- title: The high-volume return premium
+  authors:
+  - Simon Gervais
+  - Ron Kaniel
+  - Dan H. Mingelgrin
+  year: 2001
+  venue: Journal of Finance
+  note: >-
+    Stocks with unusually high volume over a day or week earn higher returns over the following month.
+    Visibility and short-sale constraints explain it. Directly gives a return signal, opposite in sign
+    to the reversal idea.
+- title: Do noise traders move markets?
+  authors:
+  - Brad M. Barber
+  - Terrance Odean
+  - Ning Zhu
+  year: 2006
+  venue: SSRN working paper
+  url: http://ssrn.com/abstract=869827
+  note: >-
+    Links retail order flow (the same broker datasets) to price pressure and subsequent returns. It would
+    give the missing return evidence.
+- title: Noise Trader Risk in Financial Markets
+  authors:
+  - J. Bradford DeLong
+  - Andrei Shleifer
+  - Lawrence Summers
+  - Robert Waldmann
+  venue: Journal of Political Economy
+  year: 1990
+  note: 'The noise-trader-risk foundation: mispricings can deepen before correcting, which limits arbitrage.'
+- title: Contrarian Investment, Extrapolation, and Risk
+  authors:
+  - Josef Lakonishok
+  - Andrei Shleifer
+  - Robert Vishny
+  venue: Journal of Finance
+  year: 1994
+  note: >-
+    Evidence for the value/glamour anomaly. Investors extrapolate growth, and the anomaly is not explained
+    by risk.
+- title: 'Costly Arbitrage: Evidence from Closed-End Funds'
+  authors:
+  - Jeffrey Pontiff
+  venue: Quarterly Journal of Economics
+  year: 1996
+  note: Tests how arbitrage costs and idiosyncratic risk determine the size of the mispricing.
+- title: The Dynamics of Leveraged and Inverse Exchange-Traded Funds
+  authors:
+  - Minder Cheng
+  - Ananth Madhavan
+  venue: Barclays Global Investors (working paper)
+  year: 2009
+  note: >-
+    Independently derived the same formula and covers rebalancing flows at the close. Strong source for
+    the end-of-day flow and gamma angle.
+- title: Long Term Performance of Leveraged ETFs
+  authors:
+  - L. Lu
+  - J. Wang
+  - G. Zhang
+  venue: SSRN
+  year: 2009
+  url: http://ssrn.com/abstract=1344133
+  note: Empirical evidence of long-horizon LETF underperformance versus static leverage.
+- title: A Dynamic Model for Hard-to-Borrow Stocks
+  authors:
+  - M. Avellaneda
+  - M. D. Lipkin
+  venue: RISK Magazine / SSRN
+  year: 2009
+  url: http://ssrn.com/abstract=1357069
+  note: Borrow-cost model, which matters for any short-LETF decay trade.
+- title: Intraday Share Price Volatility and Leveraged ETF Rebalancing
+  authors:
+  - Shum, P.
+  - Hejazi, W.
+  - Haryanto, E.
+  - Rodier, A.
+  year: 2016
+  venue: Review of Finance
+  note: Tests whether rebalancing flow moves late-day volatility. Cited from memory, not checked.
+- title: Leveraged and Inverse ETF Rebalancing
+  authors:
+  - Tugkan Tuzun
+  venue: Federal Reserve Board working paper
+  year: 2013
+  note: >-
+    Links rebalancing flow to last-half-hour returns and volatility. From my own knowledge, not seen in
+    the fetched text.

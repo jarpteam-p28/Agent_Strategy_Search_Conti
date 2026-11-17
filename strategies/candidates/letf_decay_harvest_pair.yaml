@@ -1,0 +1,290 @@
+id: letf_decay_harvest_pair
+name: >-
+  Leveraged-ETF Decay Harvest: short the bull/bear pair, delta-hedged with index futures (idea, synthetic
+  pre-test on ES/NQ)
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/path_dependence_of_leveraged_etf_returns.md
+  papers:
+  - title: Path-Dependence of Leveraged ETF Returns
+    authors:
+    - Marco Avellaneda
+    - Stanley Zhang
+    venue: SIAM Journal on Financial Mathematics
+    year: 2010
+    url: https://doi.org/10.1137/090760805
+    note: >-
+      Gives the variance-drag identity log(L_t/L_0)=β log(S_t/S_0) − (β²−β)/2·σ²t + fees. No trading rule
+      is tested.
+  - title: The Dynamics of Leveraged and Inverse Exchange-Traded Funds
+    authors:
+    - Minder Cheng
+    - Ananth Madhavan
+    venue: BGI working paper
+    year: 2009
+    note: >-
+      Same identity, plus the close rebalancing flows (the flow angle is already covered by our letf_*
+      strategies).
+  - title: A Dynamic Model for Hard-to-Borrow Stocks
+    authors:
+    - M. Avellaneda
+    - M. D. Lipkin
+    year: 2009
+    url: http://ssrn.com/abstract=1357069
+    note: Borrow cost is the main friction for the short leg.
+finding: >-
+  Avellaneda and Zhang studied 56 ProShares and Direxion leveraged ETFs on daily data from Jan 2008 to
+  Mar 2009. Daily-reset leveraged ETFs track β×log index return minus (β²−β)/2 × realized variance, plus
+  funding and fee terms. Average tracking error is mostly under ~1-2% for 2x long funds and larger for
+  short and 3x funds. Over 60-day windows in 2008, LETFs mostly lagged static leverage, except when the
+  index trended strongly at low volatility. The paper backtests no trade and includes no costs or borrow
+  fees.
+why: >-
+  Execution mechanics plus a product mandate. The issuer must reset leverage every day, so it buys after
+  up days and sells after down days at the close. Holders are therefore structurally short realized variance
+  and long convexity. Retail demand keeps these products large, and the reset is contractual, so the mechanics
+  persist. Important nuance (ours, not the paper's): the drag shows up in the MEDIAN path, not the mean.
+  With zero autocorrelation in daily returns, a short-LETF position hedged with static β× futures has
+  about zero expected value before fees: it wins small and often, and loses big in strong trends. So the
+  real, durable edge in a hedged short has three parts: (1) the expense ratio the short collects (~0.9-1%/yr
+  per fund), (2) any negative daily autocorrelation in the index, which makes the issuer's buy-high/sell-low
+  rebalancing lose real money (partly to us), and (3) the funding/swap spread embedded in the fund. Against
+  that stand borrow cost and tail risk. The spec is built so the backtest shows which of these terms actually
+  pays.
+market:
+  instruments:
+  - TQQQ
+  - SQQQ
+  - SSO
+  - SDS
+  - UPRO
+  - SPXU
+  - NQ
+  - ES
+  bar_size: 1 day (close-to-close), hedge checked at the 15:59 ET close
+  session: RTH 09:30-16:00 America/New_York, positions marked at the 16:00 close
+  universe: >-
+    Index LETF pairs on Nasdaq-100 and S&P 500 (β = 2 and 3). Sector and single-stock LETFs are a later
+    angle.
+direction: long_short
+entry:
+  long: >-
+    Long futures hedge (NQ for TQQQ/SQQQ, ES for UPRO/SPXU/SSO/SDS) sized to the net delta of the short
+    LETF legs, so the book starts delta-neutral.
+  short: >-
+    On the first trading day of each month, at the close, short equal dollar notional of the bull and
+    the bear LETF on the same index. Equal dollars make the pair net short (β − (−β))... not neutral:
+    the pair is delta-neutral at inception because +β and −β legs offset. The futures hedge only covers
+    drift that builds up after that.
+  filters:
+  - 'Base version: always on (unconditional). This is the falsification baseline.'
+  - >-
+    Regime variant: open only when 20-day realized variance of ES/NQ (from 1-min or daily closes) is above
+    its trailing 1-year median. Higher variance means larger expected decay but also larger tail risk;
+    test both sides of the split.
+  - >-
+    Skip opening if the borrow fee on either leg is above the max_borrow_fee threshold (live only; unknown
+    in backtest).
+  - >-
+    Skip opening if the 20-day index return is beyond ±trend_cutoff × 20-day vol. Strong trends are where
+    convexity beats decay.
+exit:
+  stop_loss: >-
+    Close the whole book if the mark-to-market loss exceeds stop_pct of gross short notional (default
+    8%). That is roughly a 2.5-3 sigma monthly index move for 3x funds.
+  take_profit: null
+  time_exit: >-
+    Close everything at the close on the last trading day of the month, then reopen fresh under the entry
+    rules. The monthly roll resets the delta and caps how far path dependence can run.
+  other:
+  - >-
+    Delta band: when net book delta (bull leg + bear leg + futures) exceeds delta_band of gross short
+    notional, rebalance at the close with futures back to zero. The paper's 5% band gave a rebalance every
+    ~9-40 days.
+  - Hard exit before known extreme-vol events is NOT used. Don't add discretionary filters.
+position_sizing:
+  development: >-
+    Fixed $100,000 short notional per LETF leg (fixed per pair for the synthetic ES/NQ test), with futures
+    hedge rounded to whole contracts (use MES/MNQ equivalence for accuracy). No compounding.
+  live: >-
+    Volatility targeting on the short-gamma exposure. The book's P&L variance scales with (β²−β)·σ² ×
+    notional, so set gross notional = risk_budget / ((β²−β)/2 · σ²_20d · 21) with a cap. Calm months get
+    more notional, stressed months less. Optional variant: keep notional constant when vol is high, to
+    take the bigger decay; compare the two in-sample only.
+parameters:
+- name: beta
+  default: 3
+  source: paper (2x and 3x funds)
+  test_range: 2, 3
+- name: holding_period_days
+  default: 21
+  source: paper uses 60-day windows; monthly roll is our assumption
+  test_range: 5, 10, 21, 42, 63
+- name: delta_band
+  default: 0.05
+  source: paper (5% band replication)
+  test_range: 0.02, 0.05, 0.10, none (static hedge)
+- name: stop_pct
+  default: 0.08
+  source: assumption
+  test_range: 0.05, 0.08, 0.12, none
+- name: vol_regime_lookback_days
+  default: 20
+  source: assumption (paper uses 5-day vol for fit)
+  test_range: 5, 10, 20, 60
+- name: trend_cutoff_sigmas
+  default: 1.5
+  source: assumption, from the paper's break-even band (eq. 13-15)
+  test_range: 1.0, 1.5, 2.0, off
+- name: max_borrow_fee_annual
+  default: 0.03
+  source: assumption
+  test_range: live only
+- name: expense_ratio_annual
+  default: 0.0095
+  source: assumption (ProShares/Direxion typical)
+  test_range: 0.0075-0.0100 in synthetic test
+open_questions:
+- >-
+  Mean vs median: in theory the hedged short has about zero expected gross P&L if daily returns are uncorrelated.
+  Does the synthetic test show positive mean P&L beyond the expense ratio? If not, the 'decay' is only
+  a skewed payoff shape, not an edge.
+- >-
+  Synthetic LETF built from ES/NQ daily closes ignores real fund tracking error, swap financing and close-auction
+  execution. How large is the gap vs actual TQQQ/SQQQ/UPRO/SPXU prices? We need ETF data to check.
+- >-
+  Borrow fees for SQQQ/SPXU/SDS can spike (hard-to-borrow, recalls). We have no history. The paper sets
+  borrow to zero.
+- >-
+  Settlement mismatch: futures settle at 16:15 ET (Globex) vs ETF close 16:00. Use the 15:59-16:00 ES/NQ
+  bar as the mark.
+- >-
+  NQ 1-min data starts only in mid-2021. For a long synthetic sample we need NDX or QQQ daily history
+  from elsewhere, or we run the S&P version on ES from 2013.
+- >-
+  Does the regime filter (high vol only) help, or does it just load more tail risk? The paper's 2008 sample
+  is all high-vol, so it can't tell us.
+- >-
+  Equal-dollar pair vs single-leg short (e.g. only the bear fund, which has 3x the drag of 2x long but
+  the worst borrow): which is better net of borrow?
+- >-
+  Overlap with letf_rebalance_day_reversal_nq: the futures-only equivalent of this book is a daily contrarian
+  close-to-close trade. Report the correlation of daily P&L between the two.
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th-percentile simulated drawdown for the same number of monthly
+    periods, OR if any single month loses more than the worst in-sample month (the tail is the whole risk
+    of this trade).
+  extra_checks:
+  - >-
+    Step 1 (data we have): build synthetic daily-reset 2x/3x bull and bear series from ES daily closes
+    2013-2026 (and NQ 2021-2026), net of an assumed expense ratio and zero borrow. Run the hedged short
+    book. Report mean, median, skew, worst month, and the share of P&L from fees vs the autocorrelation
+    term.
+  - >-
+    Decompose P&L: expense-ratio carry vs realized-autocorrelation term vs convexity losses. Break it
+    out by year and by realized-vol tercile; 2017, 2020 (Feb-Mar), 2022 and 2023-24 must be shown separately.
+  - >-
+    Compute the lag-1 daily return autocorrelation of ES/NQ by year. The edge should be visibly larger
+    in years with negative autocorrelation.
+  - >-
+    Step 2 (needs ETF data): repeat with real LETF prices and an assumed borrow fee path (0%, 2%, 5%,
+    10%/yr) to find the break-even borrow.
+  - >-
+    Report net profit, win rate (monthly), average month, max drawdown, and the P(drawdown > 15% of notional)
+    from bootstrap.
+data_available: partial
+data_requirements:
+- >-
+  ES 1-min (have, 2013-2026) and NQ 1-min (have, 2021-2026) for synthetic LETF series, hedge marks and
+  realized variance
+- Daily adjusted closes for TQQQ, SQQQ, UPRO, SPXU, SSO, SDS, QLD, QID (not in inventory)
+- Historical borrow fees / short availability for the bear funds (not in inventory)
+- Fund expense ratios and swap financing terms (public prospectuses)
+- >-
+  Longer Nasdaq-100 daily history (NDX or QQQ) for the β=3 Nasdaq synthetic test before 2021 (not in inventory)
+expectations:
+- >-
+  The paper implies the median 60-day hedged-short outcome is positive when vol is high and the index
+  is range-bound, and negative in strong low-vol trends.
+- >-
+  Our expectation: gross mean P&L close to the expense-ratio carry (~1-2%/yr on gross notional for a pair),
+  plus or minus an autocorrelation term. Strongly negative skew, with the worst months in trend bursts
+  (e.g. Nov 2020, Jan 2023-Mar 2024 rallies, Mar 2020 crash).
+- >-
+  Bear-leg decay should be visibly larger than bull-leg decay in the synthetic series ((β²−β)/2 bigger
+  for β = −3: 6 vs 3).
+what_would_kill_it: >-
+  Borrow fees on the bear funds above the fee-plus-autocorrelation carry; issuers moving to monthly or
+  longer resets; a regime of persistent low-vol trends (positive daily autocorrelation), where convexity
+  beats decay; or the synthetic test showing zero mean P&L beyond fees, which would mean the trade only
+  reshapes the payoff (sells tail risk) and has no edge.
+why_note: ''
+notes:
+- >-
+  Only new angle from this paper. The close-flow angle is already covered by letf_anticipation_migration_es,
+  letf_close_rebalance_continuation_nq, letf_flow_to_depth_last_hour_es and letf_rebalance_day_reversal_nq.
+  No duplicate flow spec is proposed.
+- >-
+  This is a short-gamma, carry-style book. It is a candidate diversifier versus our long-only overnight/ORB
+  strategies, but it correlates with any short-vol exposure. Check its correlation to liquidity_stress_overlay_es
+  regimes.
+- >-
+  Correction to the entry text: equal-dollar bull and bear legs offset at inception (+β and −β), so the
+  futures hedge only needs to absorb the delta drift that builds as the legs move apart.
+related_strategies:
+- letf_rebalance_day_reversal_nq
+- letf_close_rebalance_continuation_nq
+- letf_flow_to_depth_last_hour_es
+- letf_anticipation_migration_es
+- liquidity_stress_overlay_es
+variants:
+- 'Single-leg: short only the bear fund + short futures hedge (largest drag, worst borrow)'
+- >-
+  Single-leg: short only the bull fund + long... short futures hedge reversed (bull short hedged with
+  long futures)
+- Static hedge (no delta band) vs 5% band vs daily close rehedge
+- Sector/single-stock LETFs (SOXL/SOXS, financial 3x) where variance is higher - needs data
+- Synthetic CPPI-like products (Black-Perold) as another forced-rebalancer to fade
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 2
+    testability: 2
+    overfit_resistance: 2
+  verdict: park
+  reasons:
+  - >-
+    The WHY is a real product rule: daily resets make holders structurally short variance. But the spec
+    itself says a hedged short has about zero expected gross P&L. The decay shows up in the typical (median)
+    outcome, not the average, so short of real negative day-to-day correlation, hedging mainly turns it
+    into a skewed short-gamma payoff.
+  - >-
+    What remains is the expense-ratio carry (~1%/yr per fund), a possible negative day-to-day correlation
+    term and a funding spread. Bear-fund borrow fees and the lost interest on short-sale cash are priced
+    by the market and probably absorb most of the fee carry. We have no borrow history, and that is the
+    deciding variable.
+  - >-
+    The synthetic ES/NQ test is close to circular. The fee term just returns the expense ratio we put
+    in. The rest is ES day-to-day return correlation, which the spec admits equals the daily contrarian
+    futures trade already covered by letf_rebalance_day_reversal_nq. Step 1 cannot see tracking error,
+    swap financing, closing-auction fills or borrow fees and recalls.
+  - >-
+    This is a short-gamma book with strongly negative skew. About 150 monthly periods in 2013-2026 cannot
+    pin down the tail, and bootstrapping those few months understates it. It is correlated with other
+    short-vol exposure.
+  - >-
+    Six free parameters (holding period, delta band, stop, vol lookback, trend cutoff, regime filter)
+    with 4-5 values each, on a thin and skewed sample, invite overfitting. The trend-cutoff filter quietly
+    assumes momentum, which needs its own WHY.
+  - >-
+    The spec text is muddled: the entry paragraph calls the pair both 'net short' and delta-neutral, the
+    futures hedge is sized to a net delta that is zero at inception, and the bull-only variant text is
+    garbled.
+  - It does not copy the paper. The paper has no trading rule, and the hedged-pair framing is our own.
+  copies_the_paper: false

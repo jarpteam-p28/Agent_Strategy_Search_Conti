@@ -1,0 +1,128 @@
+{
+  "title": "Market Liquidity and Funding Liquidity",
+  "authors": [
+    "Markus K. Brunnermeier",
+    "Lasse Heje Pedersen"
+  ],
+  "year": 2009,
+  "source_url": "https://doi.org/10.1093/rfs/hhn098",
+  "paper_type": "academic",
+  "read_mode": "abstract_only",
+  "one_line": "A theory paper showing that when traders' funding gets tight, market liquidity dries up across assets at once and prices become fragile, which creates a feedback loop between market liquidity and funding liquidity (margin spirals).",
+  "findings": [
+    {
+      "statement": "Theory model: speculators (dealers, hedge funds) provide market liquidity, and their capacity depends on the funding they can get. Funding depends on the margins their lenders require, and margins depend on the volatility of the asset and the asset's market liquidity.",
+      "evidence": "Theoretical model (RFS 2009). I could not open the paper and am writing from memory of it. I did not read the full text and the model details are not verified."
+    },
+    {
+      "statement": "Market liquidity and funding liquidity reinforce each other through two spirals. In the loss spiral, losses erode capital and force sales. In the margin spiral, higher margins force deleveraging. Both push prices further from fundamentals.",
+      "evidence": "Model result. It is an equilibrium analysis, not an empirical backtest."
+    },
+    {
+      "statement": "Market liquidity has a common component across securities, and it co-moves with funding conditions and volatility. Liquidity can suddenly drop (be fragile) when funding gets tight, so it behaves non-linearly.",
+      "evidence": "Model propositions. The paper cites empirical support from the 1998 LTCM crisis, the 2007-08 crisis and the 1987 crash. I did not verify the figures."
+    },
+    {
+      "statement": "Securities with higher margins are more sensitive to funding shocks. Their prices should show higher required returns, and their margins should go up when volatility rises. Liquidity risk has a premium: assets whose liquidity co-moves with funding conditions earn higher expected returns.",
+      "evidence": "Model predictions. The paper states them as testable implications. It does not run a trading test."
+    }
+  ],
+  "reported_results": {
+    "headline": "No trading backtest. The paper is a theory paper with testable predictions about liquidity co-movement, margins and the cross-section of returns.",
+    "key_stats": [
+      "No Sharpe ratio, return or sample statistics are reported, because the paper is theoretical."
+    ],
+    "costs_included": "Not applicable"
+  },
+  "setting": {
+    "instruments": [
+      "Theoretical risky securities",
+      "Applied to equities, bonds and futures in the discussion"
+    ],
+    "markets": [
+      "General, with no specific market"
+    ],
+    "sample_period": "None (theory). Illustrative episodes: 1987, 1998, 2007-08",
+    "data_frequency": "Not applicable",
+    "holding_period": "Not applicable"
+  },
+  "why": {
+    "pattern": "Institutional constraint / mandate, plus liquidity constraints on large orders. This is a forced-seller version: margin calls and capital limits force leveraged players to deleverage in a predictable way. It is also a liquidity risk premium.",
+    "mechanism": "Leveraged liquidity providers fund their positions with collateralised short-term borrowing. When volatility rises or they take losses, lenders raise margins and their capital shrinks. They must cut positions and stop providing liquidity. Spreads widen, prices move against them, and the cycle repeats. Because the same funders and the same traders are active in many assets, the stress hits many assets at once, so correlations and liquidity commonality jump together.",
+    "who_is_forced": "Levered hedge funds, prop desks and dealers facing margin calls or risk limits. Their lenders (prime brokers, repo desks) are also forced to raise haircuts when volatility rises. Their forced selling is mechanical and tends to follow volatility spikes.",
+    "why_it_persists": "Leverage, collateral rules and VaR-based margin are structural features of financial markets. The paper argues that margins tend to rise in bad times, so the spiral is built into the system. Crises since 2009 (2020 March, repo/Treasury basis stress, Aug 2024) fit the pattern.",
+    "what_would_kill_it": "Central bank backstops, fixed or counter-cyclical margin rules, or much lower leverage. Any of these would dampen the spirals. In futures, exchanges could stop raising margin when volatility spikes. The edge can also die if everyone anticipates the spiral and crowds into the same liquidity-provision trade early.",
+    "authors_explanation_vs_ours": "The authors' explanation is the WHY itself. The weakness is that this is a theory paper and gives no trading rules, thresholds or estimated effect sizes. Turning it into a strategy takes our own proxies, such as realised volatility, VIX, or bid-ask spreads."
+  },
+  "tradable_edge": "Treat funding stress as a regime state. When volatility spikes sharply and market depth falls, forced deleveraging pushes prices past fundamentals and spreads widen. Two uses follow. First, defensive: cut size or stand aside in index futures when volatility and depth deteriorate, because moves are nonlinear and continuation is likely while the spiral is running. This is volatility targeting with a liquidity add-on. Second, opportunistic: after the stress peaks (volatility has peaked and starts to fall, intraday range or depth recovers), take long reversion trades in ES/NQ, since the liquidity providers who were forced out are coming back and the price overshoot unwinds. Both are regime filters or overlays on other strategies, not a standalone signal. Costs matter, and holding periods should be hours to days.",
+  "angles": [
+    "Use ES 1-min data to build a liquidity-stress proxy: realised volatility, range per unit of volume, and volume spikes. Condition existing intraday momentum and reversion tests on that proxy.",
+    "Test fade-the-panic: after a large one-day or intraday drop with volume at 3x normal and the stress proxy at a high percentile, go long ES for hours to days. Compare against the always-long baseline.",
+    "Use the stress proxy as a vol-targeting overlay to reduce size on days when volatility is rising faster than a threshold, to avoid the margin spiral. Compare drawdown with and without it.",
+    "Check pre/post 2022 and by volatility regime, as the playbook requires for intraday momentum.",
+    "Compare ES with NQ (NQ only from 2021-07). Do NQ stress episodes lead or lag ES?",
+    "Long-side only, since forced selling produces the overshoots that reverse upward. Short squeezes are less reliable.",
+    "Combine with scheduled-event findings: quad-witching, month-end and the VIX expiry are times when margin and deleveraging flows are concentrated."
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "The mechanism is structural and has been widely known since 2009. It is cited in thousands of papers. Central bank backstops and the faster response of vol-targeting funds change the timing. As a regime filter it is likely to persist. Crisis events are rare, so a direct trading edge has few observations and is hard to validate."
+  },
+  "data_fit": "Only partly testable. ES 1-min bars (2013-2026) and NQ 1-min bars (2021-2026) let us build volatility, range and volume proxies for stress, and we can test the overlay and the post-stress reversion on index futures. We lack funding data (repo spreads, TED/FRA-OIS, VIX, margin rates), bid/ask depth for the earlier years (ticks cover only ES 2021-06 to 2023-06 and NQ 2021 onward), and cross-asset data (bonds, credit, CL, GC). We also have few stress episodes: March 2020, Feb 2018, Aug 2015, plus 2022. The sample has too few independent events for strong significance.",
+  "caveats": [
+    "I could not open the paper. Fetching failed (domain not allowed), so this summary comes from memory of the paper and its abstract. Details and numbers could be wrong.",
+    "The paper is a theory paper with no strategy rules, backtest or estimated effect sizes.",
+    "Any tradable rule is our own construct on proxies, so it needs full in-sample/out-of-sample validation.",
+    "Stress episodes are rare. Results may rest on just a few events (2015, 2018, 2020, 2022)."
+  ],
+  "referenced_papers_worth_reading": [
+    {
+      "title": "Liquidity Risk and Expected Stock Returns",
+      "authors": [
+        "Lubos Pastor",
+        "Robert Stambaugh"
+      ],
+      "venue": "Journal of Political Economy",
+      "year": 2003,
+      "url": null,
+      "pdf_url": null,
+      "note": "From memory, not confirmed as cited here. It prices aggregate liquidity risk, and builds a reversal-based liquidity measure that could be computed from index futures."
+    },
+    {
+      "title": "Liquidity and Market Crashes / Leverage Cycle and the Economy (Geanakoplos)",
+      "authors": [
+        "Gromb",
+        "Vayanos"
+      ],
+      "venue": "Review of Financial Studies",
+      "year": 2002,
+      "url": null,
+      "pdf_url": null,
+      "note": "From memory; related theory on margin-constrained arbitrageurs. Not confirmed as cited."
+    },
+    {
+      "title": "Betting Against Beta",
+      "authors": [
+        "Andrea Frazzini",
+        "Lasse Heje Pedersen"
+      ],
+      "venue": "Journal of Financial Economics",
+      "year": 2014,
+      "url": null,
+      "pdf_url": null,
+      "note": "A follow-on by the same author. It uses funding constraints as the WHY for a tradable factor. Not cited in this paper (it appeared later)."
+    },
+    {
+      "title": "Volatility-Managed Portfolios",
+      "authors": [
+        "Alan Moreira",
+        "Tyler Muir"
+      ],
+      "venue": "Journal of Finance",
+      "year": 2017,
+      "url": null,
+      "pdf_url": null,
+      "note": "Already in the playbook. A practical way to use volatility and stress as a sizing overlay. Not cited in this paper."
+    }
+  ]
+}

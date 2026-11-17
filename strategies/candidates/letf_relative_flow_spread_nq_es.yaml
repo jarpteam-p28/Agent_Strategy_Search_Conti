@@ -1,0 +1,237 @@
+id: letf_relative_flow_spread_nq_es
+name: >-
+  LETF Relative-Flow Close Spread: long NQ / short ES after up days, reverse after down days (15:30-16:00
+  ET)
+status: spec
+source:
+  kind: paper
+  ref: papers/summaries/dynamics_of_leveraged_and_inverse_exchange_traded_funds.md
+  papers:
+  - title: The Dynamics of Leveraged and Inverse Exchange-Traded Funds
+    authors:
+    - Minder Cheng
+    - Ananth Madhavan
+    year: 2009
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1539120
+    note: Source of the rebalancing-flow formula (L²−L)×AUM×r. Read from the abstract and memory only.
+  - title: Are Leveraged and Inverse ETFs the New Portfolio Insurers?
+    authors:
+    - Tuzun, T.
+    year: 2013
+    venue: FEDS working paper
+    note: Empirical test linking LETF flow to late-day returns. Not checked.
+  - title: Market Intraday Momentum
+    authors:
+    - Gao, L.
+    - Han, Y.
+    - Li, S.Z.
+    - Zhou, G.
+    year: 2018
+    venue: Journal of Financial Economics
+    note: Last-half-hour momentum confound. The spread design is meant to strip it out.
+finding: >-
+  Cheng and Madhavan (2009) show that daily-reset leveraged and inverse ETFs must trade in the direction
+  of the day's index return, by about (L²−L)×AUM×r. They do it near the close, and the impact is largest
+  where that flow is big relative to closing liquidity. These numbers are from memory and have not been
+  checked against the PDF. Our desk already tests outright late-day continuation on ES and NQ (letf_flow_to_depth_last_hour_es,
+  letf_close_rebalance_continuation_nq, letf_anticipation_migration_es). The new angle here is cross-sectional
+  between indices. Nasdaq-100 leveraged products (TQQQ, SQQQ, QLD, QID) carry far more 3x AUM relative
+  to the index's closing depth than S&P 500 products (SPXL, UPRO, SPXU, SSO, SDS) do relative to the S&P's
+  much deeper close. So on the same day move, the forced flow per unit of liquidity should be larger in
+  NQ than in ES.
+why: >-
+  Execution mechanics plus a fixed mandate. The funds have no say over the size or timing of the rebalance:
+  size comes from the prospectus and the day's return, and timing is the close. The flow scales with leverage
+  squared and AUM, and its price impact scales with flow divided by closing liquidity. NQ's LETF complex
+  is very large relative to its depth, so NQ should get a bigger same-direction push than ES. Going long
+  one index and short the other cancels the shared parts of late-day drift: general intraday momentum,
+  the last-half-hour market drift and index-wide hedging. What should remain is the part of the move explained
+  by the difference in LETF flow-to-depth. That is a cleaner test of the WHY than any outright trade,
+  and it also gives a return stream with low correlation to the outright late-day strategies.
+market:
+  instruments:
+  - NQ
+  - ES
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC; convert with DST)
+  universe: NQ and ES continuous front month, 2021-07 to 2026-09 (the period covered by both)
+direction: long_short
+entry:
+  long: >-
+    At the 15:30 ET bar close, compute the day move r = NQ return from the prior RTH close (16:00 ET)
+    to 15:30 ET. If r > +threshold: buy NQ and sell a beta-matched notional of ES (long the spread).
+  short: 'If r < −threshold at 15:30 ET: sell NQ and buy the beta-matched ES notional (short the spread).'
+  filters:
+  - >-
+    Absolute day move threshold |r| ≥ 1.0% (or ≥ k × 20-day average absolute close-to-15:30 return, to
+    test the volatility-scaled version)
+  - >-
+    Require ES's day move to have the same sign as NQ's, so the LETF flows in both indices point the same
+    way and the spread isolates the difference in magnitude
+  - Skip half-days (early close) and skip days with missing NQ or ES bars between 15:25 and 16:00
+  - One spread trade per day
+exit:
+  time_exit: 'Close both legs at 15:59 ET (variant: 16:00 settlement or 16:15 futures close)'
+  stop_loss: >-
+    Spread adverse move > 2 × the 20-day average absolute 15:30-16:00 spread return (mainly a disaster
+    stop; expect it to fire rarely)
+  take_profit: null
+  other:
+  - Both legs are entered and exited together; never hold one leg alone
+position_sizing:
+  development: >-
+    1 NQ against beta-matched ES. In development, compute P&L in return space: spread return = r_NQ(15:30→close)
+    − β × r_ES(15:30→close), with β = trailing 60-day beta of NQ 30-min returns on ES. Then translate
+    to 1 NQ ≈ round(β × NQ notional / ES notional) ES, or use the MNQ/MES equivalent for a finer hedge.
+  live: >-
+    Volatility targeting: fixed dollar risk per trade (e.g. $2,000). Number of spread units = risk ÷ (20-day
+    standard deviation of the 15:30-16:00 spread P&L per unit). Use MNQ/MES for granularity.
+parameters:
+- name: entry_time_et
+  default: '15:30'
+  source: assumption (summary suggests last 30-60 min)
+  test_range: 15:00, 15:30, 15:45
+- name: day_move_threshold_pct
+  default: 1.0
+  source: summary angle (1% or 1.5×ATR)
+  test_range: 0 (sign only), 0.5, 1.0, 1.5, 2.0
+- name: hedge_beta_lookback_days
+  default: 60
+  source: assumption
+  test_range: 20, 60, 120; also fixed dollar-neutral β=1
+- name: day_move_reference
+  default: prior RTH close
+  source: paper (LETFs rebalance on close-to-close return)
+  test_range: prior close, RTH open
+- name: exit_time_et
+  default: '15:59'
+  source: assumption
+  test_range: 15:59, 16:00, 16:15
+expectations:
+- >-
+  Spread return in the trade direction is positive on average and rises monotonically with |day move|
+  (bucket by 0.5% steps). The flow formula is linear in r, so the effect should scale with r.
+- >-
+  The effect is larger in the 15:45-16:00 window than in 15:30-15:45, because the flow is concentrated
+  at the close
+- >-
+  The outright NQ-only late-day continuation should be larger than the spread, but the spread should carry
+  a meaningful share of it with clearly lower volatility
+- >-
+  The effect should be weaker after 2022 if 0DTE dealer long gamma absorbs the flow. Report pre/post 2022
+  separately.
+- >-
+  Report gross points per trade against the cost of a 2-leg round trip. Expect a thin gross edge; the
+  playbook hurdle is net t ≥ 2 with the same sign in every OOS year.
+- >-
+  Baselines: an unconditional 15:30-16:00 long-NQ/short-ES spread every day, and the same spread with
+  a random sign
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same number
+    of trades
+  extra_checks:
+  - Chronological 80/20 split on 2021-07 to 2026-09 (in-sample about 2021-07 to 2025-07)
+  - Bucket results by |day move| and by realized-volatility tercile
+  - Pre/post 2022 and expiry-day vs non-expiry-day splits (0DTE confound)
+  - Long-spread vs short-spread sides reported separately
+  - >-
+    Correlation of daily P&L with letf_flow_to_depth_last_hour_es and noise_area_last_half_hour_es (target
+    < 0.25)
+  - >-
+    Sensitivity to hedge ratio (β vs dollar-neutral). If the edge exists only under one hedge choice,
+    it is a beta artifact.
+data_requirements:
+- NQ 1-min continuous 2021-07 to 2026-09 (have)
+- ES 1-min continuous (have)
+- US market holiday/half-day calendar
+- >-
+  Optional: daily AUM of TQQQ/SQQQ/QLD/QID and SPXL/UPRO/SPXU/SSO/SDS to build an explicit flow-to-depth
+  ratio instead of the raw day move (not in inventory)
+- 'Optional: closing-auction volume for QQQ/SPY constituents (not in inventory)'
+data_available: partial
+what_would_kill_it: >-
+  NQ's LETF flow is no longer large relative to its depth compared with ES. That could happen if TQQQ/SQQQ
+  AUM shrinks, S&P leveraged AUM grows, or NQ closing liquidity deepens. Other causes: dealers or front-runners
+  pricing the flow before 15:30, the funds moving to intraday or pre-close rebalancing, or 0DTE dealer
+  long gamma absorbing the push. If the spread shows nothing while the outright NQ continuation works,
+  the late-day effect comes from market-wide drivers and not from LETF flow.
+notes:
+- >-
+  Genuinely new relative to existing LETF specs: those trade outright direction, and this one isolates
+  the cross-index difference in flow-to-depth
+- >-
+  High decay risk: the paper is from 2009 and the closing-flow effect is well known; plan on half or less
+  of any in-sample edge
+- >-
+  Only about 5 years of overlapping data. With a 1% threshold, expect roughly 200-300 trades in total,
+  so OOS will be thin; report confidence intervals
+open_questions:
+- >-
+  Should the signal use NQ's day move, ES's, or an explicit AUM-weighted flow estimate per index? AUM
+  data is not in inventory.
+- >-
+  What is the right hedge: return beta, dollar-neutral, or volatility-neutral? Each implies a different
+  null.
+- >-
+  Entry/exit price: use the 15:30 bar close, or the next bar open to avoid look-ahead? Exit at 15:59,
+  at the 16:00 settlement, or at 16:15 Globex?
+- >-
+  Do the gaps in the NQ tick contracts (12-21, 03-22, 03-25, 06-25, 09-25) affect the clean_NQ 1-min file
+  in these windows?
+- Quarterly rebalance and triple-witching days carry extra index flow. Exclude them or keep them?
+- Is the 15:00 ET window better? Earlier LETF hedging (anticipation) may move the flow ahead of 15:30.
+- >-
+  Paper numbers are from memory; check the real Cheng-Madhavan flow estimates before trusting the premise
+  that NQ flow is larger relative to depth.
+variants:
+- >-
+  Explicit flow signal: (L²−L)×AUM×r ÷ 20-day average closing volume, computed per index; trade the sign
+  of the difference
+- 15:45-16:00 window only
+- Outright NQ leg only, for comparison against letf_close_rebalance_continuation_nq
+related_strategies:
+- letf_flow_to_depth_last_hour_es
+- letf_close_rebalance_continuation_nq
+- letf_anticipation_migration_es
+- letf_rebalance_day_reversal_nq
+- noise_area_last_half_hour_es
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 3
+    testability: 4
+    overfit_resistance: 3
+  verdict: refine
+  copies_the_paper: false
+  reasons:
+  - >-
+    The rules don't copy the paper. Cheng-Madhavan give a flow formula and no trading rule. Going long
+    NQ / short ES is our own cross-index angle, and it strips out market-wide late-day drift, which the
+    outright LETF specs we already have cannot do.
+  - >-
+    The WHY is mechanical: daily-reset LETFs must trade with the day's move, near the close. The premise
+    that NQ gets more flow per unit of closing depth than ES is plausible. TQQQ+SQQQ are large; S&P leveraged
+    AUM is spread across smaller funds and meets a much deeper close. But the spec has not checked this
+    premise yet.
+  - >-
+    Hedge leakage risk: beta comes from all-day 30-min returns. If NQ's beta in the last half hour of
+    big-move days is higher, outright late-day momentum leaks into the spread and looks like an LETF effect.
+  - >-
+    Other explanations aren't controlled: (a) NQ simply continuing to outperform or underperform ES on
+    the day (spread momentum); (b) 0DTE dealer gamma, much heavier on SPX than NDX, damping ES more than
+    NQ, which gives the same sign without any LETF flow.
+  - >-
+    Thin sample: about 200-300 trades and roughly 50 out-of-sample, on the small difference between two
+    small effects, paying two-leg costs. There is no power analysis.
+  - About six parameters with test grids over 5 years of data leave a lot of room to tune.
+  - >-
+    Mechanics need fixing: the 16:15 'Globex close' exit variant is out of date (CME removed the 16:15-16:30
+    ET halt in 2021); entering at the same 15:30 bar the signal uses is look-ahead; the disaster stop
+    on a 30-min hold adds a parameter and does little.
+  - >-
+    Data for the core test is in inventory (NQ and ES 1-min, 2021-07 to 2026-09), so the test is cheap
+    once the design is fixed.

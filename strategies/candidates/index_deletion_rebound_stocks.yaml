@@ -1,0 +1,249 @@
+id: index_deletion_rebound_stocks
+name: Index Deletion Rebound after Forced Selling (single stocks, long only, post-effective-date)
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/front_running_index_funds_the_price_impact_of_index_reconsti.md
+  papers:
+  - title: Index Changes and Losses to Index Fund Investors
+    authors:
+    - Honghui Chen
+    - Gregory Noronha
+    - Vijay Singal
+    year: 2006
+    url: https://ssrn.com/abstract=922296
+    note: >-
+      Trigger paper. Only the abstract topic was available and the content is recalled from memory, so
+      none of its numbers are verified.
+  - title: 'The Price Effects of S&P 500 Index Changes: Is the Demand for Stocks Perfectly Elastic?'
+    authors:
+    - Honghui Chen
+    - Gregory Noronha
+    - Vijay Singal
+    venue: Journal of Finance
+    year: 2004
+    note: >-
+      Recalled: additions keep a permanent gain, but deletions largely recover. This asymmetry is why
+      we take the deletion leg.
+  - title: Price and Volume Effects Associated with Changes in the S&P 500 List
+    authors:
+    - Lawrence Harris
+    - Eitan Gurel
+    venue: Journal of Finance
+    year: 1986
+    note: Temporary price pressure and reversal. Recalled.
+  - title: Demand Curves for Stocks Do Slope Down
+    authors:
+    - Andrei Shleifer
+    venue: Journal of Finance
+    year: 1986
+    note: Original paper on addition price pressure. Recalled.
+finding: >-
+  This is recalled and not verified. Stocks added to or dropped from the S&P 500 move in the direction
+  of the index funds' forced trade between the announcement and the effective-date close. Part of that
+  move reverses after the effective date. As remembered, the reversal is fuller for deletions: deleted
+  stocks tend to recover most of their fall. The sample is probably US large caps from the 1990s to the
+  early 2000s.
+why: >-
+  This is an institutional mandate plus a liquidity constraint. Index funds are judged on tracking error,
+  so they must sell deleted names at the effective-date close, all at the same time. Front-runners sell
+  or short ahead of that close and cover into it. When the forced selling ends, nothing fundamental has
+  changed, so the price-pressure part reverses. Deleted names are also short-sale constrained and get
+  little analyst follow-up after they leave the index. That slows the recovery and leaves it open for
+  days to weeks, which fits the PEAD-style slow-diffusion pattern. We take the deletion leg only and long
+  only: buy after the forced seller has finished.
+market:
+  instruments:
+  - >-
+    Single US stocks deleted from S&P 500 (also S&P 400/600, Nasdaq-100, Russell 1000/2000 deletions as
+    angles)
+  bar_size: 1day (1min optional for close/open fills)
+  session: RTH 09:30-16:00 America/New_York; entry at effective-date close (MOC) or next open
+  universe: >-
+    Stocks deleted from a major index for reasons other than merger, acquisition, bankruptcy or delisting,
+    that are still trading after the effective date
+direction: long_only
+entry:
+  long: >-
+    Buy at the close of the effective date (the closing auction where index funds sell). Variant: buy
+    at the next day's open.
+  short: null
+  filters:
+  - >-
+    Exclude deletions caused by M&A, spin-off, bankruptcy or delisting. Keep only deletions where the
+    stock still trades and moves to another index or out of it.
+  - >-
+    Require a negative return from announcement to effective date of at most -X% (default -3%), so there
+    was forced pressure to reverse.
+  - Minimum price $5 and minimum average daily dollar volume, so fills are realistic.
+exit:
+  stop_loss: Close below entry by 2.5x the 20-day ATR (wide, because this is a reversal trade)
+  take_profit: Price recovers to the pre-announcement close (pressure fully reversed)
+  time_exit: Close at the Nth trading day after entry (default 20)
+  other:
+  - Exit if the stock receives a takeover offer or is delisted (log these separately)
+position_sizing:
+  development: Equal dollar weight per event (e.g. $10,000 notional), one position per event
+  live: >-
+    Volatility targeting: each position risks the same dollars, with shares = risk budget ÷ (20-day ATR
+    × stop multiple). Cap each name at 2% of portfolio and total open deletions at 20%.
+parameters:
+- name: holding_days
+  default: 20
+  source: assumption (paper window is 'a few days to weeks after effective date', recalled)
+  test_range: 5, 10, 20, 40, 60
+- name: min_pressure_drop_pct
+  default: -3
+  source: assumption
+  test_range: 0, -3, -5, -10
+- name: entry_timing
+  default: effective-date close
+  source: paper (index funds trade at the effective close)
+  test_range: effective close, next open, next close
+- name: stop_atr_mult
+  default: 2.5
+  source: assumption
+  test_range: none, 2, 2.5, 3.5
+- name: index_universe
+  default: S&P 500
+  source: paper
+  test_range: S&P 500, S&P 400, S&P 600, Nasdaq-100, Russell reconstitution
+open_questions:
+- >-
+  None of the paper's numbers are verified. We need the actual sizes of the run-up and reversal for additions
+  vs deletions, and the post-effective window the paper measured.
+- >-
+  Did the deletion reversal survive after 2010? Later work suggests the S&P effects have shrunk, and that
+  S&P now announces after the close with shorter gaps.
+- >-
+  Event data source: we need announcement and effective dates and the reason for each deletion. Possible
+  sources are S&P press releases, the CRSP index file, or Compustat idx.
+- >-
+  Survivorship: deleted names often keep falling (they were deleted because they shrank). How do we separate
+  pressure reversal from continued momentum? Compare against a size/momentum-matched benchmark.
+- >-
+  Should the long be hedged with a sector ETF or SPY so we isolate the event return from beta? Default
+  is unhedged, but report both.
+- >-
+  Many deletions go to the S&P 400 the same day, which brings forced buying by mid-cap funds. Does that
+  change whether the reversal shows up?
+- >-
+  The addition leg (shorting added names after the effective date) is excluded because the permanent component
+  is recalled to be larger. Should it be tested as a variant anyway?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown over N events exceeds the 95th-percentile drawdown from the bootstrap for
+    that many trades
+  extra_checks:
+  - 'Chronological split: tune only on the first 80% of events'
+  - Report results before and after 2010, and before and after S&P's switch to after-close announcements
+  - Benchmark-adjusted return (vs SPY or a size-matched index) as well as raw return
+  - Check it works in down years (2008, 2022), since this is long only
+  - 'Costs: use a realistic spread plus impact for small, newly deleted names'
+  - 'Outlier dependence: what share of profit comes from the top 10 events'
+data_requirements:
+- Daily OHLCV for single US stocks, survivorship-bias free, including delisted names
+- >-
+  Index membership change history with announcement date, effective date and reason (S&P 500/400/600,
+  Nasdaq-100, Russell)
+- 'Optional: closing-auction volume and imbalance on effective dates'
+data_available: 'no'
+expectations:
+- Deleted names fall from announcement into the effective close (that is the forced selling)
+- A positive average return after the effective date, larger when the pre-effective drop was larger
+- >-
+  The effect is stronger in smaller and less liquid indices (S&P 600, Russell 2000) than in the S&P 500
+- Probably much weaker after publication. Plan on half or less of the paper's numbers
+what_would_kill_it: >-
+  Index providers announcing and making changes effective almost immediately or phasing them in; index
+  funds trading away from the effective close or sampling the index; enough arbitrage capital to absorb
+  the forced selling at no discount; or post-deletion returns that only match continued negative momentum
+  once benchmarked.
+variants:
+- Short added names from the effective close for N days (the reversal of the addition run-up)
+- >-
+  Russell reconstitution (late June) deletions, where the forced flow is huge and predictable from public
+  preliminary lists
+- 'Pair trade: long deleted names, short added names, both entered at the same effective close'
+- Europe or Asia index reviews (MSCI, FTSE, STOXX), where coverage and liquidity are lower
+notes:
+- The paper itself was not read. This is a speculative spec, which is why its status is 'idea'.
+- >-
+  There is no ES/NQ version here. At the index level, additions and deletions roughly cancel, so the quarterly
+  rebalance gives no directional futures flow. Expiry and close effects are already covered by third_friday_spike_es,
+  expiration_pin_es and letf_close_rebalance_continuation_nq.
+- Decay risk is high. The S&P 500 index effect has been known since 1986.
+related_strategies:
+- pead_long
+- forced_selling_flush_fade_es
+- third_friday_spike_es
+- expiration_pin_es
+review:
+  scores:
+    why_strength: 4
+    persistence: 2
+    simplicity: 3
+    testability: 2
+    overfit_resistance: 2
+  verdict: park
+  reasons:
+  - >-
+    The WHY is real and structural: index funds judged on tracking error must sell deleted names at the
+    effective-date close, and once that forced selling ends the price-pressure part should reverse.
+  - >-
+    The rules are our own framing (deletions only, long only, entry after the forced seller has finished),
+    not a copy of the paper.
+  - >-
+    The source paper was never read and every number, including the claimed addition/deletion asymmetry
+    that justifies the deletion leg, is recalled and unverified.
+  - >-
+    Weak persistence: the effect has been published since 1986, later studies find it smaller and faster,
+    and S&P now announces after the close with shorter gaps.
+  - >-
+    Most S&P 500 deletions move to the S&P 400 on the same effective date, so mid-cap funds buy as large-cap
+    funds sell. The forced selling the trade depends on may largely cancel at the close where we enter.
+    The spec lists this as an open question, but it is central to the trade.
+  - >-
+    Small sample: probably about 5-20 eligible S&P 500 deletions a year, so few events for 5 tunable dimensions
+    (holding days, drop threshold, entry timing, stop multiple, index universe) and an 80/20 split. Overfitting
+    is likely, especially in the subsample after 2010.
+  - >-
+    Momentum confound: deleted names were deleted because they shrank and tend to keep falling, so raw
+    returns mix the reversal with continued decline unless benchmarked.
+  - >-
+    The take-profit at the pre-announcement close assumes the whole drop was price pressure. Part of it
+    is likely real information, so the target is biased upward.
+  - >-
+    None of the needed data is on hand (survivorship-free single stocks, index-change history with announcement
+    dates, effective dates and reasons). It needs CRSP/Compustat or similar, which is costly and outside
+    our futures-focused setup.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Get and read the actual papers (Chen, Noronha & Singal 2004 and 2006, plus at least one post-2010
+    study such as Patel & Welch 2017 or Bennett, Stulz & Wang) and record the deletion reversal size,
+    window and sample. Confirm the reversal still exists after 2010.
+  - >-
+    Split deletion events into migrations to the S&P 400/600 and outright exits. Make outright exits (or
+    Russell reconstitution deletions) the primary universe, or explain why migrations still carry net
+    selling at the close.
+  - >-
+    Make Russell reconstitution deletions the lead variant if sample size is the constraint: larger, predictable
+    flow and many more events.
+  - >-
+    Define the main test metric before tuning: return net of a size- and momentum-matched benchmark (or
+    hedged with SPY or a sector ETF), not raw return.
+  - >-
+    Freeze most parameters before testing (holding days 20, entry at the effective close, no stop in the
+    master test). Tune at most the drop threshold, in-sample only. First run a fixed-hold master signal
+    with no stop or target, against a baseline of buying random matched names.
+  - >-
+    Replace the take-profit at the pre-announcement close with a time exit only, or with a partial-recovery
+    target (e.g. half the announcement-to-effective drop).
+  - >-
+    State a minimum event count and a cost model (spread plus impact for small, newly deleted names) as
+    conditions for continuing. Require net t >= 2 and the same sign in the post-2010 subsample.
+  - Before buying data, cost CRSP/Compustat index-history access and confirm it covers delisted names.

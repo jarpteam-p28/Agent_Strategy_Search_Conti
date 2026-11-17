@@ -1,0 +1,240 @@
+id: letf_anticipation_migration_es
+name: >-
+  LETF Flow Anticipation Migration: earlier-afternoon entry, signed by the prior-close move (ES/NQ, long/short,
+  flat at 15:59 ET)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/are_leveraged_and_inverse_etfs_the_new_portfolio_insurers.md
+  papers:
+  - title: Are Leveraged and Inverse ETFs the New Portfolio Insurers?
+    authors:
+    - Tugkan Tuzun
+    venue: Federal Reserve FEDS working paper 2013-48
+    year: 2013
+    url: https://www.federalreserve.gov/pubs/feds/2013/201348/201348abs.html
+    note: >-
+      Same paper as letf_flow_to_depth_last_hour_es. This spec only tests the paper's own warning that
+      front-runners pull the effect earlier into the afternoon.
+  - title: Dynamics of Leveraged and Inverse Exchange-Traded Funds
+    authors:
+    - Minder Cheng
+    - Ananth Madhavan
+    venue: Journal of Investment Management
+    year: 2009
+    note: Index-level evidence of end-of-day LETF pressure on the S&P 500.
+finding: >-
+  US stocks, June 2006 to Dec 2011. The 15:00-16:00 ET return moves with the leveraged/inverse ETF rebalancing
+  flow implied by the index return from the prior close to 15:00. A 1% index day adds about 7bp in a large
+  cap and about 13bp in financials and small caps. Part of the move reverses the next day. The effect
+  was stronger in 2006-2009 and on up days. The author notes that anticipators front-run the flow, which
+  pulls the price pressure earlier in the afternoon. Our existing LETF specs all enter at fixed late times
+  (15:00 or 15:30). This spec asks a different question: since 2013, has the continuation moved earlier,
+  to 13:30-14:30, as LETF assets and front-running have grown?
+why: >-
+  Execution mechanics plus a mandate. Daily-reset LETFs must trade r×δ×(δ−1)×AUM in the direction of the
+  day's move near the close, and long and inverse funds add together. Everyone can compute the flow from
+  the index move, so anticipators (prop desks, market makers pre-hedging) are likely to trade ahead of
+  it. Their buying or selling is predictable, not forced. If they compete, the price pressure starts earlier
+  and the 15:00-16:00 window already has part of it priced in. The forced flow sets the direction. Competition
+  among anticipators sets the timing.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC; convert with DST)
+  universe: null
+direction: long_short
+entry:
+  long: >-
+    At clock time T ET (default 14:30), compute r = price at T / last trade at 16:00 ET the prior RTH
+    day − 1. If r > k × σ20, where σ20 is the trailing 20-day standard deviation of close-to-close (16:00
+    ET) returns, buy 1 contract at the next bar's open.
+  short: Same rule, sell 1 contract if r < −k × σ20.
+  filters:
+  - One trade per day, with no re-entry.
+  - Skip half-day sessions (early close at 13:00 ET) and days with missing bars around T.
+  - 'Warm-up: require 20 completed sessions for σ20 before trading.'
+  - >-
+    Mapping step (in-sample only): run the same rule for T ∈ {13:00, 13:30, 14:00, 14:30, 15:00, 15:30}
+    and report gross points per trade for each T. Freeze one T before out-of-sample.
+exit:
+  time_exit: Exit at the 15:59 ET bar close (or MOC proxy at 16:00 ET)
+  stop_loss: >-
+    Master test: none, so the exit cannot flatter the entry. Live variant: stop at 0.3 × the 15-session
+    average daily ATR from entry.
+  take_profit: null
+  other:
+  - >-
+    Flatten all positions before the close and hold nothing overnight. The reversal leg is covered by
+    letf_rebalance_day_reversal_nq.
+position_sizing:
+  development: 1 ES (or 1 NQ) contract, fixed
+  live: >-
+    Volatility target: contracts = fixed dollar risk ÷ (0.3 × ATR15 × point value). Optionally scale by
+    signal strength |r|/σ20, capped at 2×.
+parameters:
+- name: entry_time_T_ET
+  default: '14:30'
+  source: assumption (paper uses 15:00; earlier times test the front-running claim)
+  test_range: 13:00, 13:30, 14:00, 14:30, 15:00, 15:30
+- name: k_threshold_sigma
+  default: 1.0
+  source: assumption; the paper scales flow linearly with the index move, and 1% days are its reference
+    case
+  test_range: 0 (always trade the sign), 0.5, 1.0, 1.5
+- name: absolute_threshold_alt
+  default: 1.0%
+  source: paper (1% index move reference)
+  test_range: 0.5%, 0.75%, 1.0%, 1.5%
+- name: sigma_lookback_days
+  default: 20
+  source: assumption
+  test_range: 10, 20, 60
+- name: stop_atr_fraction
+  default: 0.3
+  source: transcript 03 (30% of 15-session ATR)
+  test_range: 0.2, 0.3, 0.5, none
+expectations:
+- >-
+  The paper implies continuation in the direction of r that rises with |r|. Gross ES points per trade
+  should be monotonic in |r|/σ20.
+- >-
+  If front-running has moved the effect earlier, gross edge per remaining hour should be higher for T
+  = 13:30-14:30 than for T = 15:00, at least post-2016.
+- >-
+  The effect should be concentrated in high-volatility regimes (2015-16, 2018 Q4, 2020, 2022). Report
+  results by VIX or σ20 tercile.
+- Long (up-day) side stronger than short in large caps and tech per Table V; check on ES/NQ.
+- >-
+  Report pre/post 2022 separately: post-0DTE dealer long gamma on expiry days could damp the continuation.
+what_would_kill_it: >-
+  Gross points per trade at every T are below about 1 ES point (round-trip cost plus slippage), or there
+  is no dose-response in |r|. Also fatal: the sign flips between out-of-sample years, or the edge exists
+  only in 2020 and disappears when that year is removed. The mechanism itself would die if LETF issuers
+  spread rebalancing across the day or execute fully in the closing auction, or if LETF AUM shrinks.
+data_requirements:
+- ES 1-min RTH 2013-12 to 2026-09 (have)
+- NQ 1-min 2021-07 to 2026-09 (have)
+- Exchange calendar of early-close days
+- 'Optional: VIX daily for regime split (not in inventory; σ20 from ES can substitute)'
+- >-
+  Optional: LETF AUM history (SPXL/SPXU/UPRO/SPXS/TQQQ/SQQQ) to test whether the edge scales with AUM
+  over time
+data_available: 'yes'
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th-percentile simulated drawdown for the same number of trades.
+  extra_checks:
+  - >-
+    Chronological split: ES in-sample 2013-12 to about 2023-08, out-of-sample after that. NQ is short
+    (2021+), so use it only as a confirmation instrument with frozen ES rules.
+  - Choose T in-sample only. Prefer a plateau of neighbouring T values over the single best T.
+  - >-
+    Baseline comparison: unconditional long T→16:00 every day (zero-intelligence), and the existing 15:00
+    entry of letf_flow_to_depth_last_hour_es.
+  - Report gross vs net points per trade, net t ≥ 2, and the same sign in every out-of-sample year.
+  - 'Outlier dependence: share of profit from the top 20 trades.'
+  - >-
+    Correlation of daily P&L with noise_area_last_half_hour_es and letf_flow_to_depth_last_hour_es. If
+    above 0.7, treat it as the same strategy.
+open_questions:
+- >-
+  Does the existing letf_flow_to_depth_last_hour_es already sweep entry times? If so, merge this into
+  it as a variant rather than run it as a separate strategy.
+- >-
+  Prior close reference: 16:00 ET last trade vs CME 16:00 ET settlement vs SPX cash close. Futures trade
+  until 17:00 ET, so pick one and keep it.
+- >-
+  Most US LETFs hedge with swaps whose counterparties hedge in futures or in the closing auction. When
+  does that hedging actually happen in 2013-2026? It is not observable in our data.
+- >-
+  The continuation could be ordinary intraday momentum (Gao et al.) rather than LETF flow. With no AUM
+  data we cannot separate the two. AUM scaling over time is the only partial check.
+- >-
+  Is the move scaled by σ20 the right normalisation, given that flow is linear in r but impact grows with
+  volatility (Kyle-Obizhaeva)?
+- >-
+  How should FOMC days be treated, when the 14:00 ET announcement makes r at 14:30 news-driven rather
+  than flow-driven? Exclude them or test them separately.
+notes:
+- >-
+  Not a copy of the paper's regression. This is a test of the timing claim (front-running moves the effect
+  earlier) that our fixed-time LETF specs do not cover.
+- The expected edge is small, a few bp per day on the index. Costs will decide whether it survives.
+related_strategies:
+- letf_flow_to_depth_last_hour_es
+- letf_close_rebalance_continuation_nq
+- letf_rebalance_day_reversal_nq
+- noise_area_last_half_hour_es
+- noise_area_momentum_es
+- close_reversal_overnight_es
+variants:
+- Long-only (up days only) per the paper's up/down asymmetry.
+- 'High-vol regime only: σ20 in the top tercile of its trailing 1-year distribution.'
+- 'Combined with a VWAP filter: trade only if the price at T is on the same side of session VWAP as r.'
+- Split the T→16:00 window into T→15:00 and 15:00→16:00 to see where the drift sits in each year.
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 3
+    testability: 4
+    overfit_resistance: 2
+  verdict: refine
+  reasons:
+  - >-
+    The cause is real: daily-reset LETFs must trade r×δ×(δ−1)×AUM in the direction of the day's move,
+    long and inverse funds trade the same way, and fund assets have grown a lot since 2011.
+  - >-
+    The 'migration earlier' timing claim has no structural reason behind it. Anticipators are predictable,
+    not forced, and the paper never observes when they trade. At earlier T, the prior-close move so far
+    is a weaker proxy for the final close-to-close rebalancing flow.
+  - >-
+    It does not copy the paper. It tests the author's own front-running remark, which our fixed-time LETF
+    specs do not cover.
+  - >-
+    The signal is the same as generic intraday momentum (Gao et al.) and our noise-area strategies. Without
+    fund-asset data, a positive result cannot be attributed to LETF flow.
+  - >-
+    The parameter grid (6 T × 4 k × 4 absolute thresholds × 3 lookbacks × 4 stops) is far too large for
+    an edge of a few bp. The six T windows overlap, so they are not independent tests.
+  - >-
+    The spec itself suggests merging into letf_flow_to_depth_last_hour_es, so it is probably a duplicate
+    rather than a separate strategy.
+  - >-
+    The cost hurdle is binding. The expected gross is about 1 ES point. Holds from T ≥ 15:00 are 60 minutes
+    or less, which the cost-hurdle note says to avoid.
+  - >-
+    Our data supports it: ES 1-minute 2013–2026 and NQ 2021–2026. FOMC handling and the prior-close reference
+    are still undecided.
+  required_changes:
+  - >-
+    Merge into letf_flow_to_depth_last_hour_es as an entry-time variant rather than running it as a separate
+    strategy.
+  - >-
+    Replace the T grid search with one event-profile test. Condition on r/σ20 at a fixed anchor (for example
+    13:00), plot the average cumulative signed return to 16:00 minute by minute, split by year, and read
+    off where the drift sits. Choose T from a plateau, in-sample only.
+  - >-
+    Cut the free parameters: fix σ lookback = 20, drop the absolute-threshold alternative, use k ∈ {0,
+    1} only, and run no stop in the master test. Tune at most T and k.
+  - >-
+    Exclude FOMC days (and optionally CPI/NFP days) from the main test and report them separately. Freeze
+    one prior-close reference before any test: the 16:00 ET last trade.
+  - >-
+    Add a generic intraday-momentum baseline: the same rule signed by the session-open-to-T return instead
+    of the prior-close-to-T return. Also run the fund-asset-scaling check, comparing edge per year with
+    SPXL/UPRO/TQQQ/SQQQ assets (assets are public and can be bought). Without these the LETF cause is
+    unproven.
+  - >-
+    State in advance what result would support migration: a larger edge per hour held for T = 13:30–14:30
+    than for T = 15:00, rising over time post-2016. If not, the variant goes back to the parent spec.
+  - >-
+    Report gross points per trade against about 1 ES point of round-trip costs at every T, with net t
+    ≥ 2 and the same sign in every out-of-sample year.
+  copies_the_paper: false

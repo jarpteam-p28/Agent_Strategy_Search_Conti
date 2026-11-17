@@ -1,0 +1,142 @@
+{
+  "title": "Path-Dependence of Leveraged ETF Returns",
+  "authors": [
+    "Marco Avellaneda",
+    "Stanley Zhang"
+  ],
+  "year": 2010,
+  "source_url": "https://doi.org/10.1137/090760805",
+  "paper_type": "academic",
+  "read_mode": "full_pdf",
+  "one_line": "Daily-rebalanced leveraged ETFs lose value in proportion to the realized variance of their underlying index (about 1x variance for 2x long, 3x for 2x short), so over multi-week horizons they lag the leverage multiple times index return unless the index trends strongly.",
+  "findings": [
+    {
+      "statement": "Exact/near-exact formula: log(L_t/L_0) = β·log(S_t/S_0) − (β²−β)/2 · realized variance + financing/fee terms. LETF holders are short realized variance regardless of the sign of β. The drag is −1×variance for 2x long, −3×variance for 2x short, and larger for 3x funds.",
+      "evidence": "Derived with Taylor expansion (discrete) and Ito's lemma (continuous); the remainder is of order daily vol over horizons under 1 year."
+    },
+    {
+      "statement": "The formula fits empirically. Average tracking error is mostly under ~100 bp for 22 ProShares 2x long funds, with a standard deviation of about 0.4–1.9%. Short and 3x funds have larger errors, especially in financials and energy during the Jul–Nov 2008 short-sale restrictions and hard-to-borrow period.",
+      "evidence": "56 LETFs (22 Ultra, 22 UltraShort, 12 Direxion 3x), daily data Jan 2008–Mar 2009 (308 days; 3x funds since Nov 2008). Vol is estimated from a 5-day rolling window. Long tracking error runs from −0.73% to 2.15%. Short runs from −2.21% to 3.30%. FAS is 3.67% and FAZ std is 4.04%."
+    },
+    {
+      "statement": "Over overlapping 60-day windows in 2008, LETFs mostly underperformed the static leveraged ETF-plus-cash portfolio when returns were moderate and vol high. They outperformed only when the index moved a lot with low vol. The underperformance was worse for the short funds (SKF).",
+      "evidence": "UYG/SKF vs IYF, overlapping 60-day windows, Feb 2008–Mar 2009 (Figures 1–4)."
+    },
+    {
+      "statement": "Break-even condition: a double-long LETF beats 2x static only if the index move is outside the band X<e^V(1−√(1−e^−V)) or X>e^V(1+√(1−e^−V)). Higher variance widens the band. The LETF position is long convexity (gamma) and short variance (theta decay).",
+      "evidence": "Equations 13–15."
+    },
+    {
+      "statement": "A static-multiple exposure can be replicated with LETFs by holding (Π0/β)·(S_t/S_0) dollars in the LETF. This uses about 1/|β| of the capital. Delta-band rebalancing at 5% or weekly-ish gives reasonable tracking.",
+      "evidence": "Tables 7–9: 6-month replication in 2008 across 22 double-long funds. Mean tracking errors are mostly within ±1–2% of notional. The 5% band implies a rebalance every ~9–40 days."
+    }
+  ],
+  "why": {
+    "pattern": "Execution mechanics of big players (mandated daily rebalancing) plus a risk/convexity premium. This is a structural product mechanic, not a behavioural anomaly.",
+    "mechanism": "To hold a constant leverage β, the fund must buy after up days and sell after down days, at the close. That is buy high, sell low in a mean-reverting or choppy market. The compounded cost is deterministic in realized variance: (β²−β)/2 × σ²t. Rebalancing flows are also large and predictable in direction and timing (trend-following, near the close), and scale with fund AUM times β(β−1) times the index move. So the product holder is structurally short variance and long convexity, and the realized vol of the index prices this decay.",
+    "who_is_forced": "LETF issuers and their swap counterparties must rebalance daily to hit the stated leverage target. Retail buy-and-hold holders absorb the variance drag. Short-LETF funds also face borrow costs on hard-to-borrow underlyings.",
+    "why_it_persists": "It is arithmetic, not a mispricing, so it does not get arbitraged away. Issuers are still contractually bound to daily reset. Retail demand for leveraged products keeps the structure alive and keeps rebalancing flows large, and the difficulty of shorting these funds cheaply limits full arbitrage.",
+    "what_would_kill_it": "Issuers moving to monthly or longer resets (Direxion mentioned monthly resets). A regime of persistent, strong trends with low variance, where convexity beats decay. Borrow costs for shorting LETFs eating the decay. Regulation shrinking the product class. Rebalancing flows being crowded or front-run so the end-of-day move is already priced.",
+    "authors_explanation_vs_ours": "The authors treat this as a pricing and hedging identity and say LETFs are unsuitable for buy-and-hold. They offer no trading rule. The paper does not test any short-LETF strategy, and it ignores short-borrow cost (λ=0). It also covers only the crisis year 2008, when variance was extreme. The tradable WHY is the variance-drag and rebalancing-flow mechanics, not the replication scheme."
+  },
+  "tradable_edge": "LETFs carry a known, mechanical negative exposure to realized variance. The cost of holding β× is roughly (β²−β)/2 times the variance rate. So the cleanest edge is a market-neutral spread: short the LETF, hedge with β× the underlying (or its futures), or pair a bull and a bear LETF on the same index. The spread earns the decay when realized vol is high and the index is range-bound, and loses on strong low-vol trends. A second angle is to use the same arithmetic as a forecasting and sizing input, since decay scales with realized variance. On our futures data, the more direct use is the flow side. Daily rebalancing creates a predictable, trend-following order at the close, proportional to AUM × β(β−1) × the day's index return. That is testable as a late-day momentum signal in ES/NQ. The decay-harvest trade itself needs ETF data we lack, and the paper gives no net-of-cost backtest. Short borrow cost, margin and tail risk in sharp one-way markets all matter.",
+  "angles": [
+    "Delta-neutral decay harvest: short a 2x/3x LETF and long β× the underlying (or hold a bull-bear pair). Size with vol targeting and test it in-sample only. Expect to lose in strong low-vol trends (e.g. 2013, 2017, 2023–24 AI rally), so test by regime.",
+    "End-of-day rebalancing flow signal, which we can test with ES and NQ 1-min data. Estimate the flow as AUM × β(β−1) × day's return, with AUM from a proxy or a constant. Test whether the last 15–30 minutes of RTH continue the day's direction, bucketed by day size and vol. Report pre/post 2022 and by signal strength, with a 60+ minute hold preference and cost hurdle.",
+    "Volatility-regime conditioning: decay is a function of realized variance, so test the spread or flow signal only when 5–20 day realized vol is above its median. Use ES/NQ 1-min realized variance as the regime variable.",
+    "One side only: the short side (2x/3x bear funds) has 3x the variance drag of 2x long, but also hard-to-borrow risk. Test long-only underlying-versus-short-LETF and short-only variants separately.",
+    "Different universes: sector and single-stock LETFs, 3x funds (TQQQ/SQQQ, SOXL) and VIX-product analogues, where variance drag is bigger and AUM is concentrated. This needs ETF data we do not have.",
+    "Combine with volatility targeting (Moreira-Muir): the paper's variance-decay formula gives a theory for why volatility-managed exposure beats constant leverage.",
+    "Proxy the leveraged-exposure replication idea: on futures, the paper's rule (hold S_t/S_0 notional scaled by 1/β) is a trend-following sizing rule. Test as a pyramiding rule on ES/NQ."
+  ],
+  "decay_risk": {
+    "level": "medium",
+    "reason": "The identity cannot decay. But the paper is from 2010 and the drag is now widely known: SEC and FINRA alerts, and an industry of 'short TQQQ/SQQQ pairs' strategies. The edge in harvesting it is limited by borrow costs, tail risk and crowded decay trades. The end-of-day flow effect is also published (Cheng and Madhavan; later literature) and may be arbitraged by closing auction liquidity providers. The authors tested only 2008–09 data, so no out-of-sample or net-of-cost evidence is provided."
+  },
+  "data_fit": "Partly testable. We have ES (2013–2026) and NQ (2021–2026) 1-min data. These cover only the rebalancing-flow angle (late-day momentum conditional on day return and realized vol), plus a realized-variance regime variable. We do not have LETF prices (SSO, SDS, QLD, TQQQ, SQQQ), ETF/underlying prices, borrow cost data, or fund AUM. So the decay-harvest spread cannot be tested directly. The paper also gives no tradeable rules, no costs, and a single crisis year, so the strategy would be fully our own construction. AUM is needed to scale the flow estimate; use a fixed proxy and flag the limitation. We could simulate the variance-drag identity synthetically from ES/NQ daily data to show expected decay by regime.",
+  "caveats": [
+    "Sample is mostly 2008–Mar 2009, an extreme-vol crisis. Short-sale bans and hard-to-borrow stocks distort the short-fund results.",
+    "The paper sets borrow cost λ=0 and has no transaction costs. It never backtests a trading strategy, so there are no Sharpe, win-rate or drawdown numbers.",
+    "Tracking error for short and 3x funds is large (up to 3–4% mean and std). The formula is an approximation that depends on a 5-day rolling variance estimate.",
+    "The paper's dynamic-replication tables cover only 2008, and tracking error is sometimes negative by 1–2%.",
+    "The edge is long convexity versus short variance: short-LETF hedged positions can lose a lot in strong trends or squeezes.",
+    "The rebalancing-flow idea is in the intro/discussion only. It is not empirically tested here."
+  ],
+  "reported_results": {
+    "headline": "No trading P&L is reported. The empirical result is that the variance-drag formula explains LETF returns with mostly under ~1% average tracking error for long funds, and larger error for short/3x funds.",
+    "key_stats": [
+      "56 LETFs (44 ProShares 2x, 12 Direxion 3x), Jan 2008–Mar 2009",
+      "Variance drag: −1×σ²t for 2x long, −3×σ²t for 2x short",
+      "Long fund tracking error mean ≤ ~2.15%, std 0.38–1.86%",
+      "Short funds: SKF mean 3.30% and std 3.03%; DXD −2.01% mean",
+      "Dynamic replication of 6-month returns: mean tracking error mostly −2% to +1% of notional; std ~0.3–2%",
+      "5% delta band implies a rebalance every ~9–40 days"
+    ],
+    " costs_included": "No transaction costs, short-borrow set to zero; LIBOR funding and expense ratios are included in the formula",
+    "costs_included": "Funding rate and expense ratio included in the formula; transaction costs and borrow cost not included (λ=0)"
+  },
+  "setting": {
+    "markets": [
+      "US equity ETFs (broad, sector, size/style)"
+    ],
+    "instruments": [
+      "ProShares Ultra/UltraShort 2x ETFs",
+      "Direxion 3x bull/bear ETFs",
+      "underlying iShares/SPY/QQQQ/DIA ETFs"
+    ],
+    "data_frequency": "Daily",
+    "sample_period": "Jan 2, 2008 – Mar 20, 2009 (3x funds since Nov 2008)",
+    "holding_period": "60-day and 6-month windows"
+  },
+  "referenced_papers_worth_reading": [
+    {
+      "title": "The Dynamics of Leveraged and Inverse Exchange-Traded Funds",
+      "authors": [
+        "Minder Cheng",
+        "Ananth Madhavan"
+      ],
+      "venue": "Barclays Global Investors (working paper)",
+      "year": 2009,
+      "url": null,
+      "pdf_url": null,
+      "note": "Independently derived the same formula and covers rebalancing flows at the close. Strong source for the end-of-day flow and gamma angle."
+    },
+    {
+      "title": "Long Term Performance of Leveraged ETFs",
+      "authors": [
+        "L. Lu",
+        "J. Wang",
+        "G. Zhang"
+      ],
+      "venue": "SSRN",
+      "year": 2009,
+      "url": "http://ssrn.com/abstract=1344133",
+      "pdf_url": null,
+      "note": "Empirical evidence of long-horizon LETF underperformance versus static leverage."
+    },
+    {
+      "title": "A Dynamic Model for Hard-to-Borrow Stocks",
+      "authors": [
+        "M. Avellaneda",
+        "M. D. Lipkin"
+      ],
+      "venue": "RISK Magazine / SSRN",
+      "year": 2009,
+      "url": "http://ssrn.com/abstract=1357069",
+      "pdf_url": null,
+      "note": "Borrow-cost model, which matters for any short-LETF decay trade."
+    },
+    {
+      "title": "Theory of constant proportion portfolio insurance",
+      "authors": [
+        "F. Black",
+        "A. Perold"
+      ],
+      "venue": "Journal of Economic Dynamics and Control",
+      "year": 1992,
+      "url": null,
+      "pdf_url": null,
+      "note": "CPPI has the same variance-exposure structure as LETFs, so it is a candidate for finding the same flow effect in other products."
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+id: attention_spike_fade_es
+name: Attention-Spike Fade after Euphoric High-Volume Days (ES/NQ daily, short only, falsification test)
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/overnight_returns_and_the_retail_investor_attention_papers_e.md
+  papers:
+  - title: >-
+      All That Glitters: The Effect of Attention and News on the Buying Behavior of Individual and Institutional
+      Investors
+    authors:
+    - Brad M. Barber
+    - Terrance Odean
+    year: 2008
+    venue: Review of Financial Studies
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=460660
+    note: Source of the order-flow finding. It reports no returns.
+  - title: 'Profiting from predictability: Smart traders, daily price limits, and investor attention'
+    authors:
+    - Mark Seasholes
+    - Guojun Wu
+    year: 2004
+    url: http://ssrn.com/abstract=527182
+    note: >-
+      Attention-driven retail buying the day after limit-up hits reverses within about 10 days. This is
+      the return evidence we lean on.
+  - title: The high-volume return premium
+    authors:
+    - Simon Gervais
+    - Ron Kaniel
+    - Dan H. Mingelgrin
+    year: 2001
+    venue: Journal of Finance
+    note: >-
+      Finds the opposite sign: high volume is followed by higher returns. This is the competing hypothesis
+      the test must separate from ours.
+finding: >-
+  US retail investors in 1991-99 broker data were net buyers of stocks that caught their attention: abnormal
+  volume (+30% imbalance in the top 5% volume vingtile), extreme prior-day returns in either direction
+  (+24% to +29%) and news days. Institutions did not show this. The paper measures only order flow. It
+  reports no returns and no tradable edge.
+why: >-
+  Behavioural order-flow imbalance. Retail investors are long-only and have limited search capacity, so
+  attention decides what they buy. After a highly visible day, retail buy flow arrives in one direction
+  on the following session or two, and liquidity providers take the other side. If that flow pushes prices
+  away from value, the excess should reverse over the next days, as Seasholes & Wu found for Shanghai.
+  Our angle is an index proxy. After a euphoric up day on abnormal volume, the market is full of attention.
+  Retail chasing on day t+1 should extend the move, and then it should fade. We test the short side only
+  after up-spikes, because after crash days retail dip-buying lines up with the well-known liquidity rebound,
+  which existing strategies already cover. NQ carries more retail and tech exposure, so the effect should
+  be larger there than in ES.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min aggregated to daily RTH bars
+  session: RTH 09:30-16:00 America/New_York (data stored in UTC)
+  universe: null
+direction: short_only
+entry:
+  long: null
+  short: >-
+    Day t is an attention spike if both hold: (1) the RTH close-to-close return is in the top 5% of the
+    trailing 252-day distribution of daily returns; (2) RTH volume divided by its trailing 252-day average
+    is in the top 5% of its trailing distribution, or above 1.8x. Let day t+1 run, since that is the expected
+    retail-chasing day. Sell 1 contract at the RTH close of day t+1 (15:59 ET bar close).
+  filters:
+  - >-
+    Exclude roll weeks, or use volume summed across contracts, so that front-month rolls do not create
+    fake volume spikes
+  - No new entry while a position is open (one position at a time)
+  - 'Warm-up: the first 252 sessions do not trade'
+exit:
+  stop_loss: 2.0 x 20-day ATR above entry, checked on 1-min bars
+  take_profit: null
+  time_exit: Buy back at the RTH close of day t+1+N (default N = 5 sessions)
+  other:
+  - >-
+    Master-signal check first: run with no stop and a pure time exit, so the exit cannot flatter the entry
+position_sizing:
+  development: 1 contract fixed
+  live: >-
+    Volatility targeting: contracts = fixed dollar risk / (stop distance in points x point value), where
+    stop distance = 2 x 20-day ATR
+parameters:
+- name: return_extreme_pct
+  default: 95
+  source: paper (top 5% return vingtile)
+  test_range: 90, 95, 97.5
+- name: volume_ratio_threshold
+  default: top 5% of trailing 252-day volume ratio
+  source: paper (abnormal volume = volume / 252-day average, top vingtile)
+  test_range: 1.5x, 1.8x, 2.2x, or percentile 90/95
+- name: entry_delay_days
+  default: 1
+  source: assumption (let the retail-chasing day happen first)
+  test_range: 0, 1, 2
+- name: hold_days_N
+  default: 5
+  source: Seasholes & Wu (reversal within about 10 days)
+  test_range: 3, 5, 10
+- name: stop_atr_mult
+  default: 2.0
+  source: assumption
+  test_range: 1.5, 2.0, 3.0, none
+expectations:
+- >-
+  Over days t+1 to t+10, cumulative returns after attention spikes are below the unconditional drift.
+  That would support a reversal; above the drift would support Gervais et al.'s high-volume premium
+- Day t+1 open-to-close is above average (the retail chase), and the following days give it back
+- The effect is larger in NQ than in ES over the same 2021-2026 window
+- >-
+  Very few signals, roughly 5-12 per year, so the t-statistic will be weak. Treat the result as exploratory
+what_would_kill_it: >-
+  Post-spike returns equal to or above normal drift, in line with the high-volume return premium. The
+  reversal disappears after costs, or only shows up in one regime such as 2022. Also a structural change:
+  retail flow internalised by wholesalers with no index-level impact, or retail moving to systematic shorting
+  and scanning.
+notes:
+- 'This is a proxy, not a replication: the paper shows single-stock order flow and no returns'
+- >-
+  Bull-market beta works against a short-only rule. Compare against the matched always-long slice and
+  report pre/post 2022 separately
+- >-
+  The crash-day long side is left out on purpose, because deleveraging_rebound_es_daily and liquidity_recovery_long_es
+  already cover it
+variants:
+- Long variant on day t+1 only (09:30 to 15:59) to test the retail-chase leg directly
+- >-
+  Avoid-longs filter: switch off overnight_drift_long and orb_long_only for N days after an attention
+  spike, and check whether they improve
+- >-
+  Intraday attention variant: first-hour volume / 20-day average first-hour volume > 2 plus an opening
+  gap > 1 ATR, then fade from 10:30 to 15:59 (hold 60+ minutes to beat costs)
+related_strategies:
+- deleveraging_rebound_es_daily
+- liquidity_recovery_long_es
+- megacap_earnings_overnight_split_nq
+- overnight_reversal_first_hour_es
+- orb_long_only
+open_questions:
+- >-
+  Is index-futures volume a valid proxy for retail attention, given that retail mainly trades single stocks
+  and ETFs (SPY/QQQ volume would be better but we don't have it)?
+- >-
+  Is the volume ratio computed on RTH or ETH volume, and how do we neutralise the volume spike at quarterly
+  rolls?
+- >-
+  Is the return extreme defined by a percentile of raw returns or by a z-score scaled to volatility (regimes
+  change the threshold a lot)?
+- Should both conditions be required, or should either one be enough to raise the signal count?
+- >-
+  NQ data covers only 2021-2026, which is too few events for an 80/20 split. Should NQ be used only as
+  a cross-check of the ES result?
+- >-
+  Which sign wins at index level: reversal (Seasholes & Wu) or high-volume premium (Gervais et al.)? We
+  have no prior.
+data_requirements:
+- ES 1-min 2013-2026 (RTH aggregation, volume)
+- NQ 1-min 2021-2026
+- Roll calendar for ES/NQ to clean volume
+- 'Optional, not held: SPY/QQQ volume or retail flow proxy (odd-lot, TAQ retail-flagged trades)'
+data_available: partial
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th-percentile drawdown from the bootstrap simulation over
+    the same number of trades
+  extra_checks:
+  - >-
+    Event-study plot of mean cumulative return from t to t+10 against the unconditional baseline, with
+    confidence bands
+  - >-
+    Report gross points per trade against about $13 (ES) or $19 (NQ) round-trip costs, and require net
+    t ≥ 2
+  - Same sign in every out-of-sample year; report pre/post 2022 separately
+  - Compare NQ with ES over the overlapping 2021-2026 window
+  - Check whether a few outliers drive the result (top-10 trade share of profit)
+review:
+  scores:
+    why_strength: 2
+    persistence: 2
+    simplicity: 3
+    testability: 4
+    overfit_resistance: 2
+  verdict: park
+  reasons:
+  - >-
+    The WHY doesn't carry over to the instrument we would trade. Barber & Odean measured retail buy/sell
+    order flow in single stocks. They reported no returns. ES/NQ futures are mostly institutional instruments:
+    hedgers, CTAs, dealers and index arbitrage. Days of extreme ES volume are mostly macro events (CPI,
+    FOMC), deleveraging, roll weeks or quarterly expiries, not retail attention. So the signal measures
+    'big institutional macro day', not 'retail attention'.
+  - >-
+    The spec admits it has no prior on the sign: reversal (Seasholes & Wu) versus the high-volume premium
+    (Gervais et al.). Testing both directions with no structural prior is a coin flip dressed up as a
+    hypothesis. Whichever sign comes out can be explained after the fact, which is classic data mining.
+  - >-
+    Seasholes & Wu was found in Shanghai under daily price limits with a retail-dominated market. That
+    does not support a US index-futures reversal. The only return evidence comes from a different market
+    structure.
+  - >-
+    Index days that are both a top-5% up day and a top-5% volume day cluster in high-volatility bear regimes:
+    2015-16, Q4 2018, March 2020, 2022. Bear-market rallies there do often fade, but that is a volatility-regime
+    or bear-market effect, not attention. With raw-return percentiles, the signal is mostly a regime detector.
+  - >-
+    Requiring both conditions likely gives only about 2-6 events a year. A 13-year ES sample then has
+    maybe 40-70 trades, and an 80/20 split leaves about 10 out-of-sample trades. It cannot reach net t
+    ≥ 2 or show the same sign in every out-of-sample year. NQ (2021-2026) is too short to do more than
+    a cross-check.
+  - >-
+    There are five parameters, each with 3-4 test values, plus unresolved definitions: RTH vs ETH volume,
+    percentile vs z-score, AND vs OR conditions, and roll handling. That gives a large hidden search space
+    on a tiny sample.
+  - >-
+    Persistence is weak. Retail flow is now internalised by wholesalers, and HFT and market makers absorb
+    attention flow within minutes. Any index-level effect is speculative and probably arbitraged.
+  - >-
+    Credit where due: the spec is honest about all this. It does not copy the paper, which has no rules
+    to copy. It specifies a master-signal check, a baseline comparison, a cost hurdle and an outlier check.
+    It is cheap to run as an event study, but it is low priority next to strategies with a real structural
+    WHY.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    If revived, pre-register one definition before looking at returns: a volatility-scaled return (z-score
+    against 20-day realised vol) instead of raw percentiles, RTH volume summed across contracts (or roll
+    weeks excluded), and both conditions required. Freeze N=5, entry delay=1 and no stop for the master
+    test.
+  - >-
+    Add a regime-matched baseline: compare post-spike returns with all top-5% up days, ignoring volume,
+    in the same volatility regime. This shows whether the volume or attention condition adds anything
+    beyond 'big rally in a high-vol market'.
+  - >-
+    Tag and separately report scheduled macro-event days (FOMC, CPI, NFP). If the spikes are mostly macro
+    days, the attention WHY fails and the idea should be dropped.
+  - >-
+    Treat it as an event study (cumulative-return curve from t to t+10 with confidence bands) rather than
+    a strategy until a sign appears that matches a stated prior. Commit to the reversal sign in advance
+    and count a high-volume-premium result as a fail, not a pivot.
+  - >-
+    Look for a better attention proxy before spending more time: SPY/QQQ volume, retail-flagged TAQ volume
+    or options call volume. Index-futures volume is the weakest link in the WHY.

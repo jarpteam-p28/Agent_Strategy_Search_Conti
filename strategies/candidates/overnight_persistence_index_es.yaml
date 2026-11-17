@@ -1,0 +1,214 @@
+id: overnight_persistence_index_es
+name: >-
+  Overnight-Return Persistence on index futures: hold ES overnight only when recent overnights were strong
+  (ES/NQ, falsification test)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/overnight_returns_and_firm_specific_investor_sentiment.md
+  papers:
+  - title: Overnight Returns and Firm-Specific Investor Sentiment
+    authors:
+    - David Aboody
+    - Omri Even-Tov
+    - Reuven Lehavy
+    - Brett Trueman
+    year: 2018
+    venue: JFQA (SSRN 2554010)
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2554010
+    note: >-
+      Single-stock finding: overnight returns persist for 1-4 weeks. This spec carries the idea over to
+      index futures as an untested hypothesis.
+  - title: 'Return Differences between Trading and Non-Trading Hours: Like Night and Day'
+    authors:
+    - Cliff, M.
+    - Cooper, M.
+    - Gulen, H.
+    year: 2008
+    venue: Working paper
+    note: Index returns concentrate overnight, which is the baseline this test must beat.
+finding: >-
+  In US single stocks (1992-2013), a stock's recent average close-to-open return predicts its overnight
+  return over the next 1-4 weeks. The paper offers no index-level evidence. Our hypothesis is that the
+  aggregate version (retail and attention flow arriving at the cash open in a run) makes the index's overnight
+  drift persistent in time. If so, the overnight premium is concentrated in stretches that follow strong
+  overnight runs.
+why: >-
+  Retail and attention flow is placed outside market hours and hits at the open. Retail imbalances persist
+  for weeks, so overnight pressure should cluster in time. At index level this also overlaps with the
+  overnight risk premium: holders are paid for carrying risk while the market is closed. Persistence would
+  mean the overnight premium is time-varying and readable from its own recent history.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: 1min
+  session: >-
+    Hold from the 16:00 America/New_York close to the 09:30 America/New_York RTH open (ETH bars; data
+    is in UTC, so convert with DST)
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    At the 15:59 ET bar close, compute the average of the last N=5 overnight returns (RTH 16:00 close
+    → next 09:30 open). If it is above the 60th percentile of its trailing 250-session distribution (signal_rule
+    = 'top bucket'), buy 1 ES at the 16:00 ET close.
+  short: null
+  filters:
+  - >-
+    Run no trade if the last 5 overnights include a session holiday gap longer than 3 days. Otherwise
+    treat weekends as a single overnight.
+  - 'Warm-up: the first 250 sessions are used for the percentile and do not trade.'
+exit:
+  stop_loss: >-
+    Catastrophic stop at 2.0 × the 20-session average absolute overnight move, measured from entry and
+    checked on 1-min ETH bars.
+  take_profit: null
+  time_exit: Sell at the 09:30 ET RTH open (open of the 09:30 bar).
+  other:
+  - One position per night.
+position_sizing:
+  development: '1 ES contract fixed (NQ: 1 contract on its separate 2021+ test).'
+  live: >-
+    Volatility targeting: contracts = $ risk budget ÷ (20-session std of overnight returns × point value
+    × price), rounded down, with a minimum of 0 contracts.
+parameters:
+- name: lookback_overnights
+  default: 5
+  source: paper (1-week formation)
+  test_range: 3, 5, 10, 20
+- name: entry_percentile
+  default: 0.6
+  source: assumption
+  test_range: 0.5, 0.6, 0.7, 0.8; also simple sign > 0
+- name: percentile_window
+  default: 250
+  source: assumption
+  test_range: 120, 250, 500
+- name: stop_multiple
+  default: 2.0
+  source: assumption
+  test_range: 1.5, 2.0, 3.0, none
+open_questions:
+- >-
+  The paper is cross-sectional (relative ranking across stocks). Time-series persistence of one index's
+  overnight return is a different claim and may well be zero or even reversed. Treat this as a falsification
+  test.
+- >-
+  Should the overnight leg start at the 16:00 ET close or at the 18:00 ET Globex reopen (skipping the
+  16:15-18:00 gap)?
+- >-
+  Must beat the always-long-overnight baseline (overnight_drift_long) per trade and in Sharpe, not just
+  be positive.
+- Report pre/post 2022 (0DTE era) and by signal strength, as the method notes require.
+- >-
+  NQ has only 2021-2026, which is too short for an 80/20 split on its own. Use ES (2013-2026) as the primary
+  test.
+- 'Costs: about $5-13 round trip per ES contract. Report gross points per trade vs costs.'
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if the live drawdown exceeds the 95th-percentile simulated drawdown for that many
+    trades.
+  extra_checks:
+  - >-
+    Compare against the unconditional overnight long and against the inverse rule (hold only after weak
+    overnights). If the inverse rule wins, the index shows reversal, not persistence.
+  - Same sign in every out-of-sample year; net t ≥ 2.
+  - 'Down-year check: 2018 Q4, 2020, 2022.'
+  - >-
+    Regression of the next overnight return on the trailing N-overnight mean, with HAC t-stat, before
+    any rule tuning.
+data_requirements:
+- ES 1-min ETH/RTH 2013-2026 (have)
+- NQ 1-min 2021-2026 (have)
+- Exchange holiday calendar
+data_available: 'yes'
+expectations:
+- >-
+  If the hypothesis holds, the average overnight return after the top-bucket signal is higher than the
+  unconditional overnight average, and the Sharpe per night is higher.
+- >-
+  Likely outcome: weak or no persistence at index level, since the paper's effect is firm-specific sentiment.
+  A null result is informative and parks the idea.
+what_would_kill_it: >-
+  No predictive slope of the trailing overnight mean on the next overnight return, or a negative one.
+  The conditional version failing to beat the always-long overnight baseline after costs. The effect existing
+  only before 2022.
+related_strategies:
+- overnight_drift_long
+- overnight_reversal_first_hour_es
+- europe_open_long_es
+- nq_extreme_overnight_drop_rebound
+variants:
+- 'Inverse/reversal check: hold overnight only after weak trailing overnights.'
+- >-
+  Spread signal: use the trailing (overnight minus intraday) return gap as the sentiment proxy instead
+  of the overnight level.
+- >-
+  Pair with an intraday short of the RTH session after very strong trailing overnights (the Berkman give-back),
+  but check overlap with overnight_reversal_first_hour_es.
+notes:
+- >-
+  This is our own angle and not in the paper. Status is 'idea' until the regression shows any persistence.
+review:
+  scores:
+    why_strength: 2
+    persistence: 2
+    simplicity: 4
+    testability: 5
+    overfit_resistance: 3
+  verdict: refine
+  reasons:
+  - >-
+    WHY is borrowed from a cross-sectional, firm-specific retail-sentiment result (strongest in small,
+    hard-to-value, low-institutional names). The paper offers no index-level evidence; retail flow is
+    a tiny share of ES and index overnight moves are mostly global news/macro, which do not repeat predictably.
+  - >-
+    The fallback WHY (time-varying overnight risk premium) does not clearly predict persistence. If anything,
+    the premium should be higher after stressed (weak) nights, so the sign of the effect is ambiguous
+    before testing.
+  - >-
+    Persistence of the mechanism is doubtful: paper data ends in 2013, and post-2013 retail behaviour
+    (commission-free apps, extended hours, 0DTE options) differs. The overnight premium is widely known.
+  - >-
+    At best the strategy is a filtered subset of overnight_drift_long, so it adds little diversification.
+    Its value is only better timing of an existing exposure.
+  - >-
+    Strengths: data fully available (ES 2013-2026), rules nearly codeable, explicit falsification framing,
+    regression before tuning, comparison against both the always-long baseline and the inverse rule, pre/post-2022
+    split. Does not copy the paper.
+  - >-
+    Overfit risk: 4 tuned parameters (~240 combinations) on a weak signal that trades ~40% of nights invites
+    a false positive.
+  - >-
+    Ambiguities: 'top bucket' at the 60th percentile is really the top 40%; 16:00 vs 18:00 entry is unresolved
+    and changes the return being measured; weekend and holiday handling in the 5-night look-back and the
+    stop units are underspecified.
+  required_changes:
+  - >-
+    Make the in-sample regression a hard stop: regress the next overnight return on the trailing 1/5/20-night
+    means with HAC t-stats. If no look-back gives a positive slope with t >= 2, park the idea without
+    any rule tuning.
+  - >-
+    Lock the default rule before testing: 5-night look-back, sign > 0 (or one fixed threshold), no stop.
+    Allow at most one more parameter in-sample; drop the percentile-window and stop-multiple sweeps.
+  - >-
+    Settle the entry time: 16:00 ET ES close, matching overnight_drift_long, for a like-for-like baseline.
+    Run 18:00 Globex reopen only as a sensitivity check.
+  - >-
+    Rewrite the WHY in two parts with their predicted signs: retail attention predicts persistence (hold
+    after strong nights); a time-varying risk premium may predict the reverse (hold after weak nights).
+    Make the inverse rule a co-equal hypothesis, decided by the in-sample regression only.
+  - >-
+    Define edge cases exactly: Friday close to Monday open counts as one night; say whether a holiday
+    gap > 3 days blocks only that night's entry or every night whose look-back contains it; give the stop's
+    units (points from entry) if a stop is kept.
+  - Rename 'top bucket' to 'above 60th percentile', or use a true top-quintile rule.
+  - >-
+    Measure success against the baseline, not zero: net extra return per night after $5-13 round-trip
+    costs, Sharpe per calendar night (nights out of the market count as zero) vs always-long, pre/post
+    2022, same sign in every out-of-sample year.
+  - Use NQ 2021-2026 only to confirm the frozen ES rule, never for tuning or a separate split.
+  copies_the_paper: false

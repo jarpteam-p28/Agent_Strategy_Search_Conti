@@ -1,0 +1,176 @@
+id: liquidity_stress_overlay_es
+name: Liquidity-Stress Sizing Overlay on top of Vol Targeting (ES daily, falsification test)
+status: idea
+source:
+  kind: paper
+  ref: papers/summaries/market_liquidity_and_funding_liquidity.md
+  papers:
+  - title: Market Liquidity and Funding Liquidity
+    authors:
+    - Markus K. Brunnermeier
+    - Lasse Heje Pedersen
+    venue: Review of Financial Studies
+    year: 2009
+    url: https://doi.org/10.1093/rfs/hhn098
+    note: >-
+      Abstract and memory only. Says liquidity is fragile and non-linear when funding is tight. That suggests
+      illiquidity could carry risk information beyond volatility.
+  - title: Volatility-Managed Portfolios
+    authors:
+    - Alan Moreira
+    - Tyler Muir
+    venue: Journal of Finance
+    year: 2017
+    url: null
+    note: Baseline overlay that we must beat
+finding: >-
+  Theory: during funding stress, liquidity collapses non-linearly and price moves become self-reinforcing.
+  Volatility alone may underestimate tail risk while the spiral is running.
+why: >-
+  Forced deleveraging through margin and loss spirals. While illiquidity is high and still rising, liquidity
+  providers are still being pushed out, so moves continue and gap. Cutting exposure in that state, beyond
+  what volatility targeting already does, should reduce drawdowns.
+market:
+  instruments:
+  - ES
+  - NQ
+  bar_size: daily (built from 1min)
+  session: RTH 09:30-16:00 America/New_York; positions held close-to-close
+  universe: null
+direction: long_only
+entry:
+  long: >-
+    Baseline: hold long ES every day, sized by volatility targeting (20-day realised vol). Overlay: multiply
+    that size by min(1, median_252(ILLIQ5)/ILLIQ5), and set it to 0 when ILLIQ5 is above its 95th percentile
+    AND rising versus 5 days ago. Rebalance at each close.
+  short: null
+  filters:
+  - >-
+    Apply the same overlay to the daily P&L of existing intraday strategies (e.g. vault_break, noise_area_momentum_es)
+    as a second test
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: Daily rebalance at the RTH close
+  other:
+  - 'The overlay itself is the exit: size goes to 0 in the rising-stress state'
+position_sizing:
+  development: >-
+    Fractional notional exposure in backtest (continuous weights), with the baseline at a 15% annualised
+    vol target
+  live: Round to whole contracts at the target vol; cap leverage at 2x notional
+parameters:
+- name: vol_target_annual
+  default: 0.15
+  source: assumption
+  test_range: 0.10-0.20
+- name: illiq_smoothing_days
+  default: 5
+  source: assumption
+  test_range: 3, 5, 10
+- name: flat_percentile
+  default: 95
+  source: assumption
+  test_range: 90, 95, 99
+expectations:
+- >-
+  Success means lower max drawdown and a higher Sharpe than pure vol targeting, not just lower exposure
+- If the overlay's gain disappears after matching average exposure, the idea is rejected
+data_requirements:
+- ES 1-min 2013-2026 (have)
+- NQ 1-min 2021-2026 (have)
+data_available: 'yes'
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: Stop if live drawdown exceeds the 95th-percentile simulated drawdown for the same horizon
+  extra_checks:
+  - Use block bootstrap of daily returns (e.g. 20-day blocks) to keep stress clustering
+  - Compare at equal average exposure
+  - Check results in 2022, a down year
+what_would_kill_it: >-
+  ILLIQ adds no information beyond realised volatility, i.e. its correlation with vol is so high that
+  the overlay equals vol targeting. Also a sign that the market recovers too quickly for daily rebalancing
+  to help.
+notes:
+- >-
+  This is a falsification test. A null result is useful because it would tell us volatility targeting
+  is enough.
+open_questions:
+- What is the correlation between ILLIQ5 and 20-day realised vol? If it is above 0.9, the test is moot
+- Daily or intraday rebalancing?
+- Does the overlay help intraday strategies more than buy-and-hold?
+related_strategies:
+- trend_risk_timing_overlay_es
+- liquidity_recovery_long_es
+review:
+  scores:
+    why_strength: 3
+    persistence: 3
+    simplicity: 4
+    testability: 4
+    overfit_resistance: 3
+  verdict: refine
+  reasons:
+  - >-
+    The setup is honest and cheap to run. It is a falsification test against a stated baseline (Moreira-Muir
+    vol targeting), it compares the two at equal average exposure, it checks 2022, and it uses a block
+    bootstrap to keep stress clustering. That is the right way to approach this.
+  - >-
+    The rules don't copy the paper. Brunnermeier-Pedersen is a theory paper with no trading rules, so
+    the overlay is our own framing around the WHY (forced deleveraging through margin and loss spirals).
+    The WHY is real, but it is mostly about funding liquidity, which we can't observe. Our only window
+    on it is a price/volume proxy, so the link from the WHY to the signal is weak.
+  - >-
+    Biggest flaw: ILLIQ5 is never defined. If it is Amihud-style |return| / (dollar) volume, the numerator
+    is the absolute return, so it is built from almost the same input as realised vol. A high correlation
+    with vol is then partly built in, and the test could come out null for a mechanical reason rather
+    than an economic one.
+  - >-
+    Volume in a continuous front-month ES series has roll artifacts: front-month volume falls in the days
+    before each roll. There is also a strong long-term trend in volume from 2013 to 2026, and the ETH/RTH
+    split changes which volume you count. Any of these can create false 'illiquidity spikes' unless handled.
+  - >-
+    The overlay has two separate mechanisms: continuous scaling by median/ILLIQ5, and a hard go-flat switch
+    at the 95th percentile when rising. The continuous part is basically a second vol scaler. Only the
+    switch is the true 'spiral' hypothesis. If both are tested together, we won't know which one caused
+    the result.
+  - >-
+    Real stress episodes are few: 2015, 2018, 2020, 2022, Aug 2024 and Apr 2025. With an 80/20 split,
+    the out-of-sample period (about mid-2023 to 2026) has maybe 2 events. Any improvement in drawdown
+    will rest on a handful of days, so the test needs an event-level breakdown.
+  - >-
+    Persistence is moderate. Margin and leverage spirals are structural. But central bank backstops, the
+    speed of vol-targeting funds and the fact that the idea is widely known all cut the window during
+    which daily rebalancing can act.
+  required_changes:
+  - >-
+    Define ILLIQ exactly before any test, e.g. RTH |close-to-close return| divided by RTH dollar volume
+    summed across both contracts during roll weeks, or better a range-based measure: (high-low)/volume.
+    Fix the definition in-sample and don't change it afterwards.
+  - >-
+    Fix the volume roll and trend problems. Sum volume across front and next contract around rolls, or
+    use volume relative to its own 20-day median. Show a chart of the raw ILLIQ series with roll dates
+    marked to prove that the spikes are not roll artifacts.
+  - >-
+    Make the orthogonality test the first gate. Regress log ILLIQ5 on log RV20 in-sample and use the residual
+    (the 'excess illiquidity' part) as the signal. If the residual's 95th percentile flags essentially
+    the same days as RV, stop and record the null result.
+  - >-
+    Split the overlay into two variants and test them separately: (a) only the flat switch on rising excess-illiquidity,
+    applied on top of vol targeting, and (b) only the continuous scaling. Keep the version with the clearer
+    story (the switch), and don't stack both.
+  - >-
+    Specify the vol-target leverage cap and include costs: ES round-turn cost for daily rebalancing, plus
+    a no-trade band (e.g. only rebalance when the size change is >10%). Without these, turnover from the
+    overlay will eat the gain.
+  - >-
+    Report results event by event: drawdown saved or missed in each stress episode, plus how many days
+    the overlay was flat in total and in each regime. Also report the cost of whipsaw when it went flat
+    and the market rebounded (Mar-Apr 2020, Apr 2025).
+  - >-
+    Leave the second test on intraday strategies (vault_break, noise_area_momentum_es) until the buy-and-hold
+    test passes, and fix the IS/OOS dates in advance, since those strategies have their own development
+    splits.
+  copies_the_paper: false

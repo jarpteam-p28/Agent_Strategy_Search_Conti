@@ -1,0 +1,239 @@
+id: overnight_persistence_smallcap_stocks
+name: >-
+  Overnight-Return Persistence: hold the overnight leg of last week's top overnight-return small/mid caps
+  (single stocks, long only)
+status: parked
+source:
+  kind: paper
+  ref: papers/summaries/overnight_returns_and_firm_specific_investor_sentiment.md
+  papers:
+  - title: Overnight Returns and Firm-Specific Investor Sentiment
+    authors:
+    - David Aboody
+    - Omri Even-Tov
+    - Reuven Lehavy
+    - Brett Trueman
+    year: 2018
+    venue: Journal of Financial and Quantitative Analysis (SSRN 2554010)
+    url: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2554010
+    note: >-
+      Source finding: weekly overnight returns persist for 1-4 weeks, strongest in small, hard-to-value,
+      low-institutional-ownership stocks.
+  - title: 'Paying Attention: Overnight Returns and the Hidden Cost of Buying at the Open'
+    authors:
+    - Berkman, H.
+    - Koch, P.
+    - Tuttle, L.
+    - Zhang, Y.
+    year: 2012
+    venue: JFQA
+    note: 'WHY: attention-driven retail buying at the open inflates overnight returns, then reverses intraday.'
+  - title: Do Retail Trades Move Markets?
+    authors:
+    - Barber, B.
+    - Odean, T.
+    - Zhu, N.
+    year: 2009
+    venue: RFS
+    note: Retail order imbalances persist for weeks, which is why the open-price pressure repeats.
+finding: >-
+  CRSP stocks (price >$5, cap >$10M), Jul 1992-Dec 2013: stocks ranked on a week's average close-to-open
+  return keep the same ordering in overnight returns over the next 4 weeks. The top-minus-bottom decile
+  spread is 1.76 pp in week 1 (t=46), then 1.48, 1.33 and 1.21 pp. Close-to-close persistence is small
+  (0.26 pp), so the effect sits in the overnight leg and partly reverses intraday. The spread is about
+  twice as large in the smallest, most volatile, youngest and lowest-institutional-ownership quartiles
+  (2.3 pp vs 0.7-1.1 pp). All figures are gross and equal-weighted.
+why: >-
+  Retail investors place orders while the market is closed, and those orders execute at the next open.
+  Attention keeps the same retail investors buying the same names for weeks (Barber-Odean-Zhu), so the
+  price pressure at the open repeats night after night. Market makers absorb it and give part of it back
+  intraday. Arbitrage is limited in small, hard-to-value, costly-to-short names, so the pressure is not
+  competed away there. This is the 'retail order flow at the open + limits to arbitrage' pattern, a relative
+  of 'information/orders pile up while the market is closed'.
+market:
+  instruments:
+  - US common stocks
+  bar_size: daily (official open and close auction prices)
+  session: >-
+    RTH 09:30-16:00 America/New_York; position held from the 16:00 closing auction to the 09:30 opening
+    auction
+  universe: >-
+    US common stocks, price >$5, market cap $50M-$3B, 20-day median dollar volume > $2M; primary tilt
+    to the lower half of institutional ownership
+direction: long_only
+entry:
+  long: >-
+    Every Friday after the close, compute each stock's average daily close-to-open return over the last
+    5 trading days. Rank the universe into deciles. For each of the next 5 trading days, buy the top-decile
+    names in the closing auction (MOC) at 16:00 ET.
+  short: null
+  filters:
+  - >-
+    Skip a stock if it has an earnings announcement in the next 5 trading days, so that we isolate sentiment
+    from news (and avoid overlap with post_surprise_overnight_long_stocks). Also test with the filter
+    off.
+  - >-
+    Exclude stocks whose 5-day average overnight return is driven by a single night with a gap above 20%
+    (takeovers, halts, splits).
+  - >-
+    Optional tilt: keep only names in the bottom half of institutional ownership or the top half of 60-day
+    volatility.
+exit:
+  stop_loss: null
+  take_profit: null
+  time_exit: >-
+    Sell every position in the next morning's opening auction (MOO, 09:30 ET). Re-enter at the close each
+    day for 5 trading days, then re-rank.
+  other:
+  - >-
+    No intraday holding. The paper shows the intraday leg partly reverses, so being flat during the day
+    is part of the edge.
+position_sizing:
+  development: Equal weight across the top-decile names, each night (fixed notional per name).
+  live: >-
+    Inverse-volatility weights using the 20-day std of overnight returns, so each name targets the same
+    overnight risk. Cap each name at 2% of the portfolio and keep each order at 5% or less of typical
+    closing/opening auction volume.
+parameters:
+- name: formation_window_days
+  default: 5
+  source: paper (1 week)
+  test_range: 3, 5, 10, 20
+- name: holding_weeks
+  default: 1
+  source: paper (persistence measured over 1-4 weeks)
+  test_range: 1, 2, 4 (overlapping portfolios)
+- name: top_bucket
+  default: decile
+  source: paper
+  test_range: decile, quintile
+- name: market_cap_max_usd
+  default: 3e9
+  source: assumption (paper says the effect is strongest in small caps)
+  test_range: 1e9, 3e9, 10e9
+- name: min_dollar_volume_usd
+  default: 2e6
+  source: assumption (tradability)
+  test_range: 1e6, 2e6, 5e6
+open_questions:
+- >-
+  Should the benchmark be the universe's average overnight return? Overnight returns are positive on average,
+  and the edge must beat 'long every small cap overnight'.
+- >-
+  Cost model: the half-spread at the MOC/MOO auctions in small caps plus auction impact. The paper's +0.86%/week
+  top-decile overnight return is about 17 bp/night. Is that above the cost of a round trip in two auctions?
+- >-
+  Does the effect survive after 2013 (commission-free apps, extended-hours retail trading, payment for
+  order flow)? It must be reported for 2014-2019 and 2020+ separately.
+- >-
+  Is the long top decile or the short bottom decile carrying the spread? Shorting overnight is costly,
+  so a long-only version only captures the top-decile minus baseline.
+- Do we need institutional ownership (13F) data, or is size/volatility a good enough proxy?
+- Should we use quote midpoints instead of the official open to strip bid-ask bounce from the signal?
+validation:
+  in_sample_pct: 80
+  monte_carlo_reshuffle_runs: 10000
+  monte_carlo_bootstrap_runs: 20000
+  kill_switch: >-
+    Stop if the live drawdown exceeds the 95th-percentile simulated drawdown for that many trading nights.
+  extra_checks:
+  - Chronological 80/20 split. Also report pre-2014 vs post-2014 and pre/post 2020 (retail app era).
+  - Net vs gross per-night return, with a cost sweep of 5/10/20/30 bp per round trip.
+  - Top decile minus universe overnight baseline, and a placebo that ranks on the close-to-close return.
+  - Must hold in a down year (2008, 2022) relative to the overnight baseline.
+data_requirements:
+- Daily official open and close prices for US stocks, survivorship-bias free (CRSP or Polygon/Norgate)
+- Market cap, dollar volume, corporate actions
+- Earnings announcement dates
+- 'Optional: 13F institutional ownership'
+- 'Optional: auction volumes and quote midpoints'
+data_available: 'no'
+expectations:
+- >-
+  Next-week overnight spread is positive and roughly monotonic across deciles. Plan on about half the
+  paper's 1.76 pp gross after decay.
+- The spread is larger in small/low-ownership names than in large caps.
+- >-
+  The close-to-close spread is much smaller than the overnight spread, which confirms the intraday give-back.
+- The net edge may be close to zero after auction costs in microcaps. That is a real risk.
+what_would_kill_it: >-
+  Retail orders no longer cluster at the open (extended-hours and 24h retail trading, fractional orders
+  executed through the day), opening auctions pricing the imbalance in, or auction costs in small caps
+  exceeding the roughly 15-20 bp/night gross edge.
+related_strategies:
+- post_surprise_overnight_long_stocks
+- overnight_drift_long
+- pead_long
+variants:
+- 'Long-short: long the top decile, short the bottom decile overnight (if borrow is available).'
+- 'Intraday fade: short the top decile from open to close (Berkman reversal).'
+- >-
+  Long-horizon reversal: rank monthly on the trailing 20-day average overnight return. Go long the lowest
+  decile of hard-to-value names and hold 12 months with overlapping cohorts (the paper's 7.4%/yr alpha
+  comes mostly from the long leg). Run it as a separate low-turnover book.
+- >-
+  PEAD filter: drop pead_long candidates that are in the top decile of overnight return over days -20
+  to -2.
+notes:
+- >-
+  The paper runs no trading strategy, and its results are gross equal-weighted decile spreads. Our framing
+  (MOC→MOO each night, long only, earnings filter) is our own.
+- Daily turnover is 200% of the book, so costs decide whether this works.
+review:
+  scores:
+    why_strength: 3
+    persistence: 2
+    simplicity: 3
+    testability: 2
+    overfit_resistance: 3
+  verdict: park
+  reasons:
+  - >-
+    WHY is plausible (retail orders placed while closed, executed at the open; attention persists for
+    weeks; limits to arbitrage in small caps) and fits the playbook's 'orders pile up while the market
+    is closed' pattern, but the paper never observes retail flow. Its own caveats allow news clustering
+    or an overnight risk premium instead.
+  - >-
+    Fatal-risk economics: top 10% is about +0.86%/week gross, roughly 17bp a night, equal-weighted. Long-only,
+    the edge is only top group minus the universe's (positive) overnight return. Apply the ~58% post-publication
+    decay and the edge must then cover two small-cap auction trades a night, with the book turning over
+    twice a day. Realistic net expectancy is near zero.
+  - >-
+    Decay risk is high: data is 1992-2013 and published in 2018, and the retail landscape changed (zero-commission
+    apps, extended hours, payment for order flow, options). No post-2013 evidence.
+  - >-
+    Not a copy of the paper: the paper runs no strategy. Buying in the closing auction and selling at
+    the next open, long only, with an earnings filter, is our own framing.
+  - >-
+    Data: no stock data in the inventory. It needs a survivorship-free US stock dataset with official
+    auction prices, earnings dates and ideally auction volume and quotes. That can be bought, but it is
+    a big lift for a low-priority, cost-fragile idea on a futures desk.
+  - >-
+    Rule ambiguities: holding_weeks (1/2/4 overlapping) contradicts 'hold 5 days then re-rank'; the 'single-night
+    gap >20%' filter is undefined; the signal price (official open vs midpoint) is unresolved, and bid-ask
+    bounce in small caps can fake persistence.
+  copies_the_paper: false
+  required_changes:
+  - >-
+    Resolve the holding structure: either rank weekly and hold 5 nights with no overlap, or define exactly
+    how overlapping 2- and 4-week groups are weighted.
+  - >-
+    Make 'top 10% overnight return minus the universe's average overnight return' the main metric, with
+    an 'always long the universe overnight' baseline.
+  - >-
+    Replace the flat cost sweep with an auction-cost model: half-spread per auction by size bucket plus
+    price impact as a share of auction volume. State the cost level that kills the idea.
+  - >-
+    Define the gap exclusion as a formula, e.g. any single overnight return above 20% in absolute terms,
+    or one night above X% of the 5-day sum.
+  - >-
+    Decide up front whether ranking uses official opens or quote midpoints, and use midpoints (or the
+    prior close's midpoint) where possible to strip bid-ask bounce.
+  - >-
+    Cut the in-sample grid: fix the formation window at 5 days and the top bucket at 10%; sweep only the
+    market-cap cap and costs. Drop the institutional-ownership tilt unless 13F data is bought; use size
+    or volatility instead.
+  - >-
+    Gate further work on a cheap first check (top 10% minus universe, gross, 2014+ and 2020+ split) on
+    bought daily stock data. Allocate backtest time only if the gross edge is well above ~20bp a night
+    post-2020.

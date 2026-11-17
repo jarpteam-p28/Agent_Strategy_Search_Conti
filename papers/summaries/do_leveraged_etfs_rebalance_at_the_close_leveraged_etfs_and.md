@@ -1,0 +1,56 @@
+# Are Leveraged and Inverse ETFs the New Portfolio Insurers?
+
+**Authors:** Tugkan Tuzun  
+**Year:** 2013  **Type:** academic  **Read:** abstract_only  
+**Source:** https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2340616
+
+> Leveraged and inverse ETFs must rebalance at the close in the same direction as the day's market move, so they add forced late-day momentum and volatility; the size scales with the day's return and with the ETFs' assets.
+
+## Findings
+- Leveraged and inverse ETFs reset their exposure daily, so they have to trade in the direction of the underlying index's same-day return, near the close. This applies to both long-leveraged and inverse funds. The size is roughly (L² − L) × fund assets × the day's return. It is a mechanical rule, like portfolio insurance. — *Recalled from my memory of the paper (Fed FEDS 2013-48). I could not open the text, so the figures are unverified.*
+- The rebalancing demand is large relative to closing-period liquidity on big move days, and it is linked to stronger late-day momentum and higher volatility in the underlying index and stocks. The link is stronger where leveraged-ETF ownership is higher. — *Recalled from memory only. Exact coefficients, sample and period were not verified. The sample is U.S. equities and ETFs, around 2008-2012.*
+
+## The WHY
+**Pattern:** Execution mechanics of big players / institutional constraint (a mandate forces the trade)
+
+A 2x or 3x daily-reset ETF must hold a constant multiple of its net assets in exposure. After the index rises, the fund must buy more exposure. After it falls, it must sell. Inverse funds also trade in the same direction as the market. Counterparties and authorised participants do this hedging in futures, swaps and stocks, mostly in the last 30 minutes. The flow is mechanical and its size is known in advance. It is a function of the day's return (close to the closing level) and of assets under management. It adds to the move and increases late-day volatility.
+
+- **Who is forced / predictable:** The ETF sponsors and their swap counterparties. They have a daily-reset mandate and cannot defer the trade without tracking error.
+- **Why it persists:** The product structure is unchanged, and assets in leveraged ETFs have grown. The mandate makes the flow certain. Closing-period liquidity is limited.
+- **What would kill it:** Leveraged ETF assets falling sharply. Sponsors rebalancing intraday or through the closing auction in a smoothed way. Many traders front-running the flow so that it is already priced in by 15:30 ET. A regime of strong dealer long-gamma on 0DTE days that absorbs the flow.
+- **Paper's view vs ours:** The author frames this as a new form of portfolio insurance, where trend-following hedging amplifies moves. This is consistent with our WHY. I could not check the empirical detail, and later work found the effect varies with the market regime.
+
+## Setting
+- Markets: 
+- Instruments: 
+- Period:   Frequency:   Holding: 
+
+## Reported results
+
+
+## Tradable edge (our framing)
+On days when the index has moved a lot by mid-afternoon, estimate the forced leveraged-ETF rebalance from the day's return and the ETFs' assets (or a proxy). Then test whether the late-day move (about 15:30 to 16:00 ET) continues in the direction of the day's return, and whether it grows with move size. The main trade is late-session continuation in ES or NQ after large move days. A possible second leg is fading any overshoot into the next open. Hold times are short, so costs must be compared with the gross edge.
+
+## Angles to test
+- Different instrument: test ES and NQ separately. NQ should show more effect because the leveraged products (TQQQ/SQQQ) are Nasdaq-heavy.
+- Different session: trade only 15:30-16:00 ET, or 15:45-close, with a fixed time exit.
+- Conditioning: trade only when the absolute day return is above a threshold, or above an estimated flow proxy such as return times a growing AUM trend. Compare high-vol days with calm days.
+- One side only: test long-only after up days versus short after down days, since they may behave asymmetrically.
+- Next-day angle: check for a reversal at the next open after high-flow days.
+- Regime split: report pre/post-2022 and by 0DTE era.
+- Combine with intraday momentum findings (first-half-hour return predicts last half-hour), and filter by day-of-week or month-end rebalancing.
+
+## Decay risk: high
+Published in 2013, and this closing flow is widely known (it is also discussed by banks and the press). Intraday momentum into the close is already documented (Gao et al. 2018). Others will have traded it away. Late-day hold times are short, so costs matter, and 0DTE dealer gamma may have changed the dynamics.
+
+## Data fit
+"Partial. ES 1-min data from 2013 and NQ 1-min from 2021 can test late-session continuation by day-return size, including a pre/post-2022 split. Missing: ETF assets under management, leveraged-ETF flow data, and single stocks. We would need to proxy flow using the index return (squared-leverage logic) and an assumed AUM trend. I did not read the paper, so the details are untested."
+
+## Caveats
+- I could not access the SSRN page or the Fed PDF, so read_mode is abstract_only. The findings come from my memory of the paper and are not verified. Do not rely on specific numbers.
+- The rebalancing formula and the direction of the flow are mechanical and certain. The size of the price effect is an empirical question we must test ourselves.
+- Cost hurdle: 2-point NQ round-trip friction kills most short-hold edges; late-day holds are short.
+
+## Cited papers worth reading
+- Market Intraday Momentum (2018)
+- Leveraged ETFs and market closing-hour momentum (Cheng & Madhavan, The Dynamics of Leveraged and Inverse Exchange-Traded Funds) (2009)
