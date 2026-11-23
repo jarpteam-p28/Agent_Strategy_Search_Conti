@@ -473,11 +473,13 @@
     "year": 2026,
     "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7558660",
     "origin": "manual",
-    "status": "queued",
-    "attempts": 0,
+    "status": "failed",
+    "attempts": 1,
     "priority": 1,
     "where_to_get_it": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7558660",
-    "testable_on_our_data": "yes"
+    "testable_on_our_data": "yes",
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011ChLfbgN7xtTKw2Jgb2zg5'}",
+    "updated": "2026-11-23"
   },
   "beat_the_market_an_effective_intraday_momentum_strategy_for": {
     "title": "Beat the Market: An Effective Intraday Momentum Strategy for S&P500 ETF (SPY)",
@@ -3176,11 +3178,13 @@
     "year": 2026,
     "url": null,
     "origin": "manual",
-    "status": "queued",
-    "attempts": 0,
+    "status": "failed",
+    "attempts": 1,
     "priority": 1,
     "where_to_get_it": "Companion to SSRN 7609644 (Chuk); search SSRN/academia.edu for the title.",
-    "testable_on_our_data": "yes"
+    "testable_on_our_data": "yes",
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011ChLfbgjwSoferdtK6ck5G'}",
+    "updated": "2026-11-23"
   },
   "regression_discontinuity_and_the_price_effects_of_stock_mark": {
     "title": "Regression Discontinuity and the Price Effects of Stock Market Indexing",
@@ -3530,11 +3534,13 @@
     "year": 2026,
     "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6350238",
     "origin": "manual",
-    "status": "queued",
-    "attempts": 0,
+    "status": "failed",
+    "attempts": 1,
     "priority": 1,
     "where_to_get_it": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6350238",
-    "testable_on_our_data": "yes"
+    "testable_on_our_data": "yes",
+    "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011ChLfbhLu3K2Kn86uz8Zuv'}",
+    "updated": "2026-11-23"
   },
   "structural_limits_of_ohlcv_based_intraday_signals_in_mnq_fut": {
     "title": "Structural Limits of OHLCV-Based Intraday Signals in MNQ Futures: A Systematic Falsification Study",
